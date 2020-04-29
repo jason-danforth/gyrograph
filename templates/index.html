@@ -1,10 +1,10 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Most Important Thing</title>
+        <title>Gyrograph</title>
 
         <!-- CSS -->
-        <link rel="stylesheet" href="../CSS/style.css">
+        <link rel="stylesheet" href="../static/css/style.css">
 
         <!-- Bootstrap and AJAX (need these versions for Modal popup to work) -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -28,14 +28,15 @@
 <!----------JS---------------------------------------------------------------------------------------------------------------------->
         
 
-        <script type="text/javascript" src="../../resources/three.min.js"></script>
-        <script type="text/javascript" src="../../resources/OrbitControls.js"></script>
-        <script type="text/javascript" src="../../resources/rhino3dm.js"></script>
-        <script type="text/javascript" src="../JS/200225_blocks.js"></script>
+        <script type="text/javascript" src="../static/js/three.min.js"></script>
+        <script type="text/javascript" src="../static/js/OrbitControls.js"></script>
+        <script type="text/javascript" src="../static/js/rhino3dm.js"></script>
+        <script type="text/javascript" src="../static/js/200225_blocks.js"></script>
+        <script type="text/javascript" src="../static/js/run.js"></script>
 
-        <script type="text/javascript">
-            let fetchPromise = fetch('../../resources/models/drawingmachine_2.3dm');
-            //let fetchPromise = fetch('../../resources/models/Blocks_Web.3dm');
+        <!-- <script type="text/javascript">
+            let fetchPromise = fetch('../resources/models/drawingmachine_2.3dm');
+            //let fetchPromise = fetch('../resources/models/Blocks_Web.3dm');
             
             rhino3dm().then(async m => {
                 console.log('Loaded rhino3dm.');
@@ -87,7 +88,7 @@
 
 
             });
-        </script>
+        </script> -->
 
     </body>
 </html>
