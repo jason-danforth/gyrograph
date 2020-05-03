@@ -116,3 +116,5 @@ function moveObj(object) {
     let result = object.translate([100, 100, -100]);
     return object
 }
+
+function test() {console.log("This function works PERFECTLY");}
