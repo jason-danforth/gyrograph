@@ -1,9 +1,12 @@
 
-let fetchPromise = fetch('static/models/drawingmachine_2.3dm');
-//let fetchPromise = fetch('../../resources/models/Blocks_Web.3dm');
+//Heroku app runs from app.py backend (in main project directory)
+//let fetchPromise = fetch('static/models/Drawing_Machine.3dm');
+
+//Locally hosted app runs directly from index.html (in "templates" directory)
+let fetchPromise = fetch('../static/models/Drawing_Machine.3dm');
 
 rhino3dm().then(async m => {
-    console.log('Loaded rhino3dm.');
+    //console.log('Loaded rhino3dm.');
     let rhino = m;
 
     let res = await fetchPromise;
@@ -16,7 +19,12 @@ rhino3dm().then(async m => {
     init();
     
     let objects = doc.objects();
+
     draw(objects);
+
+
+    console.log(objects);
+
 
     //Use button click event to draw meshes
     //document.getElementById('draw_button').addEventListener('click', async () => { draw(objects) });
@@ -24,9 +32,12 @@ rhino3dm().then(async m => {
     function draw(objects) {
         let meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 150});
         var curveMaterial = new THREE.LineBasicMaterial( { color: 0x9c9c9c } );
-        
+
         for (let i = 0; i < objects.count; i++) {
-            let geo = objects.get(i).geometry();
+            let geo = objects.get(i).geometry(); //This is what works
+            //console.log(objects.get(i));
+            let attr = objects.get(i).attributes().id;
+            console.log(attr);
             // if(i == 0) {
             //     //Test rhino3dm.js action
             //     geo = moveObj(geo);
