@@ -622,67 +622,66 @@ def generate_selection_pairs(source_tags, target_tags):
 
 
 def next_part(parts, target_axes, target_guides, target_tags, count, nib_item):
-    
-    if len(block_list) > count:
-        block = block_list[count]
+    if (part_list.length > count) {
+        block = part_list[count]
         
-        if block_list[count] == "Tube 1":
+        if part_list[count] == "Tube 1":
             try:
                 tube1(parts, target_axes, target_guides, target_tags, count, nib_item)
             except:
                 count += 1
                 next_part(parts, target_axes, target_guides, target_tags, count, nib_item)
         
-        elif block_list[count] == "Tube 2":
+        elif part_list[count] == "Tube 2":
             try:
                 tube2(parts, target_axes, target_guides, target_tags, count, nib_item)
             except:
                 count += 1
                 next_part(parts, target_axes, target_guides, target_tags, count, nib_item)
         
-        elif block_list[count] == "Tube 3":
+        elif part_list[count] == "Tube 3":
             try:
                 tube3(parts, target_axes, target_guides, target_tags, count, nib_item)
             except:
                 count += 1
                 next_part(parts, target_axes, target_guides, target_tags, count, nib_item)
         
-        elif block_list[count] == "Motor 1":
+        elif part_list[count] == "Motor 1":
             try:
                 motor1(parts, target_axes, target_guides, target_tags, count, nib_item)
             except:
                 count += 1
                 next_part(parts, target_axes, target_guides, target_tags, count, nib_item)
         
-        elif block_list[count] == "Motor 2":
+        elif part_list[count] == "Motor 2":
             try:
                 motor2(parts, target_axes, target_guides, target_tags, count, nib_item)
             except:
                 count += 1
                 next_part(parts, target_axes, target_guides, target_tags, count, nib_item)
         
-        elif block_list[count] == "Motor 3":
+        elif part_list[count] == "Motor 3":
             try:
                 motor3(parts, target_axes, target_guides, target_tags, count, nib_item)
             except:
                 count += 1
                 next_part(parts, target_axes, target_guides, target_tags, count, nib_item)
         
-        elif block_list[count] == "Motor 4":
+        elif part_list[count] == "Motor 4":
             try:
                 motor4(parts, target_axes, target_guides, target_tags, count, nib_item)
             except:
                 count += 1
                 next_part(parts, target_axes, target_guides, target_tags, count, nib_item)
         
-        elif block_list[count] == "Motor 5":
+        elif part_list[count] == "Motor 5":
             try:
                 motor5(parts, target_axes, target_guides, target_tags, count, nib_item)
             except:
                 count += 1
                 next_part(parts, target_axes, target_guides, target_tags, count, nib_item)
         
-        elif block_list[count] == "Nib":
+        elif part_list[count] == "Nib":
             try:
                 nib(parts, target_axes, target_guides, target_tags, count, nib_item)
             except:
@@ -697,6 +696,8 @@ def next_part(parts, target_axes, target_guides, target_tags, count, nib_item):
     else:
         print "Done"
         return parts, target_axes, target_guides
+
+    }
 
 
 def angle_cross_product(target, source):
