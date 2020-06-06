@@ -565,7 +565,7 @@ rhino3dm().then(async m => {
 
     base();
 
-    // draw();
+    draw();
 
     //Remove previously drawn objects from the scene
     // while (object.children.length)

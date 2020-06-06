@@ -127,14 +127,16 @@ function curveToLineSegments(curve, material) {
 // }
 
 function draw() {
-
+    let meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 150});
+    let curveMaterial = new THREE.LineBasicMaterial( { color: 0x9c9c9c } );
+    
     for (let i=0; i<part_list_output.length; i++) {
         let geo = part_list_output[i];
-
         let threeMesh = meshToThreejs(geo, meshMaterial);
         threeMesh.castShadow = true;
         threeMesh.receiveShadow = true;
         scene.add(threeMesh);
+
 
         // if (geo instanceof rhino.Mesh) {
         //     //Convert all meshes in 3dm model into threejs objects
@@ -153,6 +155,22 @@ function draw() {
 
 
 //------------------------------------------Drawing Machine Functions-------------------------------------------------------------------------------------------------------------------------------------
+
+function add_part(part_name) {
+    part_list_input.push(part_name);
+    selection_list.push(0);
+
+    //Remove previously drawn objects from the scene
+    for (let i=0; i<scene.children.legth; i++) {
+        if (scene.children[0].type == 'Mesh') {
+            scene.remove(scene.children[0]);
+        }
+    } 
+
+    part_list_output = [];
+    base();
+    draw();
+}
 
 
 function generate_selection_pairs(source_tags, target_tags) {
@@ -278,23 +296,26 @@ function angle_cross_product(target, source) {
     This function expects a target and source curve, originally drawn in Rhino, that will be
     converted into vectors. The curves can be axes or guides.*/
     
-    let target_normal = target.pointAt(1) - target.pointAt(0);
-    let source_normal = source.pointAt(1) - source.pointAt(0);
+    let target_normal = [target.pointAt(1)[0] - target.pointAt(0)[0], target.pointAt(1)[1] - target.pointAt(0)[1], target.pointAt(1)[2] - target.pointAt(0)[2]];
+    let source_normal = [source.pointAt(1)[0] - source.pointAt(0)[0], source.pointAt(1)[1] - source.pointAt(0)[1], source.pointAt(1)[2] - source.pointAt(0)[2]];
     
     //Cross Product [cx, cy, cz] is the normal vector or axis of rotation
     let cx = (source_normal[1] * target_normal[2]) - (source_normal[2] * target_normal[1]);
     let cy = (source_normal[2] * target_normal[0]) - (source_normal[0] * target_normal[2]);
     let cz = (source_normal[0] * target_normal[1]) - (source_normal[1] * target_normal[0]);
     let cross_product = [cx, cy, cz];
-    
+
     //Dot Product is used to find the angle between the two vectors (calculation is simplified for unit vectors)
     //A dot product of 1 means that the vectors are parallel, a dot product of 0 means that the vectors are orthogonal
     let dot_product = (target_normal[0] * source_normal[0]) + (target_normal[1] * source_normal[1]) + (target_normal[2] * source_normal[2]);
-    
+
     //math.acos() only accepts -1 <= x <= 1, so the following code avoids errors from numbers like 1.000000000000000000002
     if (dot_product >= 1) {angle = 0;}
     else if (dot_product <= -1) {angle = Math.pi;}
     else {angle = Math.acos(dot_product);}
+
+    // console.log('Angle: ', angle);
+    // console.log('Cross Product: ', cross_product);
 
     return [angle, cross_product];
 }
@@ -321,28 +342,32 @@ function orient3d(geo, source_axis, source_guide, potential_axes, potential_guid
     This is why there are source and target guides, and Step 3 finds the angle between the guidesfor this final rotation.*/
     
     //Step 1: rotate the two axes into alignment in 3d space
-    let angle, cross_product = angle_cross_product(target_axis, source_axis);
-    
-    let rotation = rhino.Transform.rotation(Math.sin(angle), Math.cos(angle), cross_product, source_axis.pointAt(0));
-    geo.Transform(rotation);
-    source_axis.Transform(rotation);
-    source_guide.Transform(rotation);
-    for (let i=0; i<potential_axes.length; i++) {potential_axes[i].Transform(rotation);} 
-    for (let i=0; i<potential_guides.length; i++) {potential_guides[i].Transform(rotation);}
+    let response = angle_cross_product(target_axis, source_axis);
+    let angle = response[0];
+    let cross_product = response[1];
+
+    // let rotation = rhino.Transform.rotation(Math.sin(angle), Math.cos(angle), cross_product, source_axis.pointAt(0));
+    geo.rotate(angle, cross_product, source_axis.pointAt(0));
+    source_axis.rotate(angle, cross_product, source_axis.pointAt(0));
+    source_guide.rotate(angle, cross_product, source_axis.pointAt(0));
+    for (let i=0; i<potential_axes.length; i++) {potential_axes[i].rotate(angle, cross_product, source_axis.pointAt(0));} 
+    for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle, cross_product, source_axis.pointAt(0));}
     
     
     //Step 2: move the source geometry to the target geometry
-    let movement = rhin.Transform.Translation(target_axis.pointAt(0) - source_axis.pointAt(0));
-    geo.Transform(movement);
-    source_axis.Transform(movement);
-    source_guide.Transform(movement);
-    for (let i=0; i<potential_axes.length; i++) {potential_axes[i].Transform(movement);} 
-    for (let i=0; i<potential_guides.length; i++) {potential_guides[i].Transform(movement);}
+    let movement = [target_axis.pointAt(0)[0] - source_axis.pointAt(0)[0], target_axis.pointAt(0)[1] - source_axis.pointAt(0)[1], target_axis.pointAt(0)[2] - source_axis.pointAt(0)[2]];
+    geo.translate(movement);
+    source_axis.translate(movement);
+    source_guide.translate(movement);
+    for (let i=0; i<potential_axes.length; i++) {potential_axes[i].translate(movement);} 
+    for (let i=0; i<potential_guides.length; i++) {potential_guides[i].translate(movement);}
     
     
     //Step 3: rotate the two guides into alignment in 3d space
-    angle, cross_product = angle_cross_product(target_guide, source_guide);
-    
+    response = angle_cross_product(target_guide, source_guide);
+    angle = response[0];
+    cross_product = response[1];
+
     /*When cross_product is close to 0 (as happens when vectors are parallel), there's no axis for rotation. 
     This isn't a problem if the angle is 0 (truly parallel), but is a big problem if the angle is 180
     (vectors are inverted). In that condition, the source_axis can be substituted for the cross_product,
@@ -351,13 +376,14 @@ function orient3d(geo, source_axis, source_guide, potential_axes, potential_guid
     the direction of the axis to flip.*/
     
     if (Math.round(angle, 5) == 3.14159 && Math.abs(Math.round((cross_product[0] + cross_product[1] + cross_product[2]), 6)) == 0) {
-        cross_product = source_axis.pointAt(1) - source_axis.pointAt(0);
+        cross_product = [source_axis.pointAt(1)[0] - source_axis.pointAt(0)[0], source_axis.pointAt(1)[1] - source_axis.pointAt(0)[1], source_axis.pointAt(1)[2] - source_axis.pointAt(0)[2]];
     }
     
-    rotation = rhino.Transform.rotation(Math.sin(angle), Math.cos(angle), cross_product, source_axis.pointAt(0));
-    geo.Transform(rotation);
-    for (let i=0; i<potential_axes.length; i++) {potential_axes[i].Transform(rotation);} 
-    for (let i=0; i<potential_guides.length; i++) {potential_guides[i].Transform(rotation);}
+
+    // rotation = rhino.Transform.rotation(Math.sin(angle), Math.cos(angle), cross_product, source_axis.pointAt(0));
+    geo.rotate(angle, cross_product, source_axis.pointAt(0));
+    for (let i=0; i<potential_axes.length; i++) {potential_axes[i].rotate(angle, cross_product, source_axis.pointAt(0));} 
+    for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle, cross_product, source_axis.pointAt(0));}
     
     
     //No point in returning source_axis and source_guide b/c they aren't needed anymore
@@ -398,20 +424,18 @@ function base() {
     target_tags.push(tag_tube1_a_outer);
     target_tags.push(tag_tube1_a_inner);
     
-    //Add geometry objects to THREEjs scene
-    let threeSphere = meshToThreejs(sphere, meshMaterial);
-    threeSphere.castShadow = true;
-    threeSphere.receiveShadow = true;
-    scene.add(threeSphere);
+    // //Add geometry objects to THREEjs scene
+    // let threeSphere = meshToThreejs(sphere, meshMaterial);
+    // threeSphere.castShadow = true;
+    // threeSphere.receiveShadow = true;
+    // scene.add(threeSphere);
 
-    let threeTube = meshToThreejs(tube, meshMaterial);
-    threeTube.castShadow = true;
-    threeTube.receiveShadow = true;
-    scene.add(threeTube);
+    // let threeTube = meshToThreejs(tube, meshMaterial);
+    // threeTube.castShadow = true;
+    // threeTube.receiveShadow = true;
+    // scene.add(threeTube);
 
     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-    
-    return part_list_output;
 }
 
 
@@ -424,6 +448,8 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (part_list_output/tags/axes/guides)*/
     
+
+    //This code block may not be necessary, now that the selection_list is handled programmatically within add_part() as opposed to within Grasshopper
     try {
         if (typeof selection_list[count] == 'number') {
             selection_index = selection_list[count];
@@ -526,7 +552,7 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     part_list_output.push(geo);
     
     for (let i=0; i<potential_source_tags.length; i++) {
-        if (tag == source_tag_selection) {}
+        if (potential_source_tags[i] == source_tag_selection) {}
         else {
             target_axes.push(potential_axes[i])
             target_guides.push(potential_guides[i])
@@ -535,10 +561,10 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     }
 
     //Add geometry objects to THREEjs scene
-    let threeGeo = meshToThreejs(geo, meshMaterial);
-    threeGeo.castShadow = true;
-    threeGeo.receiveShadow = true;
-    scene.add(threeGeo);
+    // let threeGeo = meshToThreejs(geo, meshMaterial);
+    // threeGeo.castShadow = true;
+    // threeGeo.receiveShadow = true;
+    // scene.add(threeGeo);
 
     //Create next block
     count += 1
