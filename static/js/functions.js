@@ -499,9 +499,12 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
     let source_axis = source_axes[source_target_pair[0]];
     let source_guide = source_guides[source_target_pair[0]];
-    let target_tag = target_tags.pop(source_target_pair[1]);
-    let target_axis = target_axes.pop(source_target_pair[1]);
-    let target_guide = target_guides.pop(source_target_pair[1]);
+    let target_tag = target_tags[source_target_pair[1]];
+    target_tags.splice(source_target_pair[1], 1);
+    let target_axis = target_axes[source_target_pair[1]];
+    target_axes.splice(source_target_pair[1], 1);
+    let target_guide = target_guides[source_target_pair[1]];
+    target_guides.splice(source_target_pair[1], 1);
     
 
     /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
@@ -625,9 +628,12 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
     let source_axis = source_axes[source_target_pair[0]];
     let source_guide = source_guides[source_target_pair[0]];
-    let target_tag = target_tags.pop(source_target_pair[1]);
-    let target_axis = target_axes.pop(source_target_pair[1]);
-    let target_guide = target_guides.pop(source_target_pair[1]);
+    let target_tag = target_tags[source_target_pair[1]];
+    target_tags.splice(source_target_pair[1], 1);
+    let target_axis = target_axes[source_target_pair[1]];
+    target_axes.splice(source_target_pair[1], 1);
+    let target_guide = target_guides[source_target_pair[1]];
+    target_guides.splice(source_target_pair[1], 1);
     
     /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
     All of that geometry will be transformed according to the selected source/target geometry.
