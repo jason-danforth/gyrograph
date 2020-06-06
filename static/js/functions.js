@@ -126,6 +126,11 @@ function curveToLineSegments(curve, material) {
 //     return object
 // }
 
+
+//------------------------------------------Helper Functions-------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 function draw() {
     let meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 150});
     let curveMaterial = new THREE.LineBasicMaterial( { color: 0x9c9c9c } );
@@ -137,6 +142,7 @@ function draw() {
         threeMesh.receiveShadow = true;
         scene.add(threeMesh);
 
+        console.log('Drawing');
 
         // if (geo instanceof rhino.Mesh) {
         //     //Convert all meshes in 3dm model into threejs objects
@@ -154,8 +160,6 @@ function draw() {
 }
 
 
-//------------------------------------------Drawing Machine Functions-------------------------------------------------------------------------------------------------------------------------------------
-
 function add_part(part_name) {
     part_list_input.push(part_name);
     selection_list.push(0);
@@ -167,7 +171,13 @@ function add_part(part_name) {
         }
     } 
 
+    //Clear lists
     part_list_output = [];
+    target_axes = [];
+    target_guides = [];
+    target_tags = [];
+
+    //Redraw Machine
     base();
     draw();
 }
@@ -500,6 +510,10 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     let target_axis = target_axes.pop(source_target_pair[1]);
     let target_guide = target_guides.pop(source_target_pair[1]);
     
+
+    console.log(target_tags);
+
+
     /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
     All of that geometry will be transformed according to the selected source/target geometry.
     Note that the .duplicate() method is necessary to avoid Transforms on the same geometry
