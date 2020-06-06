@@ -41,10 +41,6 @@ var target_axes = [];
 var target_guides = [];
 var target_tags = [];
 
-var meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 150});
-var curveMaterial = new THREE.LineBasicMaterial( { color: 0x9c9c9c } );
-
-
 rotation_angle = rotation_angle * 0.0175; //Convert angle from degrees to radians
 
 /*Tubes 2/3 rotate twice as fast as Tube 1, and all tubes are slightly adjusted 

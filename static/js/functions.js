@@ -151,11 +151,6 @@ function draw() {
         //     threeMesh.receiveShadow = true;
         //     scene.add(threeMesh);
         // }
-
-        // else if (geo instanceof rhino.Curve) {
-        //     let threeCurve = curveToLineSegments(geo, curveMaterial);
-        //     scene.add(threeCurve);
-        // }
     }
 }
 
@@ -458,8 +453,6 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (part_list_output/tags/axes/guides)*/
     
-
-    //This code block may not be necessary, now that the selection_list is handled programmatically within add_part() as opposed to within Grasshopper
     try {
         if (typeof selection_list[count] == 'number') {
             selection_index = selection_list[count];
@@ -510,9 +503,6 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     let target_axis = target_axes.pop(source_target_pair[1]);
     let target_guide = target_guides.pop(source_target_pair[1]);
     
-
-    console.log(target_tags);
-
 
     /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
     All of that geometry will be transformed according to the selected source/target geometry.
@@ -574,12 +564,6 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
         }
     }
 
-    //Add geometry objects to THREEjs scene
-    // let threeGeo = meshToThreejs(geo, meshMaterial);
-    // threeGeo.castShadow = true;
-    // threeGeo.receiveShadow = true;
-    // scene.add(threeGeo);
-
     //Create next block
     count += 1
     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item)
@@ -596,10 +580,13 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
     
     try {
-        let selection_index = selection_list[count];
+        if (typeof selection_list[count] == 'number') {
+            selection_index = selection_list[count];
+        }
+        else {selection_index = 0;}
     }
     catch(err) {
-        let selection_index = 0;
+        selection_index = 0;
     }
     
     /*Step 1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
@@ -634,7 +621,7 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
     
     let pair_list = generate_selection_pairs(source_tags, target_tags);
-    let source_target_pair = pair_list[selection_index % len(pair_list)];
+    let source_target_pair = pair_list[selection_index % pair_list.length];
     let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
     let source_axis = source_axes[source_target_pair[0]];
     let source_guide = source_guides[source_target_pair[0]];
@@ -658,18 +645,18 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.
     Step 5A: Rotate Motor (and guides if necessary)*/
     
-    let axis_vector = a_axis_1.pointAt(1) - a_axis_1.pointAt(0);
-    let rotation = rg.Transform.rotation(rotation_sin_2, rotation_cos_2, axis_vector, a_axis_1.pointAt(0));
+    let axis_vector = [a_axis_1.pointAt(1)[0] - a_axis_1.pointAt(0)[0],a_axis_1.pointAt(1)[1] - a_axis_1.pointAt(0)[1], a_axis_1.pointAt(1)[2] - a_axis_1.pointAt(0)[2]];
+    // let rotation = rg.Transform.rotation(rotation_sin_2, rotation_cos_2, axis_vector, a_axis_1.pointAt(0));
     /*If the "motor" connection is selected as the source, then the entire part and all axes/guides will rotate with it
     Note that we do NOT transform the source_guide, we need to preserve a point of reference
     i.e. the change in position relative to the starting point in the local coordinates of the source geo*/
     if (source_tag_selection == "motor1_tube2_a") {
-        geo.Transform(rotation);
-        potential_axes[1].Transform(rotation); //First axis doesn't rotate b/c everything is rotating around it
-        for (let i=0; i<potential_guides.length; i++) {potential_guides[i].Transform(rotation);}
+        geo.rotate(angle * 2, axis_vector, a_axis_1.pointAt(0));
+        potential_axes[1].rotate(angle * 2, axis_vector, a_axis_1.pointAt(0)); //First axis doesn't rotate b/c everything is rotating around it
+        for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle * 2, axis_vector, a_axis_1.pointAt(0));}
     }
     //Otherwise, the guide associated with the "motor" connection (and only this guide) wiil rotate in place
-    else {potential_guides[0].Transform(rotation);}
+    else {potential_guides[0].rotate(angle * 2, axis_vector, a_axis_1.pointAt(0));}
     
     //Step 5B: Add Motor to target geometry
     let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
@@ -688,7 +675,7 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     part_list_output.push(geo);
     
     for (let i=0; i<potential_source_tags.length; i++) {
-        if (tag == source_tag_selection) {}
+        if (potential_source_tags[i] == source_tag_selection) {}
         else {
             target_axes.push(potential_axes[i]);
             target_guides.push(potential_guides[i]);
@@ -696,14 +683,7 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
         }
     }
     
-    //Add geometry objects to THREEjs scene
-    let threeGeo = meshToThreejs(geo, meshMaterial);
-    threeGeo.castShadow = true;
-    threeGeo.receiveShadow = true;
-    scene.add(threeGeo);
-
     //Create next block
     count += 1;
     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-
 }
