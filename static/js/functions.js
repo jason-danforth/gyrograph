@@ -127,9 +127,45 @@ function curveToLineSegments(curve, material) {
 // }
 
 
+
+
+
+
+
+
+//------------------------------------------Modal Popup-------------------------------------------------------------------------------------------------------------------------------------
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the <span> element that closes the modal
+var previousButton = document.getElementsByClassName("previous")[0];
+var nextButton = document.getElementsByClassName("next")[0];
+var exitButton = document.getElementsByClassName("exit")[0];
+
+// When the user clicks on the button, open the modal
+function openModal() {
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+exitButton.onclick = function() {
+  modal.style.display = "none";
+}
+
+// // When the user clicks anywhere outside of the modal, close it
+// window.onclick = function(event) {
+//   if (event.target == modal) {
+//     modal.style.display = "none";
+//   }
+// }
+
+
+
+
+
+
 //------------------------------------------Helper Functions-------------------------------------------------------------------------------------------------------------------------------------
-
-
 
 function draw() {
     let meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 150});
@@ -175,6 +211,9 @@ function add_part(part_name) {
     //Redraw Machine
     base();
     draw();
+
+    //Open Modal Popup
+    openModal();
 }
 
 
@@ -397,8 +436,13 @@ function orient3d(geo, source_axis, source_guide, potential_axes, potential_guid
 }
 
 
-//------------------------------------------Drawing Machine Parts-------------------------------------------------------------------------------------------------------------------------------------
 
+
+
+
+
+
+//------------------------------------------Drawing Machine Parts-------------------------------------------------------------------------------------------------------------------------------------
 
 function base() {
     //Define geometry
