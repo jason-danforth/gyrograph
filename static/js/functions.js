@@ -148,17 +148,64 @@ function openModal() {
     modal.style.display = "block";
 }
 
-// When the user clicks on <span> (x), close the modal
+nextButton.onclick = function() {
+    let lastIndex = selection_list.length - 1;
+    selection_list[lastIndex] = selection_list[lastIndex] + 1;
+    
+    //Remove previously drawn objects from the scene
+    for (let i=0; i<scene.children.length; i++) {
+        if (scene.children[i].type == 'Mesh') {
+            scene.remove(scene.children[i]);
+            i = i-1;
+        }
+    } 
+
+    //Clear lists
+    part_list_output = [];
+    target_axes = [];
+    target_guides = [];
+    target_tags = [];
+
+    //Redraw Machine
+    base();
+    draw();
+  }
+
+  previousButton.onclick = function() {
+    let lastIndex = selection_list.length - 1;
+    
+    if (selection_list[lastIndex] != 0) {selection_list[lastIndex] = selection_list[lastIndex] - 1;}
+    else {selection_list[lastIndex] = pair_list.length - 1;}
+    
+    //Remove previously drawn objects from the scene
+    for (let i=0; i<scene.children.length; i++) {
+        if (scene.children[i].type == 'Mesh') {
+            scene.remove(scene.children[i]);
+            i = i-1;
+        }
+    } 
+
+    //Clear lists
+    part_list_output = [];
+    target_axes = [];
+    target_guides = [];
+    target_tags = [];
+
+    //Redraw Machine
+    base();
+    draw();
+  }
+
 exitButton.onclick = function() {
   modal.style.display = "none";
 }
 
-// // When the user clicks anywhere outside of the modal, close it
-// window.onclick = function(event) {
-//   if (event.target == modal) {
-//     modal.style.display = "none";
-//   }
-// }
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
 
 
 
@@ -196,9 +243,12 @@ function add_part(part_name) {
     selection_list.push(0);
 
     //Remove previously drawn objects from the scene
-    for (let i=0; i<scene.children.legth; i++) {
-        if (scene.children[0].type == 'Mesh') {
-            scene.remove(scene.children[0]);
+    console.log(scene.children.length);
+
+    for (let i=0; i<scene.children.length; i++) {
+        if (scene.children[i].type == 'Mesh') {
+            scene.remove(scene.children[i]);
+            i = i - 1;
         }
     } 
 
@@ -473,17 +523,6 @@ function base() {
     target_tags.push(tag_tube1_a_outer);
     target_tags.push(tag_tube1_a_inner);
     
-    // //Add geometry objects to THREEjs scene
-    // let threeSphere = meshToThreejs(sphere, meshMaterial);
-    // threeSphere.castShadow = true;
-    // threeSphere.receiveShadow = true;
-    // scene.add(threeSphere);
-
-    // let threeTube = meshToThreejs(tube, meshMaterial);
-    // threeTube.castShadow = true;
-    // threeTube.receiveShadow = true;
-    // scene.add(threeTube);
-
     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
 }
 
@@ -538,7 +577,8 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     Once we know the source aixs and guide, we can ignore the remaining source geo b/c it's irrlevant
     We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
     
-    let pair_list = generate_selection_pairs(source_tags, target_tags);
+    pair_list = generate_selection_pairs(source_tags, target_tags);
+
     let source_target_pair = pair_list[selection_index % pair_list.length];
     let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
     let source_axis = source_axes[source_target_pair[0]];
@@ -667,7 +707,7 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     Once we know the source aixs and guide, we can ignore the remaining source geo b/c it's irrlevant
     We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
     
-    let pair_list = generate_selection_pairs(source_tags, target_tags);
+    pair_list = generate_selection_pairs(source_tags, target_tags);
     let source_target_pair = pair_list[selection_index % pair_list.length];
     let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
     let source_axis = source_axes[source_target_pair[0]];

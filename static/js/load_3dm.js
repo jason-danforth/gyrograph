@@ -31,6 +31,7 @@ when the user clicks "DRAW" the machine will run and the Nibs will trace out the
 var rotation_angle = 45;
 var part_list_input = []; //Array of part names (i.e. ["Tube 3", "Motor 1"...]) used to trigger associated functions
 var part_list_output = []; //Array of geometry to add/render to scene
+var pair_list //Array of potential source/target pairs. Global b/c needs to be accessed by previousButton() in functions.js
 var selection_list = [];
 var selection_index = 0;
 var count = 0;
@@ -560,7 +561,6 @@ rhino3dm().then(async m => {
     //------------------------------------------Build Machine-------------------------------------------------------------------------------------------------------------------------------------
 
     base();
-
     draw();
 
     //Remove previously drawn objects from the scene
