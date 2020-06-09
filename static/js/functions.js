@@ -303,13 +303,14 @@ function next_part(part_list_output, target_axes, target_guides, target_tags, co
             }
         }        
         else if (part_list_input[count] == "Tube 3") {
-            try {
-                tube3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
-            catch(err) {
-                count += 1;
-                next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
+            tube3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // try {
+            //     tube3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
+            // catch(err) {
+            //     count += 1;
+            //     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
         }
         else if (part_list_input[count] == "Motor 1") {
             try {
@@ -404,7 +405,7 @@ function angle_cross_product(target, source) {
     let new_angle = 0;
     
     if (dot_product >= 1) {new_angle = 0;}
-    else if (dot_product <= -1) {new_angle = Math.pi;}
+    else if (dot_product <= -1) {new_angle = Math.PI;}
     else {new_angle = Math.acos(dot_product);}
 
     return [new_angle, cross_product];
@@ -433,15 +434,15 @@ function orient3d(geo, source_axis, source_guide, potential_axes, potential_guid
     
     //Step 1: rotate the two axes into alignment in 3d space
     let response = angle_cross_product(target_axis, source_axis);
-    let angle = response[0];
+    let angle_1 = response[0];
     let cross_product = response[1];
 
     // let rotation = rhino.Transform.rotation(Math.sin(angle), Math.cos(angle), cross_product, source_axis.pointAt(0));
-    geo.rotate(angle, cross_product, source_axis.pointAt(0));
-    source_axis.rotate(angle, cross_product, source_axis.pointAt(0));
-    source_guide.rotate(angle, cross_product, source_axis.pointAt(0));
-    for (let i=0; i<potential_axes.length; i++) {potential_axes[i].rotate(angle, cross_product, source_axis.pointAt(0));} 
-    for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle, cross_product, source_axis.pointAt(0));}
+    geo.rotate(angle_1, cross_product, source_axis.pointAt(0));
+    source_axis.rotate(angle_1, cross_product, source_axis.pointAt(0));
+    source_guide.rotate(angle_1, cross_product, source_axis.pointAt(0));
+    for (let i=0; i<potential_axes.length; i++) {potential_axes[i].rotate(angle_1, cross_product, source_axis.pointAt(0));} 
+    for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle_1, cross_product, source_axis.pointAt(0));}
     
     
     //Step 2: move the source geometry to the target geometry
@@ -455,7 +456,7 @@ function orient3d(geo, source_axis, source_guide, potential_axes, potential_guid
     
     //Step 3: rotate the two guides into alignment in 3d space
     response = angle_cross_product(target_guide, source_guide);
-    angle = response[0];
+    angle_2 = response[0];
     cross_product = response[1];
 
     /*When cross_product is close to 0 (as happens when vectors are parallel), there's no axis for rotation. 
@@ -465,15 +466,16 @@ function orient3d(geo, source_axis, source_guide, potential_axes, potential_guid
     the direction of rotation will always be determined by the right hand rule, so we need to allow for 
     the direction of the axis to flip.*/
     
-    if (Math.round(angle, 5) == 3.14159 && Math.abs(Math.round((cross_product[0] + cross_product[1] + cross_product[2]), 6)) == 0) {
+    let cross_sum = cross_product[0] + cross_product[1] + cross_product[2];
+
+    if (angle_2.toFixed(5) == 3.14159 && Math.abs(cross_sum.toFixed(6)) == 0) {
         cross_product = [source_axis.pointAt(1)[0] - source_axis.pointAt(0)[0], source_axis.pointAt(1)[1] - source_axis.pointAt(0)[1], source_axis.pointAt(1)[2] - source_axis.pointAt(0)[2]];
     }
-    
 
     // rotation = rhino.Transform.rotation(Math.sin(angle), Math.cos(angle), cross_product, source_axis.pointAt(0));
-    geo.rotate(angle, cross_product, source_axis.pointAt(0));
-    for (let i=0; i<potential_axes.length; i++) {potential_axes[i].rotate(angle, cross_product, source_axis.pointAt(0));} 
-    for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle, cross_product, source_axis.pointAt(0));}
+    geo.rotate(angle_2, cross_product, source_axis.pointAt(0));
+    for (let i=0; i<potential_axes.length; i++) {potential_axes[i].rotate(angle_2, cross_product, source_axis.pointAt(0));} 
+    for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle_2, cross_product, source_axis.pointAt(0));}
     
     
     //No point in returning source_axis and source_guide b/c they aren't needed anymore
