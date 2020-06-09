@@ -28,7 +28,7 @@ when the user clicks "DRAW" the machine will run and the Nibs will trace out the
 //There are a LOT of variables because we're referencing a LOT of specific geometry in the Rhino doc
 
 // General Inputs
-var rotation_angle = 45;
+var rotation_angle = 0;
 var part_list_input = []; //Array of part names (i.e. ["Tube 3", "Motor 1"...]) used to trigger associated functions
 var part_list_output = []; //Array of geometry to add/render to scene
 var pair_list //Array of potential source/target pairs. Global b/c needs to be accessed by previousButton() in functions.js
@@ -42,20 +42,18 @@ var target_axes = [];
 var target_guides = [];
 var target_tags = [];
 
-rotation_angle = rotation_angle * 0.0175; //Convert angle from degrees to radians
-
 /*Tubes 2/3 rotate twice as fast as Tube 1, and all tubes are slightly adjusted 
 to require 10-20 rotations before arriving back at the start point
 This is how we create the spirorgraph effect, rather than drawing a single
 curve that repeats exactly every 360 degrees*/
 
-//Rotation for Tube 1
-var rotation_sin_1 = Math.sin(rotation_angle * 0.95);
-var rotation_cos_1 = Math.cos(rotation_angle * 0.95);
+// //Rotation for Tube 1
+// var rotation_sin_1 = Math.sin(rotation_angle * 0.95);
+// var rotation_cos_1 = Math.cos(rotation_angle * 0.95);
 
-//Rotation for Tubes 2 and 3
-var rotation_sin_2 = Math.sin(rotation_angle * 1.9);
-var rotation_cos_2 = Math.cos(rotation_angle * 1.9);
+// //Rotation for Tubes 2 and 3
+// var rotation_sin_2 = Math.sin(rotation_angle * 1.9);
+// var rotation_cos_2 = Math.cos(rotation_angle * 1.9);
 
 
 
@@ -562,15 +560,6 @@ rhino3dm().then(async m => {
 
     base();
     draw();
-
-    //Remove previously drawn objects from the scene
-    // while (object.children.length)
-    // {
-    // object.children.remove(object.children[0]);
-    // }
-
-    //Use button click event to draw meshes
-    //document.getElementById('draw_button').addEventListener('click', async () => { draw(objects) });
 
 
 });

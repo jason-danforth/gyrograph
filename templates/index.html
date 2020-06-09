@@ -17,25 +17,33 @@
     <body>
         <div id="overlay">
             <div class="container-fluid">
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="content with-margin">
-                            <img src="/static/images/icons_1_no_hover.png" onclick="add_part('Tube 3')" onmouseover="this.src='/static/images/icons_1_yes_hover.png';" onmouseout="this.src='/static/images/icons_1_no_hover.png';">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="content with-margin">
+                                <img src="/static/images/icons_1_no_hover.png" onclick="add_part('Tube 3')" onmouseover="this.src='/static/images/icons_1_yes_hover.png';" onmouseout="this.src='/static/images/icons_1_no_hover.png';">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="content with-margin">
+                                <img src="/static/images/icons_2_no_hover.png" onclick="add_part('Motor 1')" onmouseover="this.src='/static/images/icons_2_yes_hover.png';" onmouseout="this.src='/static/images/icons_2_no_hover.png';">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="content with-margin">
+                                <img src="/static/images/icons_3_no_hover.png" onclick="test()" onmouseover="this.src='/static/images/icons_3_yes_hover.png';" onmouseout="this.src='/static/images/icons_3_no_hover.png';">
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="content with-margin">
-                            <img src="/static/images/icons_2_no_hover.png" onclick="add_part('Motor 1')" onmouseover="this.src='/static/images/icons_2_yes_hover.png';" onmouseout="this.src='/static/images/icons_2_no_hover.png';">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="content with-margin">
-                            <img src="/static/images/icons_3_no_hover.png" onclick="test()" onmouseover="this.src='/static/images/icons_3_yes_hover.png';" onmouseout="this.src='/static/images/icons_3_no_hover.png';">
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="slidecontainer">
+                        <input type="range" min="1" max="370" value="0" class="slider" id="myRange">
                     </div>
                 </div>
             </div>
         </div>
+
 
 
         <!-- The Modal -->
@@ -55,8 +63,6 @@
             </div>
         </div>
 
-
-
         <div id="container">
             <div id="canvas"></div>
         </div>
@@ -67,7 +73,6 @@
         <script type="text/javascript" src="../static/js/three.min.js"></script>
         <script type="text/javascript" src="../static/js/OrbitControls.js"></script>
         <script type="text/javascript" src="../static/js/rhino3dm.js"></script>
-        <!-- <script type="text/javascript" src="../static/js/functions.js"></script> -->
         <script type="text/javascript" src="../static/js/load_3dm.js"></script>
         <script type="text/javascript" src="../static/js/functions.js"></script>
 

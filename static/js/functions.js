@@ -115,19 +115,28 @@ function curveToLineSegments(curve, material) {
     return new THREE.Line(geometry, material);
 }
 
-// function moveObj(object) {
-//     let movement = new rhino.Transform.translation(100, 100, -100);
-//     // console.log(movement);
-//     // console.log(object);
-//     // console.log(object.isClosed);
-//     // let result = object.transform(movement);
-//     // let moveVec = new rhino.Vector3d(100, 100, -100);
-//     let result = object.translate([100, 100, -100]);
-//     return object
-// }
+var slider = document.getElementById("myRange");
+slider.oninput = function() {
+    rotation_angle = this.value * 0.0175; //Convert angle from degrees to radians
+ 
+    //Remove previously drawn objects from the scene
+    for (let i=0; i<scene.children.length; i++) {
+        if (scene.children[i].type == 'Mesh') {
+            scene.remove(scene.children[i]);
+            i = i-1;
+        }
+    } 
 
+    //Clear lists
+    part_list_output = [];
+    target_axes = [];
+    target_guides = [];
+    target_tags = [];
 
-
+    //Redraw Machine
+    base();
+    draw();
+  }
 
 
 
@@ -224,16 +233,6 @@ function draw() {
         threeMesh.castShadow = true;
         threeMesh.receiveShadow = true;
         scene.add(threeMesh);
-
-        console.log('Drawing');
-
-        // if (geo instanceof rhino.Mesh) {
-        //     //Convert all meshes in 3dm model into threejs objects
-        //     let threeMesh = meshToThreejs(geo, meshMaterial);
-        //     threeMesh.castShadow = true;
-        //     threeMesh.receiveShadow = true;
-        //     scene.add(threeMesh);
-        // }
     }
 }
 
@@ -243,8 +242,6 @@ function add_part(part_name) {
     selection_list.push(0);
 
     //Remove previously drawn objects from the scene
-    console.log(scene.children.length);
-
     for (let i=0; i<scene.children.length; i++) {
         if (scene.children[i].type == 'Mesh') {
             scene.remove(scene.children[i]);
@@ -369,13 +366,13 @@ function next_part(part_list_output, target_axes, target_guides, target_tags, co
             }
         }
         else {
-            console.log("Block does not exist");
+            // console.log("Block does not exist");
             count += 1;
             next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
         }
     }
     else {
-        console.log("Done");
+        // console.log("Done");
         return part_list_output, target_axes, target_guides;
     }
 }
@@ -404,14 +401,13 @@ function angle_cross_product(target, source) {
     let dot_product = (target_normal[0] * source_normal[0]) + (target_normal[1] * source_normal[1]) + (target_normal[2] * source_normal[2]);
 
     //math.acos() only accepts -1 <= x <= 1, so the following code avoids errors from numbers like 1.000000000000000000002
-    if (dot_product >= 1) {angle = 0;}
-    else if (dot_product <= -1) {angle = Math.pi;}
-    else {angle = Math.acos(dot_product);}
+    let new_angle = 0;
+    
+    if (dot_product >= 1) {new_angle = 0;}
+    else if (dot_product <= -1) {new_angle = Math.pi;}
+    else {new_angle = Math.acos(dot_product);}
 
-    // console.log('Angle: ', angle);
-    // console.log('Cross Product: ', cross_product);
-
-    return [angle, cross_product];
+    return [new_angle, cross_product];
 }
 
 
@@ -512,7 +508,7 @@ function base() {
     axis.rotate(rotation_angle, axis_vector, pt1);
     guide.rotate(rotation_angle, axis_vector, pt1);
     
-    console.log("Adding Base");
+    // console.log("Adding Base");
     part_list_output.push(sphere);
     part_list_output.push(tube);
     
@@ -639,7 +635,7 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     If the target is tube 1, then technically this step isn't necessary, but for any other target part this is still
     the only way to know which potential_target_axis/guide to drop*/
     
-    console.log("Adding Tube 3");
+    // console.log("Adding Tube 3");
     part_list_output.push(geo);
     
     for (let i=0; i<potential_source_tags.length; i++) {
@@ -741,12 +737,12 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     Note that we do NOT transform the source_guide, we need to preserve a point of reference
     i.e. the change in position relative to the starting point in the local coordinates of the source geo*/
     if (source_tag_selection == "motor1_tube2_a") {
-        geo.rotate(angle * 2, axis_vector, a_axis_1.pointAt(0));
-        potential_axes[1].rotate(angle * 2, axis_vector, a_axis_1.pointAt(0)); //First axis doesn't rotate b/c everything is rotating around it
-        for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle * 2, axis_vector, a_axis_1.pointAt(0));}
+        geo.rotate(rotation_angle * 2, axis_vector, a_axis_1.pointAt(0));
+        potential_axes[1].rotate(rotation_angle * 2, axis_vector, a_axis_1.pointAt(0)); //First axis doesn't rotate b/c everything is rotating around it
+        for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(rotation_angle * 2, axis_vector, a_axis_1.pointAt(0));}
     }
     //Otherwise, the guide associated with the "motor" connection (and only this guide) wiil rotate in place
-    else {potential_guides[0].rotate(angle * 2, axis_vector, a_axis_1.pointAt(0));}
+    else {potential_guides[0].rotate(rotation_angle * 2, axis_vector, a_axis_1.pointAt(0));}
     
     //Step 5B: Add Motor to target geometry
     let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
@@ -761,7 +757,7 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     If the target is tube 1, then technically this step isn't necessary, but for any other target part this is still
     the only way to know which potential_target_axis/guide to drop*/
     
-    console.log('Adding Motor 1');
+    // console.log('Adding Motor 1');
     part_list_output.push(geo);
     
     for (let i=0; i<potential_source_tags.length; i++) {
