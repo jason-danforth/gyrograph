@@ -120,7 +120,6 @@ function curveToLineSegments(curve, material) {
 
 
 
-
 //------------------------------------------Animate-------------------------------------------------------------------------------------------------------------------------------------
 
 var slider = document.getElementById("myRange");
@@ -244,6 +243,11 @@ function draw() {
 function update_src() {
     //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
 
+    //Make undo button available
+    let element_undo = document.getElementById("undo");
+    element_undo.onmouseover = function() {this.src='/static/images/icons_undo_mouseover.png';}
+    element_undo.setAttribute( "onClick", "undo()" );
+
     let tag_set = new Set();
     for (let i=0; i<target_tags.length; i++) {
         individual_tags = target_tags[i].split(", ");
@@ -252,28 +256,28 @@ function update_src() {
         }
     }
 
-    // if (tag_set.has("tube1")) {
-    //     let element = document.getElementById("tube1");
-    //     element.src="/static/images/icons_tube1_available.png";
-    //     element.onmouseover = function() {this.src='/static/images/icons_tube1_onclick.png';}
-    //     element.onmouseout = function() {this.src='/static/images/icons_tube1_available.png';};
-    //     element.setAttribute( "onClick", "add_part('Tube 1')" );
-    // }
-    // else {
-    //     let element = document.getElementById("tube1");
-    //     element.src="/static/images/icons_tube1_unavailable.png";
-    //     element.onmouseover = function() {this.src='/static/images/icons_tube1_unavailable.png';}
-    //     element.onmouseout = function() {this.src='/static/images/icons_tube1_unavailable.png';};
-    //     element.onclick = "";
-    // }
+    if (tag_set.has("tube1")) {
+        let element = document.getElementById("tube1");
+        element.src="/static/images/icons_tube1_available.png";
+        element.onmouseover = function() {this.src='/static/images/icons_tube1_onclick.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_tube1_available.png';};
+        element.setAttribute( "onClick", "add_part('Tube 1')" );
+    }
+    else {
+        let element = document.getElementById("tube1");
+        element.src="/static/images/icons_tube1_unavailable.png";
+        element.onmouseover = function() {this.src='/static/images/icons_tube1_unavailable.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_tube1_unavailable.png';};
+        element.onclick = "";
+    }
 
     //The "tube2" tag is used for Tube 2 and Tube 3 since they share all the same placements
     if (tag_set.has("tube2")) {
-        // let element1 = document.getElementById("tube2");
-        // element1.src="/static/images/icons_tube2_available.png";
-        // element1.onmouseover = function() {this.src='/static/images/icons_tube2_onclick.png';}
-        // element1.onmouseout = function() {this.src='/static/images/icons_tube2_available.png';};
-        // element1.setAttribute( "onClick", "add_part('Tube 2')" );
+        let element1 = document.getElementById("tube2");
+        element1.src="/static/images/icons_tube2_available.png";
+        element1.onmouseover = function() {this.src='/static/images/icons_tube2_onclick.png';}
+        element1.onmouseout = function() {this.src='/static/images/icons_tube2_available.png';};
+        element1.setAttribute( "onClick", "add_part('Tube 2')" );
 
         let element2 = document.getElementById("tube3");
         element2.src="/static/images/icons_tube3_available.png";
@@ -282,11 +286,11 @@ function update_src() {
         element2.setAttribute( "onClick", "add_part('Tube 3')" );
     }
     else {
-        // let element1 = document.getElementById("tube2");
-        // element1.src="/static/images/icons_tube2_unavailable.png";
-        // element1.onmouseover = function() {this.src='/static/images/icons_tube2_unavailable.png';}
-        // element1.onmouseout = function() {this.src='/static/images/icons_tube2_unavailable.png';};
-        // element1.onclick = "";
+        let element1 = document.getElementById("tube2");
+        element1.src="/static/images/icons_tube2_unavailable.png";
+        element1.onmouseover = function() {this.src='/static/images/icons_tube2_unavailable.png';}
+        element1.onmouseout = function() {this.src='/static/images/icons_tube2_unavailable.png';};
+        element1.onclick = "";
 
         let element2 = document.getElementById("tube3");
         element2.src="/static/images/icons_tube3_unavailable.png";
@@ -310,65 +314,113 @@ function update_src() {
         element.onclick = "";
     }
 
-    // if (tag_set.has("motor2")) {
-    //     let element = document.getElementById("motor2");
-    //     element.src="/static/images/icons_motor2_available.png";
-    //     element.onmouseover = function() {this.src='/static/images/icons_motor2_onclick.png';}
-    //     element.onmouseout = function() {this.src='/static/images/icons_motor2_available.png';};
-    //     element.setAttribute( "onClick", "add_part('Motor 2')" );
-    // }
-    // else {
-    //     let element = document.getElementById("motor2");
-    //     element.src="/static/images/icons_motor2_unavailable.png";
-    //     element.onmouseover = function() {this.src='/static/images/icons_motor2_unavailable.png';}
-    //     element.onmouseout = function() {this.src='/static/images/icons_motor2_unavailable.png';};
-    //     element.onclick = "";
-    // }
+    if (tag_set.has("motor2")) {
+        let element = document.getElementById("motor2");
+        element.src="/static/images/icons_motor2_available.png";
+        element.onmouseover = function() {this.src='/static/images/icons_motor2_onclick.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_motor2_available.png';};
+        element.setAttribute( "onClick", "add_part('Motor 2')" );
+    }
+    else {
+        let element = document.getElementById("motor2");
+        element.src="/static/images/icons_motor2_unavailable.png";
+        element.onmouseover = function() {this.src='/static/images/icons_motor2_unavailable.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_motor2_unavailable.png';};
+        element.onclick = "";
+    }
 
-    // if (tag_set.has("motor3")) {
-    //     let element = document.getElementById("motor3");
-    //     element.src="/static/images/icons_motor3_available.png";
-    //     element.onmouseover = function() {this.src='/static/images/icons_motor3_onclick.png';}
-    //     element.onmouseout = function() {this.src='/static/images/icons_motor3_available.png';};
-    //     element.setAttribute( "onClick", "add_part('Motor 3')" );
-    // }
-    // else {
-    //     let element = document.getElementById("motor3");
-    //     element.src="/static/images/icons_motor3_unavailable.png";
-    //     element.onmouseover = function() {this.src='/static/images/icons_motor3_unavailable.png';}
-    //     element.onmouseout = function() {this.src='/static/images/icons_motor3_unavailable.png';};
-    //     element.onclick = "";
-    // }
+    if (tag_set.has("motor3")) {
+        let element = document.getElementById("motor3");
+        element.src="/static/images/icons_motor3_available.png";
+        element.onmouseover = function() {this.src='/static/images/icons_motor3_onclick.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_motor3_available.png';};
+        element.setAttribute( "onClick", "add_part('Motor 3')" );
+    }
+    else {
+        let element = document.getElementById("motor3");
+        element.src="/static/images/icons_motor3_unavailable.png";
+        element.onmouseover = function() {this.src='/static/images/icons_motor3_unavailable.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_motor3_unavailable.png';};
+        element.onclick = "";
+    }
 
-    // if (tag_set.has("motor4")) {
-    //     let element = document.getElementById("motor4");
-    //     element.src="/static/images/icons_motor4_available.png";
-    //     element.onmouseover = function() {this.src='/static/images/icons_motor4_onclick.png';}
-    //     element.onmouseout = function() {this.src='/static/images/icons_motor4_available.png';};
-    //     element.setAttribute( "onClick", "add_part('Motor 4')" );
-    // }
-    // else {
-    //     let element = document.getElementById("motor4");
-    //     element.src="/static/images/icons_motor4_unavailable.png";
-    //     element.onmouseover = function() {this.src='/static/images/icons_motor4_unavailable.png';}
-    //     element.onmouseout = function() {this.src='/static/images/icons_motor4_unavailable.png';};
-    //     element.onclick = "";
-    // }
+    if (tag_set.has("motor4")) {
+        let element = document.getElementById("motor4");
+        element.src="/static/images/icons_motor4_available.png";
+        element.onmouseover = function() {this.src='/static/images/icons_motor4_onclick.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_motor4_available.png';};
+        element.setAttribute( "onClick", "add_part('Motor 4')" );
+    }
+    else {
+        let element = document.getElementById("motor4");
+        element.src="/static/images/icons_motor4_unavailable.png";
+        element.onmouseover = function() {this.src='/static/images/icons_motor4_unavailable.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_motor4_unavailable.png';};
+        element.onclick = "";
+    }
 
-    // if (tag_set.has("motor5")) {
-    //     let element = document.getElementById("motor5");
-    //     element.src="/static/images/icons_motor5_available.png";
-    //     element.onmouseover = function() {this.src='/static/images/icons_motor5_onclick.png';}
-    //     element.onmouseout = function() {this.src='/static/images/icons_motor5_available.png';};
-    //     element.setAttribute( "onClick", "add_part('Motor 5')" );
-    // }
-    // else {
-    //     let element = document.getElementById("motor5");
-    //     element.src="/static/images/icons_motor5_unavailable.png";
-    //     element.onmouseover = function() {this.src='/static/images/icons_motor5_unavailable.png';}
-    //     element.onmouseout = function() {this.src='/static/images/icons_motor5_unavailable.png';};
-    //     element.onclick = "";
-    // }
+    if (tag_set.has("motor5")) {
+        let element = document.getElementById("motor5");
+        element.src="/static/images/icons_motor5_available.png";
+        element.onmouseover = function() {this.src='/static/images/icons_motor5_onclick.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_motor5_available.png';};
+        element.setAttribute( "onClick", "add_part('Motor 5')" );
+    }
+    else {
+        let element = document.getElementById("motor5");
+        element.src="/static/images/icons_motor5_unavailable.png";
+        element.onmouseover = function() {this.src='/static/images/icons_motor5_unavailable.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_motor5_unavailable.png';};
+        element.onclick = "";
+    }
+
+    if (tag_set.has("nib") && selection_list.length > 0) {
+        let element = document.getElementById("nib");
+        element.src="/static/images/icons_nib_available.png";
+        element.onmouseover = function() {this.src='/static/images/icons_nib_onclick.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_nib_available.png';};
+        element.setAttribute( "onClick", "add_part('Nib')" );
+    }
+    else {
+        let element = document.getElementById("nib");
+        element.src="/static/images/icons_nib_unavailable.png";
+        element.onmouseover = function() {this.src='/static/images/icons_nib_unavailable.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_nib_unavailable.png';};
+        element.onclick = "";
+    }
+}
+
+function undo() {
+    //Remove most recently added part
+    if (part_list_input.length > 0) {
+        part_list_input.pop();
+        selection_list.pop();
+
+        //Remove previously drawn objects from the scene
+        for (let i=0; i<scene.children.length; i++) {
+            if (scene.children[i].type == 'Mesh') {
+                scene.remove(scene.children[i]);
+                i = i - 1;
+            }
+        } 
+
+        //Clear lists
+        part_list_output = [];
+        target_axes = [];
+        target_guides = [];
+        target_tags = [];
+
+        //Redraw Machine
+        base();
+        draw();
+        update_src();
+    }
+
+    else {
+        let element_undo = document.getElementById("undo");
+        element_undo.onmouseover = function() {this.src='/static/images/icons_undo_mouseout.png';}
+        element_undo.setAttribute( "onClick", " " );
+    }
 }
 
 
