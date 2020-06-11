@@ -560,6 +560,7 @@ rhino3dm().then(async m => {
 
     base();
     draw();
+    update_src();
 
 
 });

@@ -115,6 +115,14 @@ function curveToLineSegments(curve, material) {
     return new THREE.Line(geometry, material);
 }
 
+
+
+
+
+
+
+//------------------------------------------Animate-------------------------------------------------------------------------------------------------------------------------------------
+
 var slider = document.getElementById("myRange");
 slider.oninput = function() {
     rotation_angle = this.value * 0.0175; //Convert angle from degrees to radians
@@ -217,10 +225,6 @@ window.onclick = function(event) {
 }
 
 
-
-
-
-
 //------------------------------------------Helper Functions-------------------------------------------------------------------------------------------------------------------------------------
 
 function draw() {
@@ -234,6 +238,137 @@ function draw() {
         threeMesh.receiveShadow = true;
         scene.add(threeMesh);
     }
+}
+
+
+function update_src() {
+    //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
+
+    let tag_set = new Set();
+    for (let i=0; i<target_tags.length; i++) {
+        individual_tags = target_tags[i].split(", ");
+        for (j=0; j<individual_tags.length; j++) {
+            tag_set.add(individual_tags[j].split("_")[0]);
+        }
+    }
+
+    // if (tag_set.has("tube1")) {
+    //     let element = document.getElementById("tube1");
+    //     element.src="/static/images/icons_tube1_available.png";
+    //     element.onmouseover = function() {this.src='/static/images/icons_tube1_onclick.png';}
+    //     element.onmouseout = function() {this.src='/static/images/icons_tube1_available.png';};
+    //     element.setAttribute( "onClick", "add_part('Tube 1')" );
+    // }
+    // else {
+    //     let element = document.getElementById("tube1");
+    //     element.src="/static/images/icons_tube1_unavailable.png";
+    //     element.onmouseover = function() {this.src='/static/images/icons_tube1_unavailable.png';}
+    //     element.onmouseout = function() {this.src='/static/images/icons_tube1_unavailable.png';};
+    //     element.onclick = "";
+    // }
+
+    //The "tube2" tag is used for Tube 2 and Tube 3 since they share all the same placements
+    if (tag_set.has("tube2")) {
+        // let element1 = document.getElementById("tube2");
+        // element1.src="/static/images/icons_tube2_available.png";
+        // element1.onmouseover = function() {this.src='/static/images/icons_tube2_onclick.png';}
+        // element1.onmouseout = function() {this.src='/static/images/icons_tube2_available.png';};
+        // element1.setAttribute( "onClick", "add_part('Tube 2')" );
+
+        let element2 = document.getElementById("tube3");
+        element2.src="/static/images/icons_tube3_available.png";
+        element2.onmouseover = function() {this.src='/static/images/icons_tube3_onclick.png';}
+        element2.onmouseout = function() {this.src='/static/images/icons_tube3_available.png';};
+        element2.setAttribute( "onClick", "add_part('Tube 3')" );
+    }
+    else {
+        // let element1 = document.getElementById("tube2");
+        // element1.src="/static/images/icons_tube2_unavailable.png";
+        // element1.onmouseover = function() {this.src='/static/images/icons_tube2_unavailable.png';}
+        // element1.onmouseout = function() {this.src='/static/images/icons_tube2_unavailable.png';};
+        // element1.onclick = "";
+
+        let element2 = document.getElementById("tube3");
+        element2.src="/static/images/icons_tube3_unavailable.png";
+        element2.onmouseover = function() {this.src='/static/images/icons_tube3_unavailable.png';}
+        element2.onmouseout = function() {this.src='/static/images/icons_tube3_unavailable.png';};
+        element2.onclick = "";
+    }
+
+    if (tag_set.has("motor1")) {
+        let element = document.getElementById("motor1");
+        element.src="/static/images/icons_motor1_available.png";
+        element.onmouseover = function() {this.src='/static/images/icons_motor1_onclick.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_motor1_available.png';};
+        element.setAttribute( "onClick", "add_part('Motor 1')" );
+    }
+    else {
+        let element = document.getElementById("motor1");
+        element.src="/static/images/icons_motor1_unavailable.png";
+        element.onmouseover = function() {this.src='/static/images/icons_motor1_unavailable.png';}
+        element.onmouseout = function() {this.src='/static/images/icons_motor1_unavailable.png';};
+        element.onclick = "";
+    }
+
+    // if (tag_set.has("motor2")) {
+    //     let element = document.getElementById("motor2");
+    //     element.src="/static/images/icons_motor2_available.png";
+    //     element.onmouseover = function() {this.src='/static/images/icons_motor2_onclick.png';}
+    //     element.onmouseout = function() {this.src='/static/images/icons_motor2_available.png';};
+    //     element.setAttribute( "onClick", "add_part('Motor 2')" );
+    // }
+    // else {
+    //     let element = document.getElementById("motor2");
+    //     element.src="/static/images/icons_motor2_unavailable.png";
+    //     element.onmouseover = function() {this.src='/static/images/icons_motor2_unavailable.png';}
+    //     element.onmouseout = function() {this.src='/static/images/icons_motor2_unavailable.png';};
+    //     element.onclick = "";
+    // }
+
+    // if (tag_set.has("motor3")) {
+    //     let element = document.getElementById("motor3");
+    //     element.src="/static/images/icons_motor3_available.png";
+    //     element.onmouseover = function() {this.src='/static/images/icons_motor3_onclick.png';}
+    //     element.onmouseout = function() {this.src='/static/images/icons_motor3_available.png';};
+    //     element.setAttribute( "onClick", "add_part('Motor 3')" );
+    // }
+    // else {
+    //     let element = document.getElementById("motor3");
+    //     element.src="/static/images/icons_motor3_unavailable.png";
+    //     element.onmouseover = function() {this.src='/static/images/icons_motor3_unavailable.png';}
+    //     element.onmouseout = function() {this.src='/static/images/icons_motor3_unavailable.png';};
+    //     element.onclick = "";
+    // }
+
+    // if (tag_set.has("motor4")) {
+    //     let element = document.getElementById("motor4");
+    //     element.src="/static/images/icons_motor4_available.png";
+    //     element.onmouseover = function() {this.src='/static/images/icons_motor4_onclick.png';}
+    //     element.onmouseout = function() {this.src='/static/images/icons_motor4_available.png';};
+    //     element.setAttribute( "onClick", "add_part('Motor 4')" );
+    // }
+    // else {
+    //     let element = document.getElementById("motor4");
+    //     element.src="/static/images/icons_motor4_unavailable.png";
+    //     element.onmouseover = function() {this.src='/static/images/icons_motor4_unavailable.png';}
+    //     element.onmouseout = function() {this.src='/static/images/icons_motor4_unavailable.png';};
+    //     element.onclick = "";
+    // }
+
+    // if (tag_set.has("motor5")) {
+    //     let element = document.getElementById("motor5");
+    //     element.src="/static/images/icons_motor5_available.png";
+    //     element.onmouseover = function() {this.src='/static/images/icons_motor5_onclick.png';}
+    //     element.onmouseout = function() {this.src='/static/images/icons_motor5_available.png';};
+    //     element.setAttribute( "onClick", "add_part('Motor 5')" );
+    // }
+    // else {
+    //     let element = document.getElementById("motor5");
+    //     element.src="/static/images/icons_motor5_unavailable.png";
+    //     element.onmouseover = function() {this.src='/static/images/icons_motor5_unavailable.png';}
+    //     element.onmouseout = function() {this.src='/static/images/icons_motor5_unavailable.png';};
+    //     element.onclick = "";
+    // }
 }
 
 
@@ -258,6 +393,7 @@ function add_part(part_name) {
     //Redraw Machine
     base();
     draw();
+    update_src();
 
     //Open Modal Popup
     openModal();
@@ -303,14 +439,13 @@ function next_part(part_list_output, target_axes, target_guides, target_tags, co
             }
         }        
         else if (part_list_input[count] == "Tube 3") {
-            tube3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            // try {
-            //     tube3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            // }
-            // catch(err) {
-            //     count += 1;
-            //     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            // }
+            try {
+                tube3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            }
+            catch(err) {
+                count += 1;
+                next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            }
         }
         else if (part_list_input[count] == "Motor 1") {
             try {
