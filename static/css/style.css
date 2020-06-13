@@ -20,6 +20,7 @@ canvas { width: 100%; height: 100%; }
 
 .with-margin {
     margin-bottom: 2px;
+    margin-left: 10px;
   }
 
 /* Modify bootstrap buttons: https://bootstrapbay.com/blog/bootstrap-button-styles/ */
@@ -73,86 +74,4 @@ canvas { width: 100%; height: 100%; }
   border-radius: 50%; 
   background: rgb(255, 255, 255); /* Green background */
   cursor: pointer; /* Cursor on hover */
-}
-
-
-
-/*---------------------------------- Modal Popup -----------------------------*/
-/* Modal Background */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.0); /* Black w/ opacity */
-}
-
-/* Modal Content/Box */
-.modal-content {
-  background-color: #fefefe;
-  margin: 3% auto; /* X% from the top and centered */
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 0px;
-  padding-bottom: 0px;
-  border: 1px solid #888;
-  width: 20%; /* Could be more or less, depending on screen size */
-  animation-name: animatetop;
-  animation-duration: 0.4s
-}
-
-/* Add Animation */
-@keyframes animatetop {
-  from {top: -100px; opacity: 0}
-  to {top: 0; opacity: 1}
-}
-
-/* The Previous Button */
-.previous {
-  color: #aaa;
-  /* padding: 5px; */
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.previous:hover,
-.previous:focus {
-  color: #221f34;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-/* The Next Button */
-.next {
-  color: #aaa;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.next:hover,
-.next:focus {
-  color: #221f34;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-/* The Close Button */
-.exit {
-  color: #aaa;
-  /* padding: 5px; */
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.exit:hover,
-.exit:focus {
-  color: #221f34;
-  text-decoration: none;
-  cursor: pointer;
 }

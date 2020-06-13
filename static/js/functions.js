@@ -149,22 +149,9 @@ slider.oninput = function() {
 
 
 
-//------------------------------------------Modal Popup-------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------Placement Controls-------------------------------------------------------------------------------------------------------------------------------------
 
-// Get the modal
-var modal = document.getElementById("myModal");
-
-// Get the <span> element that closes the modal
-var previousButton = document.getElementsByClassName("previous")[0];
-var nextButton = document.getElementsByClassName("next")[0];
-var exitButton = document.getElementsByClassName("exit")[0];
-
-// When the user clicks on the button, open the modal
-function openModal() {
-    modal.style.display = "block";
-}
-
-nextButton.onclick = function() {
+function next() {
     let lastIndex = selection_list.length - 1;
     selection_list[lastIndex] = selection_list[lastIndex] + 1;
     
@@ -187,7 +174,7 @@ nextButton.onclick = function() {
     draw();
   }
 
-  previousButton.onclick = function() {
+function previous() {
     let lastIndex = selection_list.length - 1;
     
     if (selection_list[lastIndex] != 0) {selection_list[lastIndex] = selection_list[lastIndex] - 1;}
@@ -212,17 +199,6 @@ nextButton.onclick = function() {
     draw();
   }
 
-exitButton.onclick = function() {
-  modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
 
 //------------------------------------------Helper Functions-------------------------------------------------------------------------------------------------------------------------------------
 
@@ -243,10 +219,22 @@ function draw() {
 function update_src() {
     //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
 
-    //Make undo button available
+    //Make undo, previous, and next buttons available
     let element_undo = document.getElementById("undo");
     element_undo.onmouseover = function() {this.src='/static/images/icons_undo_mouseover.png';}
     element_undo.setAttribute( "onClick", "undo()" );
+
+    let element_previous = document.getElementById("previous");
+    element_previous.src="/static/images/icons_previous_mouseout.png";
+    element_previous.onmouseover = function() {this.src='/static/images/icons_previous_mouseover.png';}
+    element_previous.onmouseout = function() {this.src='/static/images/icons_previous_mouseout.png';}
+    element_previous.setAttribute( "onClick", "previous()" );
+
+    let element_next = document.getElementById("next");
+    element_next.src="/static/images/icons_next_mouseout.png";
+    element_next.onmouseover = function() {this.src='/static/images/icons_next_mouseover.png';}
+    element_next.onmouseout = function() {this.src='/static/images/icons_next_mouseout.png';}
+    element_next.setAttribute( "onClick", "next()" );
 
     let tag_set = new Set();
     for (let i=0; i<target_tags.length; i++) {
@@ -446,9 +434,6 @@ function add_part(part_name) {
     base();
     draw();
     update_src();
-
-    //Open Modal Popup
-    openModal();
 }
 
 

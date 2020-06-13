@@ -1,170 +1,173 @@
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Gyrograph</title>
+<head>
+    <meta charset="utf-8">
+    <title>Gyrograph</title>
 
-        <!-- CSS -->
-        <link rel="stylesheet" href="../static/css/style.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../static/css/style.css">
 
-        <!-- Bootstrap and AJAX (need these versions for Modal popup to work) -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    
-    </head>
-    
+    <!-- Bootstrap and AJAX (need these versions for Modal popup to work) -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <body>
-        <div id="overlay">
-            <div class="col-md-6">
-                <div class="content with-margin">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img id="tube1" src="/static/images/icons_tube1_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_tube1_unavailable.png';" onmouseout="this.src='/static/images/icons_tube1_unavailable.png';">
-                        </div>
-                        <div class="col-md-4">
-                            <img id="tube2" src="/static/images/icons_tube2_available.png" onclick="add_part('Tube 2')" onmouseover="this.src='/static/images/icons_tube2_onclick.png';" onmouseout="this.src='/static/images/icons_tube2_available.png';">
-                        </div>
-                        <div class="col-md-4">
-                            <img id="tube3" src="/static/images/icons_tube3_available.png" onclick="add_part('Tube 3')" onmouseover="this.src='/static/images/icons_tube3_onclick.png';" onmouseout="this.src='/static/images/icons_tube3_available.png';">
-                        </div>
-                    </div>
-                </div>
-                <div class="content with-margin">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img id="motor1" src="/static/images/icons_motor1_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_motor1_unavailable.png';" onmouseout="this.src='/static/images/icons_motor1_unavailable.png';">
-                        </div>
-                        <div class="col-md-4">
-                            <img id="motor2" src="/static/images/icons_motor2_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_motor2_unavailable.png';" onmouseout="this.src='/static/images/icons_motor2_unavailable.png';">
-                        </div>
-                        <div class="col-md-4">
-                            <img id="motor3" src="/static/images/icons_motor3_available.png" onclick="add_part('Motor 3')" onmouseover="this.src='/static/images/icons_motor3_onclick.png';" onmouseout="this.src='/static/images/icons_motor3_available.png';">
-                        </div>
-                    </div>
-                </div>
-                <div class="content with-margin">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img id="motor4" src="/static/images/icons_motor4_available.png" onclick="add_part('Motor 4')" onmouseover="this.src='/static/images/icons_motor4_onclick.png';" onmouseout="this.src='/static/images/icons_motor4_available.png';">
-                        </div>
-                        <div class="col-md-4">
-                            <img id="motor5" src="/static/images/icons_motor5_available.png" onclick="add_part('Motor 5')" onmouseover="this.src='/static/images/icons_motor5_onclick.png';" onmouseout="this.src='/static/images/icons_motor5_available.png';">
-                        </div>
-                        <div class="col-md-4">
-                            <img id="nib" src="/static/images/icons_nib_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_nib_unavailable.png';" onmouseout="this.src='/static/images/icons_nib_unavailable.png';">
-                        </div>
-                    </div>
-                </div>
-                <div class="content with-margin">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img src="/static/images/icons_blank.png">
-                        </div>
-                        <div class="col-md-4">
-                        <img id="undo" src="/static/images/icons_undo_mouseout.png" onclick=" " onmouseover="this.src='/static/images/icons_undo_mouseout.png';" onmouseout="this.src='/static/images/icons_undo_mouseout.png';">
-                        </div>
-                        <div class="col-md-4">
-                            <img src="/static/images/icons_blank.png">
-                        </div>
-                    </div>
-                </div>
-            </div>
+</head>
 
-            <!-- Slider -->
-            <div class="col-md-12">
-                <div class="slidecontainer">
-                    <input type="range" min="1" max="360" value="0" class="slider" id="myRange">
-                </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="content with-margin">
-                    <div class="row">
-                        <img src="/static/images/icons_blank.png">
-                    </div>
-                </div>
-                <div class="content with-margin">
-                    <div class="row">
-                        <img src="/static/images/icons_blank.png">
-                    </div>
-                </div>
-                <div class="content with-margin">
-                    <div class="row">
-                        <img src="/static/images/icons_blank.png">
-                    </div>
-                </div>
-                <div class="content with-margin">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img src="/static/images/icons_blank.png">
-                        </div>
-                        <div class="col-md-4">
-                        <img id="undo" src="/static/images/icons_play_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_play_unavailable.png';" onmouseout="this.src='/static/images/icons_play_unavailable.png';">
-                        </div>
-                        <div class="col-md-4">
-                            <img src="/static/images/icons_blank.png">
+
+<body>
+    <div id="overlay">
+        <div class="row">
+            <div class="content with-margin">
+                <div class="col-md-6">
+                    <div class="content with-margin">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img id="tube1" src="/static/images/icons_tube1_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_tube1_unavailable.png';" onmouseout="this.src='/static/images/icons_tube1_unavailable.png';">
+                            </div>
+                            <div class="col-md-4">
+                                <img id="tube2" src="/static/images/icons_tube2_available.png" onclick="add_part('Tube 2')" onmouseover="this.src='/static/images/icons_tube2_onclick.png';" onmouseout="this.src='/static/images/icons_tube2_available.png';">
+                            </div>
+                            <div class="col-md-4">
+                                <img id="tube3" src="/static/images/icons_tube3_available.png" onclick="add_part('Tube 3')" onmouseover="this.src='/static/images/icons_tube3_onclick.png';" onmouseout="this.src='/static/images/icons_tube3_available.png';">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="content with-margin">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img src="/static/images/icons_blank.png">
+                    <div class="content with-margin">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img id="motor1" src="/static/images/icons_motor1_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_motor1_unavailable.png';" onmouseout="this.src='/static/images/icons_motor1_unavailable.png';">
+                            </div>
+                            <div class="col-md-4">
+                                <img id="motor2" src="/static/images/icons_motor2_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_motor2_unavailable.png';" onmouseout="this.src='/static/images/icons_motor2_unavailable.png';">
+                            </div>
+                            <div class="col-md-4">
+                                <img id="motor3" src="/static/images/icons_motor3_available.png" onclick="add_part('Motor 3')" onmouseover="this.src='/static/images/icons_motor3_onclick.png';" onmouseout="this.src='/static/images/icons_motor3_available.png';">
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                        <img id="undo" src="/static/images/icons_pause_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_pause_unavailable.png';" onmouseout="this.src='/static/images/icons_pause_unavailable.png';">
+                    </div>
+                    <div class="content with-margin">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img id="motor4" src="/static/images/icons_motor4_available.png" onclick="add_part('Motor 4')" onmouseover="this.src='/static/images/icons_motor4_onclick.png';" onmouseout="this.src='/static/images/icons_motor4_available.png';">
+                            </div>
+                            <div class="col-md-4">
+                                <img id="motor5" src="/static/images/icons_motor5_available.png" onclick="add_part('Motor 5')" onmouseover="this.src='/static/images/icons_motor5_onclick.png';" onmouseout="this.src='/static/images/icons_motor5_available.png';">
+                            </div>
+                            <div class="col-md-4">
+                                <img id="nib" src="/static/images/icons_nib_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_nib_unavailable.png';" onmouseout="this.src='/static/images/icons_nib_unavailable.png';">
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <img src="/static/images/icons_blank.png">
+                    </div>
+                    <div class="content with-margin">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="/static/images/icons_blank.png">
+                            </div>
+                            <div class="col-md-4">
+                            <img id="undo" src="/static/images/icons_undo_mouseout.png" onclick=" " onmouseover="this.src='/static/images/icons_undo_mouseout.png';" onmouseout="this.src='/static/images/icons_undo_mouseout.png';">
+                            </div>
+                            <div class="col-md-4">
+                                <img src="/static/images/icons_blank.png">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="content with-margin">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img src="/static/images/icons_blank.png">
-                        </div>
-                        <div class="col-md-4">
-                        <img id="undo" src="/static/images/icons_reset_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_reset_unavailable.png';" onmouseout="this.src='/static/images/icons_reset_unavailable.png';">
-                        </div>
-                        <div class="col-md-4">
-                            <img src="/static/images/icons_blank.png">
+                <!-- Placement controls -->
+                <div class="col-md-6">
+                    <div class="content with-margin">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img id="previous" src="/static/images/icons_previous_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_previous_unavailable.png';" onmouseout="this.src='/static/images/icons_previous_unavailable.png';">
+                            </div>
+                            <div class="col-md-4">
+                                <img id="next" src="/static/images/icons_next_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_next_unavailable.png';" onmouseout="this.src='/static/images/icons_next_unavailable.png';">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- The Modal -->
-        <div id="myModal" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <!--HTML 4 Entities i.e. symbols-->
-                <span class="previous">&larr;</span> <!--left arrow-->
-                <span class="next">&rarr;</span> <!--right arrow-->
-                <span class="previous">&nbsp;</span> <!--space-->
-                <span class="previous">&nbsp;</span>
-                <span class="previous">&nbsp;</span>
-                <span class="previous">&nbsp;</span>
-                <span class="previous">&nbsp;</span>
-                <span class="exit">&bull;</span> <!--bullet-->
-                <!-- <p>Some text in the Modal..</p> -->
+
+        <!-- Slider -->
+        <div class="col-md-12">
+            <div class="slidecontainer">
+                <input type="range" min="1" max="360" value="0" class="slider" id="myRange">
             </div>
         </div>
+        
 
-        <div id="container">
-            <div id="canvas"></div>
+        <!-- Play, Pause, Reset -->
+        <div class="col-md-6">
+            <div class="content with-margin">
+                <div class="row">
+                    <img src="/static/images/icons_blank.png">
+                </div>
+            </div>
+            <div class="content with-margin">
+                <div class="row">
+                    <img src="/static/images/icons_blank.png">
+                </div>
+            </div>
+            <div class="content with-margin">
+                <div class="row">
+                    <img src="/static/images/icons_blank.png">
+                </div>
+            </div>
+            <div class="content with-margin">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="/static/images/icons_blank.png">
+                    </div>
+                    <div class="col-md-4">
+                    <img id="undo" src="/static/images/icons_play_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_play_unavailable.png';" onmouseout="this.src='/static/images/icons_play_unavailable.png';">
+                    </div>
+                    <div class="col-md-4">
+                        <img src="/static/images/icons_blank.png">
+                    </div>
+                </div>
+            </div>
+            <div class="content with-margin">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="/static/images/icons_blank.png">
+                    </div>
+                    <div class="col-md-4">
+                    <img id="undo" src="/static/images/icons_pause_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_pause_unavailable.png';" onmouseout="this.src='/static/images/icons_pause_unavailable.png';">
+                    </div>
+                    <div class="col-md-4">
+                        <img src="/static/images/icons_blank.png">
+                    </div>
+                </div>
+            </div>
+            <div class="content with-margin">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="/static/images/icons_blank.png">
+                    </div>
+                    <div class="col-md-4">
+                    <img id="undo" src="/static/images/icons_reset_unavailable.png" onclick=" " onmouseover="this.src='/static/images/icons_reset_unavailable.png';" onmouseout="this.src='/static/images/icons_reset_unavailable.png';">
+                    </div>
+                    <div class="col-md-4">
+                        <img src="/static/images/icons_blank.png">
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+
+    <div id="container">
+        <div id="canvas"></div>
+    </div>
 
 
 <!----------JS---------------------------------------------------------------------------------------------------------------------->
-        
-        <script type="text/javascript" src="../static/js/three.min.js"></script>
-        <script type="text/javascript" src="../static/js/OrbitControls.js"></script>
-        <script type="text/javascript" src="../static/js/rhino3dm.js"></script>
-        <script type="text/javascript" src="../static/js/load_3dm.js"></script>
-        <script type="text/javascript" src="../static/js/functions.js"></script>
+    
+    <script type="text/javascript" src="../static/js/three.min.js"></script>
+    <script type="text/javascript" src="../static/js/OrbitControls.js"></script>
+    <script type="text/javascript" src="../static/js/rhino3dm.js"></script>
+    <script type="text/javascript" src="../static/js/load_3dm.js"></script>
+    <script type="text/javascript" src="../static/js/functions.js"></script>
 
     </body>
 </html>
