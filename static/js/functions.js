@@ -125,6 +125,8 @@ function curveToLineSegments(curve, material) {
 var slider = document.getElementById("myRange");
 slider.oninput = function() {
     rotation_angle = this.value * 0.0175; //Convert angle from degrees to radians
+    angle_A = rotation_angle * angle_factor_A;
+    angle_B = rotation_angle * angle_factor_B;
  
     //Remove previously drawn objects from the scene
     for (let i=0; i<scene.children.length; i++) {
@@ -144,8 +146,6 @@ slider.oninput = function() {
     base();
     draw();
   }
-
-
 
 
 
@@ -378,6 +378,7 @@ function update_src() {
     }
 }
 
+
 function undo() {
     //Remove most recently added part
     if (part_list_input.length > 0) {
@@ -458,85 +459,94 @@ function next_part(part_list_output, target_axes, target_guides, target_tags, co
         block = part_list_input[count];
         
         if (part_list_input[count] == "Tube 1") {
-            try {
-                tube1(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
-            catch(err) {
-                count += 1;
-                next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
+            tube1(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // try {
+            //     tube1(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
+            // catch(err) {
+            //     count += 1;
+            //     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
         }
         else if (part_list_input[count] == "Tube 2") {
-            try {
-                tube2(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
-            catch(err) {
-                count += 1;
-                next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
+            tube2(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+        //     try {
+        //         tube2(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+        //     }
+        //     catch(err) {
+        //         count += 1;
+        //         next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+        //     }
         }        
         else if (part_list_input[count] == "Tube 3") {
-            try {
-                tube3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
-            catch(err) {
-                count += 1;
-                next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
+            tube3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // try {
+            //     tube3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
+            // catch(err) {
+            //     count += 1;
+            //     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
         }
         else if (part_list_input[count] == "Motor 1") {
-            try {
-                motor1(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
-            catch(err) {
-                count += 1;
-                next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
+            motor1(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // try {
+            //     motor1(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
+            // catch(err) {
+            //     count += 1;
+            //     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
         }        
         else if (part_list_input[count] == "Motor 2") {
-            try {
-                motor2(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
-            catch(err) {
-                count += 1;
-                next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
+            motor2(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // try {
+            //     motor2(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
+            // catch(err) {
+            //     count += 1;
+            //     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
         }
         else if (part_list_input[count] == "Motor 3") {
-            try {
-                motor3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
-            catch(err) {
-                count += 1;
-                next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
+            motor3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // try {
+            //     motor3(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
+            // catch(err) {
+            //     count += 1;
+            //     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
         }
         else if (part_list_input[count] == "Motor 4") {
-            try {
-                motor4(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
-            catch(err) {
-                count += 1;
-                next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
+            motor4(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // try {
+            //     motor4(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
+            // catch(err) {
+            //     count += 1;
+            //     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
         }
         else if (part_list_input[count] == "Motor 5") {
-            try {
-                motor5(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
-            catch(err) {
-                count += 1;
-                next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
+            motor5(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // try {
+            //     motor5(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
+            // catch(err) {
+            //     count += 1;
+            //     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
         }
         else if (part_list_input[count] == "Nib") {
-            try {
-                nib(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
-            catch(err) {
-                count += 1;
-                next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
-            }
+            nib(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // try {
+            //     nib(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
+            // catch(err) {
+            //     count += 1;
+            //     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+            // }
         }
         else {
             // console.log("Block does not exist");
@@ -628,7 +638,7 @@ function orient3d(geo, source_axis, source_guide, potential_axes, potential_guid
     
     //Step 3: rotate the two guides into alignment in 3d space
     response = angle_cross_product(target_guide, source_guide);
-    angle_2 = response[0];
+    let angle_2 = response[0];
     cross_product = response[1];
 
     /*When cross_product is close to 0 (as happens when vectors are parallel), there's no axis for rotation. 
@@ -661,7 +671,6 @@ function orient3d(geo, source_axis, source_guide, potential_axes, potential_guid
 
 
 
-
 //------------------------------------------Drawing Machine Parts-------------------------------------------------------------------------------------------------------------------------------------
 
 function base() {
@@ -676,8 +685,6 @@ function base() {
     let pt2 = axis.pointAt(0.5);
     let axis_vector = [pt1[0] - pt2[0], pt1[1] - pt2[1], pt1[2] - pt2[2]];
     
-    // let rotationTransform = new rhino.Transform.rotation(rotation_angle, axis_vector, pt1);
-
     tube.rotate(rotation_angle, axis_vector, pt1);
     axis.rotate(rotation_angle, axis_vector, pt1);
     guide.rotate(rotation_angle, axis_vector, pt1);
@@ -693,6 +700,237 @@ function base() {
     target_tags.push(tag_tube1_a_outer);
     target_tags.push(tag_tube1_a_inner);
     
+    next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+}
+
+
+function tube1(parts, target_axes, target_guides, target_tags, count, nib_item) {
+    /*There are 6 main steps to placing a part:
+    1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    2. Create source_tag/axis/guide pairs
+    3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically fewer options than the source placements)
+    5. Transform (orient and rotate) mesh and all potential_target geo
+    6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
+    
+    try {
+        if (typeof selection_list[count] == 'number') {
+            selection_index = selection_list[count];
+        }
+        else {selection_index = 0;}
+    }
+    catch(err) {
+        selection_index = 0;
+    }    
+    
+    //Step 1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    let geo = tube1_geo.duplicate();
+    let a_axis_1 = tube1_a_axis_1.duplicate();
+    let a_guide_1 = tube1_a_guide_1.duplicate();
+    let b_axis_1 = tube1_b_axis_1.duplicate();
+    let b_guide_1 = tube1_b_guide_1.duplicate();
+    
+    
+    /*Step 2. Create source_tag/axis/guide pairs
+    The source_tags will be compared to available target_tags, and the selection_index will be used to choose from the available pairings
+    The chosen source and target axes/guides will be used to create the transforms
+    The transforms will be applied to the mesh and the future_target geometry
+    Note: there are two different kinds of tags: source_tags describe the geometry of the part to be placed ("tube2_a_outer", "motor2_tube2_a"),
+    target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
+    This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function
+    Note: Tube 1 can be positioned according to inner (like plugging onto the end of a smaller Tube 2/3) or outer placements (like slotting into a motor). 
+    The Inner and Outer placements share axes/guides but have different tags.*/
+    
+    let source_tags = ['tube1_a_outer', 'tube1_a_inner', 'tube1_b_outer', 'tube1_b_inner'];
+    let source_axes = [a_axis_1, a_axis_1, b_axis_1, b_axis_1];
+    let source_guides = [a_guide_1, a_guide_1, b_guide_1, b_guide_1];
+    
+    
+    /*Step 3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    Once we know the source aixs and guide, we can ignore the remaining source geo b/c it's irrlevant
+    We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
+    
+    pair_list = generate_selection_pairs(source_tags, target_tags);
+    let source_target_pair = pair_list[selection_index % pair_list.length];
+    let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
+    let source_axis = source_axes[source_target_pair[0]];
+    let source_guide = source_guides[source_target_pair[0]];
+    let target_tag = target_tags[source_target_pair[1]];
+    target_tags.splice(source_target_pair[1], 1);
+    let target_axis = target_axes[source_target_pair[1]];
+    target_axes.splice(source_target_pair[1], 1);
+    let target_guide = target_guides[source_target_pair[1]];
+    target_guides.splice(source_target_pair[1], 1);
+    
+    //If Tube 1 is placed on Tube 2/3, then we have to remove the corresponding Tube 2/3 inner plane
+    //I.E. you can't place a Nib in the end of Tube 2/3 that is already in Tube 1
+    if (target_tag == tag_tube2_a_outer || target_tag == tag_tube2_b_outer || target_tag == tag_tube3_a_outer || target_tag == tag_tube3_b_outer) {
+        target_tags.splice(source_target_pair[1], 1); //Inner plane will always follow the available outer plane 
+        target_axes.splice(source_target_pair[1], 1); //Use source_target_pair[1] b/c the index has already been popped, shortening the list, so no need for +1
+        target_guides.splice(source_target_pair[1], 1);
+    }
+    
+    
+    /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
+    All of that geometry will be transformed according to the selected source/target geometry.
+    Note that the .Duplicate() method is necessary to avoid Transforms on the same geometry
+    We need potential_source_tags and potential_target_tags for the final step.*/ 
+    
+    let potential_source_tags = ['tube1_a_outer', 'tube1_a_inner', 'tube1_b_outer', 'tube1_b_inner'];
+    let potential_target_tags = [tag_tube1_a_outer, tag_tube1_a_inner, tag_tube1_b_outer, tag_tube1_b_inner];
+    let potential_axes = [a_axis_1.duplicate(), a_axis_1.duplicate(), b_axis_1.duplicate(), b_axis_1.duplicate()];
+    let potential_guides = [a_guide_1.duplicate(), a_guide_1.duplicate(), b_guide_1.duplicate(), b_guide_1.duplicate()];
+    
+    
+    //Step 5. Transform (orient and rotate) mesh and all potential_target geo
+    let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide)
+    geo = returned_objects[0]
+    potential_axes = returned_objects[1]
+    potential_guides = returned_objects[2]
+    
+    
+    /*Step 6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)
+    In the final step, we drop the potential_tag/axis/guide that corresponds to the original source_tag_selection
+    i.e. if tube3_a_outer is placed in a motor, then don't add the corresponding tag/axis/guide to the available targets list
+    Note: for tubes 2/3, this step is still necessary, despite explicitly defining the potential_target axes/guides above
+    If the target is tube 1, then technically this step isn't necessary, but for any other target part this is still
+    the only way to know which potential_target_axis/guide to drop*/
+    
+    //console.log("Adding Tube 1");
+    part_list_output.push(geo);
+    
+    for (let i=0; i<potential_source_tags.length; i++) {
+        if (potential_source_tags[i] == source_tag_selection) {}
+        else {
+            target_axes.push(potential_axes[i]);
+            target_guides.push(potential_guides[i]);
+            target_tags.push(potential_target_tags[i]);
+        }
+    }
+
+    //Create next block
+    count += 1;
+    next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+}
+
+
+function tube2(parts, target_axes, target_guides, target_tags, count, nib_item) {
+    /*There are 6 main steps to placing a part:
+    1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    2. Create source_tag/axis/guide pairs
+    3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically fewer options than the source placements)
+    5. Transform (orient and rotate) mesh and all potential_target geo
+    6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
+    
+    try {
+        if (typeof selection_list[count] == 'number') {
+            selection_index = selection_list[count];
+        }
+        else {selection_index = 0;}
+    }
+    catch(err) {
+        selection_index = 0;
+    }    
+    
+    //Step 1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    let geo = tube2_geo.duplicate();
+    let a_axis_1 = tube2_a_axis_1.duplicate();
+    let a_guide_1 = tube2_a_guide_1.duplicate();
+    let mid_axis_1 = tube2_mid_axis_1.duplicate();
+    let mid_guide_1 = tube2_mid_guide_1.duplicate();
+    let b_axis_1 = tube2_b_axis_1.duplicate();
+    let b_guide_1 = tube2_b_guide_1.duplicate();
+       
+    /*Step 2. Create source_tag/axis/guide pairs
+    The source_tags will be compared to available target_tags, and the selection_index will be used to choose from the available pairings
+    The chosen source and target axes/guides will be used to create the transforms
+    The transforms will be applied to the mesh and the future_target geometry
+    Note: there are two different kinds of tags: source_tags describe the geometry of the part to be placed ("tube2_a_outer", "motor2_tube2_a"),
+    target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
+    This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
+    
+    let source_tags = ['tube2_a_outer', 'tube2_mid_outer', 'tube2_b_outer'];
+    let source_axes = [a_axis_1, mid_axis_1, b_axis_1];
+    let source_guides = [a_guide_1, mid_guide_1, b_guide_1];
+    
+    /*Step 3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    Once we know the source aixs and guide, we can ignore the remaining source geo b/c it's irrlevant
+    We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
+    
+    pair_list = generate_selection_pairs(source_tags, target_tags);
+    let source_target_pair = pair_list[selection_index % pair_list.length];
+    let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
+    let source_axis = source_axes[source_target_pair[0]];
+    let source_guide = source_guides[source_target_pair[0]];
+    let target_tag = target_tags[source_target_pair[1]];
+    target_tags.splice(source_target_pair[1], 1);
+    let target_axis = target_axes[source_target_pair[1]];
+    target_axes.splice(source_target_pair[1], 1);
+    let target_guide = target_guides[source_target_pair[1]];
+    target_guides.splice(source_target_pair[1], 1);
+    
+    /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
+    All of that geometry will be transformed according to the selected source/target geometry.
+    Note that the .Duplicate() method is necessary to avoid Transforms on the same geometry
+    We need potential_source_tags and potential_target_tags for the final step. 
+    In the case of Tube 2, there are 5 potential targets: a_inner, a_outer, mid_outer, b_inner, b_outer
+    but tubes 2/3 are a little more complicated than the other parts, b/c when they are placed
+    inside tube1, both the outer placement AND the corresponding inner placement is lost
+    i.e. you can't place a nib in the end of tube 2/3 if that tube is already plugged into a tube1
+    For that reason, the list of potential_target_axes/guides is related to the chosen target_tag*/
+    
+    let potential_source_tags = [];
+    let potential_target_tags = [];
+    let potential_axes = [];
+    let potential_guides = [];
+
+    if (target_tag == tag_tube1_a_inner) {
+        potential_source_tags = ['tube2_a_outer', 'tube2_a_inner', 'tube2_mid_outer'];
+        potential_target_tags = [tag_tube2_a_outer, tag_tube2_a_inner, tag_tube2_mid_outer];
+        potential_axes = [a_axis_1.duplicate(), a_axis_1.duplicate(), mid_axis_1.duplicate()];
+        potential_guides = [a_guide_1.duplicate(), a_guide_1.duplicate(), mid_guide_1.duplicate()];
+    }
+    else if (target_tag == tag_tube1_b_inner) {
+        potential_source_tags = ['tube2_b_outer', 'tube2_b_inner', 'tube2_mid_outer'];
+        potential_target_tags = [tag_tube2_b_outer, tag_tube2_b_inner, tag_tube2_mid_outer];
+        potential_axes = [b_axis_1.duplicate(), b_axis_1.duplicate(), mid_axis_1.duplicate()];
+        potential_guides = [b_guide_1.duplicate(), b_guide_1.duplicate(), mid_guide_1.duplicate()];
+    }
+    else {
+        potential_source_tags = ['tube2_a_outer', 'tube2_a_inner', 'tube2_mid_outer', 'tube2_b_outer', 'tube2_b_inner'];
+        potential_target_tags = [tag_tube2_a_outer, tag_tube2_a_inner, tag_tube2_mid_outer, tag_tube2_b_outer, tag_tube2_b_inner];
+        potential_axes = [a_axis_1.duplicate(), a_axis_1.duplicate(), mid_axis_1.duplicate(), b_axis_1.duplicate(), b_axis_1.duplicate()];
+        potential_guides = [a_guide_1.duplicate(), a_guide_1.duplicate(), mid_guide_1.duplicate(), b_guide_1.duplicate(), b_guide_1.duplicate()];
+    }
+    
+    //Step 5. Transform (orient and rotate) mesh and all potential_target geo
+    let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
+    geo = returned_objects[0];
+    potential_axes = returned_objects[1];
+    potential_guides = returned_objects[2];
+    
+    /*Step 6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)
+    In the final step, we drop the potential_tag/axis/guide that corresponds to the original source_tag_selection
+    i.e. if tube3_a_outer is placed in a motor, then don't add the corresponding tag/axis/guide to the available targets list
+    Note: for tubes 2/3, this step is still necessary, despite explicitly defining the potential_target axes/guides above
+    If the target is tube 1, then technically this step isn't necessary, but for any other target part this is still
+    the only way to know which potential_target_axis/guide to drop*/
+    
+    console.log("Adding Tube 2");
+    part_list_output.push(geo);
+    
+    for (let i=0; i<potential_source_tags.length; i++) {
+        if (potential_source_tags[i] == source_tag_selection) {}
+        else {
+            target_axes.push(potential_axes[i]);
+            target_guides.push(potential_guides[i]);
+            target_tags.push(potential_target_tags[i]);
+        }
+    }
+
+    //Create next block
+    count += 1;
     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
 }
 
@@ -748,7 +986,6 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
     
     pair_list = generate_selection_pairs(source_tags, target_tags);
-
     let source_target_pair = pair_list[selection_index % pair_list.length];
     let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
     let source_axis = source_axes[source_target_pair[0]];
@@ -760,7 +997,6 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     let target_guide = target_guides[source_target_pair[1]];
     target_guides.splice(source_target_pair[1], 1);
     
-
     /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
     All of that geometry will be transformed according to the selected source/target geometry.
     Note that the .duplicate() method is necessary to avoid Transforms on the same geometry
@@ -815,15 +1051,15 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     for (let i=0; i<potential_source_tags.length; i++) {
         if (potential_source_tags[i] == source_tag_selection) {}
         else {
-            target_axes.push(potential_axes[i])
-            target_guides.push(potential_guides[i])
-            target_tags.push(potential_target_tags[i])
+            target_axes.push(potential_axes[i]);
+            target_guides.push(potential_guides[i]);
+            target_tags.push(potential_target_tags[i]);
         }
     }
 
     //Create next block
-    count += 1
-    next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item)
+    count += 1;
+    next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
 }
 
 
@@ -888,7 +1124,7 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     target_axes.splice(source_target_pair[1], 1);
     let target_guide = target_guides[source_target_pair[1]];
     target_guides.splice(source_target_pair[1], 1);
-    
+
     /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
     All of that geometry will be transformed according to the selected source/target geometry.
     Note that the .duplicate() method is necessary to avoid Transforms on the same geometry
@@ -900,30 +1136,30 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     let potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate()];
     let potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate()];
     
+
     /*Step 5. Transform 
     This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
     It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.
     Step 5A: Rotate Motor (and guides if necessary)*/
     
     let axis_vector = [a_axis_1.pointAt(1)[0] - a_axis_1.pointAt(0)[0],a_axis_1.pointAt(1)[1] - a_axis_1.pointAt(0)[1], a_axis_1.pointAt(1)[2] - a_axis_1.pointAt(0)[2]];
-    // let rotation = rg.Transform.rotation(rotation_sin_2, rotation_cos_2, axis_vector, a_axis_1.pointAt(0));
     /*If the "motor" connection is selected as the source, then the entire part and all axes/guides will rotate with it
     Note that we do NOT transform the source_guide, we need to preserve a point of reference
     i.e. the change in position relative to the starting point in the local coordinates of the source geo*/
     if (source_tag_selection == "motor1_tube2_a") {
-        geo.rotate(rotation_angle * 2, axis_vector, a_axis_1.pointAt(0));
-        potential_axes[1].rotate(rotation_angle * 2, axis_vector, a_axis_1.pointAt(0)); //First axis doesn't rotate b/c everything is rotating around it
-        for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(rotation_angle * 2, axis_vector, a_axis_1.pointAt(0));}
+        geo.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
+        potential_axes[1].rotate(angle_B, axis_vector, a_axis_1.pointAt(0)); //First axis doesn't rotate b/c everything is rotating around it
+        for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));}
     }
     //Otherwise, the guide associated with the "motor" connection (and only this guide) wiil rotate in place
-    else {potential_guides[0].rotate(rotation_angle * 2, axis_vector, a_axis_1.pointAt(0));}
+    else {potential_guides[0].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));}
     
     //Step 5B: Add Motor to target geometry
     let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
     geo = returned_objects[0];
     potential_axes = returned_objects[1];
     potential_guides = returned_objects[2];
-    
+
     /*Step 6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)
     In the final step, we drop the potential_tag/axis/guide that corresponds to the original source_tag_selection
     i.e. if tube3_a_outer is placed in a motor, then don't add the corresponding tag/axis/guide to the available targets list
@@ -944,6 +1180,661 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     }
     
     //Create next block
+    count += 1;
+    next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+}
+
+
+function motor2(parts, target_axes, target_guides, target_tags, count, nib_item) {
+    /*There are 6 main steps to placing a part:
+    1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    2. Create source_tag/axis/guide pairs
+    3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically fewer options than the source placements)
+    5. Transform (orient and rotate) mesh and all potential_target geo
+    6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
+    
+    try {
+        if (typeof selection_list[count] == 'number') {
+            selection_index = selection_list[count];
+        }
+        else {selection_index = 0;}
+    }
+    catch(err) {
+        selection_index = 0;
+    }
+    
+    /*Step 1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    Motor 1 has 6 possible placements: the side with the motor has 1 guide and can be placed left-handed 
+    or right-handed the side without the motor can be left or right-handed with either of 2 guides. These 
+    placements are all detailed below in Step 2*/
+    
+    let geo = motor2_geo.duplicate();
+    let a_axis_1 = motor2_tube2a_axis_1.duplicate();
+    let a_axis_2 = motor2_tube2a_axis_2.duplicate();
+    let a_guide_1 = motor2_tube2a_guide_1.duplicate();
+    let a_guide_2 = motor2_tube2a_guide_2.duplicate();
+    let b_axis_1 = motor2_tube2b_axis_1.duplicate();
+    let b_axis_2 = motor2_tube2b_axis_2.duplicate();
+    let b_guide_1 = motor2_tube2b_guide_1.duplicate();
+    let b_guide_2 = motor2_tube2b_guide_2.duplicate();
+    
+    /*Step 2. Create source_tag/axis/guide pairs
+    The source_tags will be compared to available target_tags, and the selection_index will be used to choose from the available pairings
+    The chosen source and target axes/guides will be used to create the transforms
+    The transforms will be applied to the mesh and the future_target geometry
+    Note: there are two different kinds of tags: source_tags describe the geometry of the part to be placed ("tube2_a_outer", "motor2_tube2_a"),
+    target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
+    This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
+    
+    let source_tags = ['motor2_tube2_a', 'motor2_tube2_a', 'motor2_tube2_b', 'motor2_tube2_b'];
+    let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2];
+    let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2];
+
+    /*Step 3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    Once we know the source aixs and guide, we can ignore the remaining source geo b/c it's irrlevant
+    We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
+    
+    pair_list = generate_selection_pairs(source_tags, target_tags);
+    let source_target_pair = pair_list[selection_index % pair_list.length];
+    let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
+    let source_axis = source_axes[source_target_pair[0]];
+    let source_guide = source_guides[source_target_pair[0]];
+    let target_tag = target_tags[source_target_pair[1]];
+    target_tags.splice(source_target_pair[1], 1);
+    let target_axis = target_axes[source_target_pair[1]];
+    target_axes.splice(source_target_pair[1], 1);
+    let target_guide = target_guides[source_target_pair[1]];
+    target_guides.splice(source_target_pair[1], 1);    
+    
+    /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
+    All of that geometry will be transformed according to the selected source/target geometry.
+    Note that the .Duplicate() method is necessary to avoid Transforms on the same geometry
+    We need potential_source_tags and potential_target_tags for the final step. 
+    In the case of Motor1, there are 2 potential targets: a (with motor) and b (without)*/
+    
+    let potential_source_tags = ['motor2_tube2_a', 'motor2_tube2_b'];
+    let potential_target_tags = [tag_motor2_tube2_a, tag_motor2_tube2_b];
+    let potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate()];
+    let potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate()];
+    
+    /*Step 5. Transform 
+    This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
+    It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.
+    Step 5A: Rotate Motor (and guides if necessary)
+    Note that when the "motor" connection rotates around the target, the entire part and all axes/guides 
+    will rotate with it. But we do NOT transform the source_guide, as we need to preserve a point of reference
+    i.e. the change in position relative to the starting point in the local coordinates of the source geo*/
+
+    if (source_tag_selection == "motor2_tube2_a") {
+        //Rotate around first axis
+        let axis_vector = [potential_axes[0].pointAt(1)[0] - potential_axes[0].pointAt(0)[0], potential_axes[0].pointAt(1)[1] - potential_axes[0].pointAt(0)[1], potential_axes[0].pointAt(1)[2] - potential_axes[0].pointAt(0)[2]];
+        geo.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
+        potential_axes[1].rotate(angle_B, axis_vector, a_axis_1.pointAt(0)); //First axis doesn't rotate b/c everything is rotating around it
+        potential_guides[0].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
+        potential_guides[1].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
+        //Rotate around second axis
+        let axis_vector_2 = [potential_axes[1].pointAt(1)[0] - potential_axes[1].pointAt(0)[0], potential_axes[1].pointAt(1)[1] - potential_axes[1].pointAt(0)[1], potential_axes[1].pointAt(1)[2] - potential_axes[1].pointAt(0)[2]];
+        potential_guides[1].rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
+    }
+    else {
+        //Rotate around first axis
+        let axis_vector = [potential_axes[1].pointAt(1)[0] - potential_axes[1].pointAt(0)[0], potential_axes[1].pointAt(1)[1] - potential_axes[1].pointAt(0)[1], potential_axes[1].pointAt(1)[2] - potential_axes[1].pointAt(0)[2]];
+        geo.rotate(angle_B, axis_vector, b_axis_1.pointAt(0));
+        potential_axes[0].rotate(angle_B, axis_vector, b_axis_1.pointAt(0)); //Second axis doesn't rotate b/c everything is rotating around it
+        potential_guides[0].rotate(angle_B, axis_vector, b_axis_1.pointAt(0));
+        potential_guides[1].rotate(angle_B, axis_vector, b_axis_1.pointAt(0));
+        //Rotate around second axis
+        let axis_vector_2 = [potential_axes[0].pointAt(1)[0] - potential_axes[0].pointAt(0)[0], potential_axes[0].pointAt(1)[1] - potential_axes[0].pointAt(0)[1], potential_axes[0].pointAt(1)[2] - potential_axes[0].pointAt(0)[2]];
+        potential_guides[0].rotate(angle_B, axis_vector_2, a_axis_1.pointAt(0));
+    }
+
+    //Step 5B: Add Motor to target geometry
+    let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
+    geo = returned_objects[0];
+    potential_axes = returned_objects[1];
+    potential_guides = returned_objects[2];
+    
+    /*Step 6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)
+    In the final step, we drop the potential_tag/axis/guide that corresponds to the original source_tag_selection
+    i.e. if tube3_a_outer is placed in a motor, then don't add the corresponding tag/axis/guide to the available targets list
+    Note: for tubes 2/3, this step is still necessary, despite explicitly defining the potential_target axes/guides above
+    If the target is tube 1, then technically this step isn't necessary, but for any other target part this is still
+    the only way to know which potential_target_axis/guide to drop*/
+    
+    // console.log('Adding Motor 2');
+    part_list_output.push(geo);
+    
+    for (let i=0; i<potential_source_tags.length; i++) {
+        if (potential_source_tags[i] == source_tag_selection) {}
+        else {
+            target_axes.push(potential_axes[i]);
+            target_guides.push(potential_guides[i]);
+            target_tags.push(potential_target_tags[i]);
+        }
+    }
+    
+    //Create next block
+    count += 1;
+    next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+}
+
+
+function motor3(parts, target_axes, target_guides, target_tags, count, nib_item) {
+    /*There are 6 main steps to placing a part:
+    1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    2. Create source_tag/axis/guide pairs
+    3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically fewer options than the source placements)
+    5. Transform (orient and rotate) mesh and all potential_target geo
+    6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
+    
+    try {
+        if (typeof selection_list[count] == 'number') {
+            selection_index = selection_list[count];
+        }
+        else {selection_index = 0;}
+    }
+    catch(err) {
+        selection_index = 0;
+    }
+    
+    /*Step 1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    Motor 1 has 6 possible placements: the side with the motor has 1 guide and can be placed left-handed 
+    or right-handed the side without the motor can be left or right-handed with either of 2 guides. These 
+    placements are all detailed below in Step 2*/
+    
+    let geo = motor3_geo.duplicate();
+    let a_axis_1 = motor3_tube2a_axis_1.duplicate();
+    let a_axis_2 = motor3_tube2a_axis_2.duplicate();
+    let a_guide_1 = motor3_tube2a_guide_1.duplicate();
+    let a_guide_2 = motor3_tube2a_guide_2.duplicate();
+    let b_axis_1 = motor3_tube2b_axis_1.duplicate();
+    let b_axis_2 = motor3_tube2b_axis_2.duplicate();
+    let b_guide_1 = motor3_tube2b_guide_1.duplicate();
+    let b_guide_2 = motor3_tube2b_guide_2.duplicate();
+    let c_axis_1 = motor3_tube1_axis_1.duplicate();
+    let c_axis_2 = motor3_tube1_axis_2.duplicate();
+    let c_guide_1 = motor3_tube1_guide_1.duplicate();
+    let c_guide_2 = motor3_tube1_guide_2.duplicate();
+    
+    
+    /*Step 2. Create source_tag/axis/guide pairs
+    The source_tags will be compared to available target_tags, and the selection_index will be used to choose from the available pairings
+    The chosen source and target axes/guides will be used to create the transforms
+    The transforms will be applied to the mesh and the future_target geometry
+    Note: there are two different kinds of tags: source_tags describe the geometry of the part to be placed ("tube2_a_outer", "motor2_tube2_a"),
+    target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
+    This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
+    
+    let source_tags = ['motor3_tube2_a', 'motor3_tube2_a', 'motor3_tube2_b', 'motor3_tube2_b', 'motor3_tube2_b', 'motor3_tube2_b', 'motor3_tube1', 'motor3_tube1', 'motor3_tube1', 'motor3_tube1'];
+    let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2, b_axis_1, b_axis_2, c_axis_1, c_axis_2, c_axis_1, c_axis_2];
+    let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2, b_guide_2, b_guide_1, c_guide_1, c_guide_2, c_guide_2, c_guide_1];
+    
+    /*Step 3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    Once we know the source aixs and guide, we can ignore the remaining source geo b/c it's irrlevant
+    We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
+    
+    pair_list = generate_selection_pairs(source_tags, target_tags);
+    let source_target_pair = pair_list[selection_index % pair_list.length];
+    let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
+    let source_axis = source_axes[source_target_pair[0]];
+    let source_guide = source_guides[source_target_pair[0]];
+    let target_tag = target_tags[source_target_pair[1]];
+    target_tags.splice(source_target_pair[1], 1);
+    let target_axis = target_axes[source_target_pair[1]];
+    target_axes.splice(source_target_pair[1], 1);
+    let target_guide = target_guides[source_target_pair[1]];
+    target_guides.splice(source_target_pair[1], 1);    
+    
+    
+    /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
+    All of that geometry will be transformed according to the selected source/target geometry.
+    Note that the .Duplicate() method is necessary to avoid Transforms on the same geometry
+    We need potential_source_tags and potential_target_tags for the final step. 
+    In the case of Motor1, there are 2 potential targets: a (with motor) and b (without)*/
+    
+    let potential_source_tags = ['motor3_tube2_a', 'motor3_tube2_b', 'motor3_tube1'];
+    let potential_target_tags = [tag_motor3_tube2_a, tag_motor3_tube2_b, tag_motor3_tube1];
+    let potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate(), c_axis_1.duplicate()];
+    let potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate(), c_guide_1.duplicate()];
+    
+    
+    /*Step 5. Transform 
+    This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
+    It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.
+    Step 5A: Rotate Motor (and guides if necessary)*/
+    let axis_vector = [a_axis_1.pointAt(1)[0] - a_axis_1.pointAt(0)[0], a_axis_1.pointAt(1)[1] - a_axis_1.pointAt(0)[1], a_axis_1.pointAt(1)[2] - a_axis_1.pointAt(0)[2]];
+    /*If the "motor" connection is selected as the source, then the entire part and all axes/guides will rotate with it
+    Note that we do NOT transform the source_guide, we need to preserve a point of reference
+    i.e. the change in position relative to the starting point in the local coordinates of the source geo*/
+    if (source_tag_selection == "motor3_tube2_a") {
+        geo.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
+        for (let i=0; i<potential_axes.length; i++) {potential_axes[i].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));} //First axis doesn't rotate b/c everything is rotating around it
+        for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));}
+    }
+    //Otherwise, the guide associated with the "motor" connection (and only this guide) wiil rotate in place
+    else {
+        potential_guides[0].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
+    }
+
+    //Step 5B: Add Motor to target geometry
+    let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
+    geo = returned_objects[0];
+    potential_axes = returned_objects[1];
+    potential_guides = returned_objects[2];
+    
+    
+    /*Step 6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)
+    In the final step, we drop the potential_tag/axis/guide that corresponds to the original source_tag_selection
+    i.e. if tube3_a_outer is placed in a motor, then don't add the corresponding tag/axis/guide to the available targets list
+    Note: for tubes 2/3, this step is still necessary, despite explicitly defining the potential_target axes/guides above
+    If the target is tube 1, then technically this step isn't necessary, but for any other target part this is still
+    the only way to know which potential_target_axis/guide to drop*/
+    
+    //console.log('Adding Motor 3');
+    part_list_output.push(geo);
+    
+    for (let i=0; i<potential_source_tags.length; i++) {
+        if (potential_source_tags[i] == source_tag_selection) {}
+        else {
+            target_axes.push(potential_axes[i]);
+            target_guides.push(potential_guides[i]);
+            target_tags.push(potential_target_tags[i]);
+        }
+    }
+    
+    //Create next block
+    count += 1;
+    next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+}
+
+
+function motor4(parts, target_axes, target_guides, target_tags, count, nib_item) {
+    /*There are 6 main steps to placing a part:
+    1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    2. Create source_tag/axis/guide pairs
+    3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically fewer options than the source placements)
+    5. Transform (orient and rotate) mesh and all potential_target geo
+    6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
+    
+    try {
+        if (typeof selection_list[count] == 'number') {
+            selection_index = selection_list[count];
+        }
+        else {selection_index = 0;}
+    }
+    catch(err) {
+        selection_index = 0;
+    }
+    
+    
+    /*Step 1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    Motor 1 has 6 possible placements: the side with the motor has 1 guide and can be placed left-handed 
+    or right-handed the side without the motor can be left or right-handed with either of 2 guides. These 
+    placements are all detailed below in Step 2*/
+    
+    let geo = motor4_geo.duplicate();
+    let a_axis_1 = motor4_tube1a_axis_1.duplicate();
+    let a_axis_2 = motor4_tube1a_axis_2.duplicate();
+    let a_guide_1 = motor4_tube1a_guide_1.duplicate();
+    let a_guide_2 = motor4_tube1a_guide_2.duplicate();
+    let b_axis_1 = motor4_tube1b_axis_1.duplicate();
+    let b_axis_2 = motor4_tube1b_axis_2.duplicate();
+    let b_guide_1 = motor4_tube1b_guide_1.duplicate();
+    let b_guide_2 = motor4_tube1b_guide_2.duplicate();
+    let c_axis_1 = motor4_tube2_axis_1.duplicate();
+    let c_axis_2 = motor4_tube2_axis_2.duplicate();
+    let c_guide_1 = motor4_tube2_guide_1.duplicate();
+    let c_guide_2 = motor4_tube2_guide_2.duplicate();
+    
+    
+    /*Step 2. Create source_tag/axis/guide pairs
+    The source_tags will be compared to available target_tags, and the selection_index will be used to choose from the available pairings
+    The chosen source and target axes/guides will be used to create the transforms
+    The transforms will be applied to the mesh and the future_target geometry
+    Note: there are two different kinds of tags: source_tags describe the geometry of the part to be placed ("tube2_a_outer", "motor2_tube2_a"),
+    target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
+    This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
+    
+    let source_tags = ['motor4_tube1_a', 'motor4_tube1_a', 'motor4_tube1_b', 'motor4_tube1_b', 'motor4_tube1_b', 'motor4_tube1_b', 'motor4_tube2', 'motor4_tube2', 'motor4_tube2', 'motor4_tube2'];
+    let source_axes = [a_axis_2, a_axis_1, b_axis_1, b_axis_2, b_axis_1, b_axis_2, c_axis_1, c_axis_2, c_axis_1, c_axis_2];
+    let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2, b_guide_2, b_guide_1, c_guide_1, c_guide_2, c_guide_2, c_guide_1];
+    
+    /*Step 3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    Once we know the source aixs and guide, we can ignore the remaining source geo b/c it's irrlevant
+    We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
+    
+    pair_list = generate_selection_pairs(source_tags, target_tags);
+    let source_target_pair = pair_list[selection_index % pair_list.length];
+    let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
+    let source_axis = source_axes[source_target_pair[0]];
+    let source_guide = source_guides[source_target_pair[0]];
+    let target_tag = target_tags[source_target_pair[1]];
+    target_tags.splice(source_target_pair[1], 1);
+    let target_axis = target_axes[source_target_pair[1]];
+    target_axes.splice(source_target_pair[1], 1);
+    let target_guide = target_guides[source_target_pair[1]];
+    target_guides.splice(source_target_pair[1], 1);
+    
+    
+    /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
+    All of that geometry will be transformed according to the selected source/target geometry.
+    Note that the .Duplicate() method is necessary to avoid Transforms on the same geometry
+    We need potential_source_tags and potential_target_tags for the final step. 
+    In the case of Motor1, there are 2 potential targets: a (with motor) and b (without)*/
+    
+    let potential_source_tags = ['motor4_tube1_a', 'motor4_tube1_b', 'motor4_tube2'];
+    let potential_target_tags = [tag_motor4_tube1_a, tag_motor4_tube1_b, tag_motor4_tube2];
+    let potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate(), c_axis_1.duplicate()];
+    let potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate(), c_guide_1.duplicate()];
+    
+    
+    /*Step 5. Transform 
+    This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
+    It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.
+    
+    Step 5A: Rotate Motor (and guides if necessary)*/
+    let axis_vector = [a_axis_1.pointAt(1)[0] - a_axis_1.pointAt(0)[0],a_axis_1.pointAt(1)[1] - a_axis_1.pointAt(0)[1], a_axis_1.pointAt(1)[2] - a_axis_1.pointAt(0)[2]];
+    /*If the "motor" connection is selected as the source, then the entire part and all axes/guides will rotate with it
+    Note that we do NOT transform the source_guide, we need to preserve a point of reference
+    i.e. the change in position relative to the starting point in the local coordinates of the source geo*/
+        
+    if (source_tag_selection == "motor4_tube1_a") {
+        geo.rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
+        for (let i=0; i<potential_axes.length; i++){potential_axes[i].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));} //First axis doesn't rotate b/c everything is rotating around it
+        for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));}
+    }
+    //Otherwise, the guide associated with the "motor" connection (and only this guide) wiil rotate in place
+    else {potential_guides[0].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));}
+    
+    //Step 5B: Add Motor to target geometry
+    let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
+    geo = returned_objects[0];
+    potential_axes = returned_objects[1];
+    potential_guides = returned_objects[2];
+    
+    /*Step 6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)
+    In the final step, we drop the potential_tag/axis/guide that corresponds to the original source_tag_selection
+    i.e. if tube3_a_outer is placed in a motor, then don't add the corresponding tag/axis/guide to the available targets list
+    Note: for tubes 2/3, this step is still necessary, despite explicitly defining the potential_target axes/guides above
+    If the target is tube 1, then technically this step isn't necessary, but for any other target part this is still
+    the only way to know which potential_target_axis/guide to drop*/
+    
+    //console.log('Adding Motor 4');
+    part_list_output.push(geo);
+    
+    for (let i=0; i<potential_source_tags.length; i++) {
+        if (potential_source_tags[i] == source_tag_selection) {}
+        else {
+            target_axes.push(potential_axes[i]);
+            target_guides.push(potential_guides[i]);
+            target_tags.push(potential_target_tags[i]);
+        }
+    }
+    
+    //Create next block
+    count += 1;
+    next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+}
+
+
+function motor5(parts, target_axes, target_guides, target_tags, count, nib_item) {
+    /*There are 6 main steps to placing a part:
+    1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    2. Create source_tag/axis/guide pairs
+    3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically fewer options than the source placements)
+    5. Transform (orient and rotate) mesh and all potential_target geo
+    6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
+    
+    try {
+        if (typeof selection_list[count] == 'number') {
+            selection_index = selection_list[count];
+        }
+        else {selection_index = 0;}
+    }
+    catch(err) {
+        selection_index = 0;
+    }    
+    
+    /*Step 1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    Motor 1 has 6 possible placements: the side with the motor has 1 guide and can be placed left-handed 
+    or right-handed the side without the motor can be left or right-handed with either of 2 guides. These 
+    placements are all detailed below in Step 2*/
+    
+    let geo = motor5_geo.duplicate();
+    let a_axis_1 = motor5_tube1a_axis_1.duplicate();
+    let a_axis_2 = motor5_tube1a_axis_2.duplicate();
+    let a_guide_1 = motor5_tube1a_guide_1.duplicate();
+    let a_guide_2 = motor5_tube1a_guide_2.duplicate();
+    let b_axis_1 = motor5_tube1b_axis_1.duplicate();
+    let b_axis_2 = motor5_tube1b_axis_2.duplicate();
+    let b_guide_1 = motor5_tube1b_guide_1.duplicate();
+    let b_guide_2 = motor5_tube1b_guide_2.duplicate();
+    let c_axis_1 = motor5_tube2_axis_1.duplicate();
+    let c_axis_2 = motor5_tube2_axis_2.duplicate();
+    let c_guide_1 = motor5_tube2_guide_1.duplicate();
+    let c_guide_2 = motor5_tube2_guide_2.duplicate();
+    
+    
+    /*Step 2. Create source_tag/axis/guide pairs
+    The source_tags will be compared to available target_tags, and the selection_index will be used to choose from the available pairings
+    The chosen source and target axes/guides will be used to create the transforms
+    The transforms will be applied to the mesh and the future_target geometry
+    Note: there are two different kinds of tags: source_tags describe the geometry of the part to be placed ("tube2_a_outer", "motor2_tube2_a"),
+    target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
+    This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
+    
+    let source_tags = ['motor5_tube1_a', 'motor5_tube1_a', 'motor5_tube1_b', 'motor5_tube1_b', 'motor5_tube1_b', 'motor5_tube1_b', 'motor5_tube2', 'motor5_tube2', 'motor5_tube2', 'motor5_tube2'];
+    let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2, b_axis_1, b_axis_2, c_axis_1, c_axis_2, c_axis_1, c_axis_2];
+    let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2, b_guide_2, b_guide_1, c_guide_1, c_guide_2, c_guide_2, c_guide_1];
+    
+    /*Step 3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    Once we know the source aixs and guide, we can ignore the remaining source geo b/c it's irrlevant
+    We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
+    
+    pair_list = generate_selection_pairs(source_tags, target_tags);
+    let source_target_pair = pair_list[selection_index % pair_list.length];
+    let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
+    let source_axis = source_axes[source_target_pair[0]];
+    let source_guide = source_guides[source_target_pair[0]];
+    let target_tag = target_tags[source_target_pair[1]];
+    target_tags.splice(source_target_pair[1], 1);
+    let target_axis = target_axes[source_target_pair[1]];
+    target_axes.splice(source_target_pair[1], 1);
+    let target_guide = target_guides[source_target_pair[1]];
+    target_guides.splice(source_target_pair[1], 1);    
+    
+    /*Step 4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
+    All of that geometry will be transformed according to the selected source/target geometry.
+    Note that the .Duplicate() method is necessary to avoid Transforms on the same geometry
+    We need potential_source_tags and potential_target_tags for the final step. 
+    In the case of Motor1, there are 2 potential targets: a (with motor) and b (without)*/
+    
+    let potential_source_tags = ['motor5_tube1_a', 'motor5_tube1_b', 'motor5_tube2'];
+    let potential_target_tags = [tag_motor5_tube1_a, tag_motor5_tube1_b, tag_motor5_tube2];
+    let potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate(), c_axis_1.duplicate()];
+    let potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate(), c_guide_1.duplicate()];
+    
+    /*Step 5. Transform 
+    This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
+    It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.
+    Step 5A: Rotate Motor (and guides if necessary)*/
+    
+    let axis_vector = [a_axis_1.pointAt(1)[0] - a_axis_1.pointAt(0)[0],a_axis_1.pointAt(1)[1] - a_axis_1.pointAt(0)[1], a_axis_1.pointAt(1)[2] - a_axis_1.pointAt(0)[2]];
+    /*If the "motor" connection is selected as the source, then the entire part and all axes/guides will rotate with it
+    Note that we do NOT transform the source_guide, we need to preserve a point of reference
+    i.e. the change in position relative to the starting point in the local coordinates of the source geo*/
+
+    if (source_tag_selection == "motor5_tube1_a") {
+        geo.rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
+        for (let i=0; i<potential_axes.length; i++) {potential_axes[i].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));} //First axis doesn't rotate b/c everything is rotating around it
+        for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));} 
+    }
+    //Otherwise, the guide associated with the "motor" connection (and only this guide) wiil rotate in place
+    else {potential_guides[0].Transform(rotation);}
+    
+    //Step 5B: Add Motor to target geometry
+    let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
+    geo = returned_objects[0];
+    potential_axes = returned_objects[1];
+    potential_guides = returned_objects[2];
+    
+    
+    /*Step 6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)
+    In the final step, we drop the potential_tag/axis/guide that corresponds to the original source_tag_selection
+    i.e. if tube3_a_outer is placed in a motor, then don't add the corresponding tag/axis/guide to the available targets list
+    Note: for tubes 2/3, this step is still necessary, despite explicitly defining the potential_target axes/guides above
+    If the target is tube 1, then technically this step isn't necessary, but for any other target part this is still
+    the only way to know which potential_target_axis/guide to drop*/
+    
+    // console.log('Adding Motor 5');
+    part_list_output.push(geo);
+    
+    for (let i=0; i<potential_source_tags.length; i++) {
+        if (potential_source_tags[i] == source_tag_selection) {}
+        else {
+            target_axes.push(potential_axes[i]);
+            target_guides.push(potential_guides[i]);
+            target_tags.push(potential_target_tags[i]);
+        }
+    }
+    
+    //Create next block
+    count += 1;
+    next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
+}
+
+
+function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
+    /*There are 6 main steps to placing a part:
+    1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    2. Create source_tag/axis/guide pairs
+    3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically fewer options than the source placements)
+    5. Transform (orient and rotate) mesh and all potential_target geo
+    6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
+        
+    try {
+        if (typeof selection_list[count] == 'number') {
+            selection_index = selection_list[count];
+        }
+        else {selection_index = 0;}
+    }
+    catch(err) {
+        selection_index = 0;
+    }
+    
+    /*Step 1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
+    Motor 1 has 6 possible placements: the side with the motor has 1 guide and can be placed left-handed 
+    or right-handed the side without the motor can be left or right-handed with either of 2 guides. These 
+    placements are all detailed below in Step 2*/
+    
+    let geo = nib_geo.duplicate();
+    let point = nib_pt.duplicate();
+    let tube1_axis_1 = nib_tube1_axis_1.duplicate();
+    let tube1_axis_2 = nib_tube1_axis_2.duplicate();
+    let tube1_guide_1 = nib_tube1_guide_1.duplicate();
+    let tube2_axis_1 = nib_tube2_axis_1.duplicate();
+    let tube2_axis_2 = nib_tube2_axis_2.duplicate();
+    let tube2_guide_1 = nib_tube2_guide_1.duplicate();
+    let motors1_axis_1 = nib_motors1_axis_1.duplicate();
+    let motors1_axis_2 = nib_motors1_axis_2.duplicate();
+    let motors2_axis_1 = nib_motors2_axis_1.duplicate();
+    let motors2_axis_2 = nib_motors2_axis_2.duplicate();
+    let motors1_guide_1 = nib_motors1_guide_1.duplicate();
+    let motors2_guide_1 = nib_motors2_guide_1.duplicate();
+    
+    /*Step 2. Create source_tag/axis/guide pairs
+    The source_tags will be compared to available target_tags, and the selection_index will be used to choose from the available pairings
+    The chosen source and target axes/guides will be used to create the transforms
+    The transforms will be applied to the mesh and the future_target geometry
+    Note: there are two different kinds of tags: source_tags describe the geometry of the part to be placed ("tube2_a_outer", "motor2_tube2_a"),
+    target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
+    This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
+    
+    let source_tags = ['nib_tube1_a', 'nib_tube1_b', 'nib_tube2_a', 'nib_tube2_b', 'nib_motors_1', 'nib_motors_1', 'nib_motors_2', 'nib_motors_2'];
+    let source_axes = [tube1_axis_1, tube1_axis_2, tube2_axis_1, tube2_axis_2, motors1_axis_1, motors1_axis_2, motors2_axis_1, motors2_axis_2];
+    let source_guides = [tube1_guide_1, tube1_guide_1, tube2_guide_1, tube2_guide_1, motors1_guide_1, motors1_guide_1, motors2_guide_1, motors2_guide_1];
+    
+    /*Step 3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    Once we know the source aixs and guide, we can ignore the remaining source geo b/c it's irrlevant
+    We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
+    
+    pair_list = generate_selection_pairs(source_tags, target_tags);
+
+console.log('Target tags: ', target_tags);
+console.log('Pair list: ', pair_list);
+
+    let source_target_pair = pair_list[selection_index % pair_list.length];
+    let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
+    let source_axis = source_axes[source_target_pair[0]];
+    let source_guide = source_guides[source_target_pair[0]];
+    let target_tag = target_tags[source_target_pair[1]];
+    target_tags.splice(source_target_pair[1], 1);
+    let target_axis = target_axes[source_target_pair[1]];
+    target_axes.splice(source_target_pair[1], 1);
+    let target_guide = target_guides[source_target_pair[1]];
+    target_guides.splice(source_target_pair[1], 1);
+    
+    /*Step 4. Enpty because Nibs don't add any new targets*/
+    let potential_source_tags = [];
+    let potential_target_tags = [];
+    let potential_axes = [];
+    let potential_guides = [];
+    
+    /*Step 5. Transform 
+    This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
+    It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.*/
+    
+    let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
+    geo = returned_objects[0];
+    potential_axes = returned_objects[1];
+    potential_guides = returned_objects[2];
+
+    
+    /*Step 6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)
+    Nibs don't add any new targets, so there's no need to iterate over the potential_source_tags for tags/axes/guides as with other parts.
+    However, if Nib is placed in a Tube 2/3 inner position, then we have to remove the corresponding Tube 2/3 outer tag so that a Tube 1 
+    can't be placed over it (but a Motor still could)*/
+    
+    // console.log('Adding Nib');
+    part_list_output.push(geo);
+
+
+    //Step 7A: confirm target is Tube 2/3
+    if (target_tag == "nib_tube2_a" || target_tag == "nib_tube2_b") {
+    //Step 7B: confirm which outer tag is referenced (could be tube2_a, tube2_b, tube3_a, or tube3_b)
+        if (target_tags[source_target_pair[1] - 1] == tag_tube2_a_outer || target_tags[source_target_pair[1] - 1] == tag_tube2_b_outer || target_tags[source_target_pair[1] - 1] == tag_tube3_a_outer || target_tags[source_target_pair[1] - 1] == tag_tube3_b_outer) {
+            //Step 7C: define new target that removes tube1_outer as possible placement
+            target_tags[source_target_pair[1] - 1] = "motor1_tube2_a, motor1_tube2_b, motor2_tube2_a, motor2_tube2_b, motor3_tube2_a, motor3_tube2_b, motor4_tube2, motor5_tube2";
+        }
+    }
+    
+    /*Add nib_pt to traces_points
+    This is the method for exporting one point per Nib for any given angle
+    Points are then recorded in Grasshopper and converted into lines*/
+    // let path = GH_Path(nib_item);
+    // let manual_points.Add(point, path);
+    
+    /*Previously: when machine in "run" mode, this was the process for recording points
+    Presumably, this method will work in JS*/
+    // if rotation_angle == 0:
+    //     trace_point = [nib_pt]
+    //     traces_points.append(trace_point)
+    // else:
+    //     traces_points[nib_item].append(nib_pt)
+    // nib_item += 1     
+
+    
+    /*nib_item refers to reach individual nib
+    traces_points is a list of lists, and each list contains the points for a particular nib
+    note how the initial point for each nib (when rotation_angle == 0) is added to traces_points as [nib_pt]
+    so nib_item locates that particular nib*/
+    
+    // Create next block
     count += 1;
     next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
 }

@@ -28,7 +28,6 @@ when the user clicks "DRAW" the machine will run and the Nibs will trace out the
 //There are a LOT of variables because we're referencing a LOT of specific geometry in the Rhino doc
 
 // General Inputs
-var rotation_angle = 0;
 var part_list_input = []; //Array of part names (i.e. ["Tube 3", "Motor 1"...]) used to trigger associated functions
 var part_list_output = []; //Array of geometry to add/render to scene
 var pair_list //Array of potential source/target pairs. Global b/c needs to be accessed by previousButton() in functions.js
@@ -42,19 +41,13 @@ var target_axes = [];
 var target_guides = [];
 var target_tags = [];
 
-/*Tubes 2/3 rotate twice as fast as Tube 1, and all tubes are slightly adjusted 
-to require 10-20 rotations before arriving back at the start point
-This is how we create the spirorgraph effect, rather than drawing a single
-curve that repeats exactly every 360 degrees*/
-
-// //Rotation for Tube 1
-// var rotation_sin_1 = Math.sin(rotation_angle * 0.95);
-// var rotation_cos_1 = Math.cos(rotation_angle * 0.95);
-
-// //Rotation for Tubes 2 and 3
-// var rotation_sin_2 = Math.sin(rotation_angle * 1.9);
-// var rotation_cos_2 = Math.cos(rotation_angle * 1.9);
-
+var rotation_angle = 0;
+/*Motors are intended to rotate at different speeds. The default settings are that motors with larger (i.e. Tube 1)
+connections will rotate at roughly half the speed of smaller (i.e. Tubes 2 and 3) connections.*/
+var angle_factor_A = 1.1;
+var angle_factor_B = 1.9;
+var angle_A = 0;
+var angle_B = 0;
 
 
 /*Each part (base, tube, motor, nib, etc.) and all of its source geometry is read in as a var variable.
@@ -224,17 +217,17 @@ var nib_motors2_guide_1;
 /*Next, each geometry variable is paired with its Rhino object. This is done by iterating over each 
 object in the Rhino document, checking its unique GUID, and pairing it with the appropriate variable.*/
 var guid_base_sphere = '97b05396-34d4-44d9-93c2-9e4f7d1dd25e';
-var guid_base_tube = '2d56c098-e5a6-4d4b-a96f-a4206e8d6754';
+var guid_base_tube = 'de093fb6-31a8-455c-8682-fb1ea0ae2da1';
 var guid_base_axis = 'cc4d087d-b190-492d-a1dd-30fcea4b304c';
 var guid_base_guide = 'd12c3e0e-d53b-4787-a606-59ebcb415449';
 
-var guid_tube1_geo = 'baecf306-abc6-499a-bb12-9918473ebe3a';
+var guid_tube1_geo = '55119f8a-1469-4537-bad7-cda52b479594';
 var guid_tube1_a_axis_1 = '869fdf2e-0b29-4b8b-9e35-0184a4e5db98';
 var guid_tube1_a_guide_1 = '604360b7-330c-4772-aeee-4226ce7d23d3';
 var guid_tube1_b_axis_1 = '5ea1588f-62dc-4958-9f16-5291f83e6151';
 var guid_tube1_b_guide_1 = '11e8391e-4575-440d-b0c4-6a91f15e221e';
 
-var guid_tube2_geo = '9e719d5c-a279-4123-ad2a-ae3f5be2f50c';
+var guid_tube2_geo = '71441d0b-3287-47eb-b7d1-27ba4bb6b80e';
 var guid_tube2_a_axis_1 = 'e71299db-93e8-4bd3-92c8-4493057f2f14';
 var guid_tube2_a_guide_1 = '31a42eaf-ff49-4f48-8942-a7854b20c445';
 var guid_tube2_mid_axis_1 = '600196e2-14a8-49ce-8dfb-af6d3dfec5ef';
