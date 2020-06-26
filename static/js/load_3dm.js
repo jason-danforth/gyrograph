@@ -217,17 +217,17 @@ var nib_motors2_guide_1;
 /*Next, each geometry variable is paired with its Rhino object. This is done by iterating over each 
 object in the Rhino document, checking its unique GUID, and pairing it with the appropriate variable.*/
 var guid_base_sphere = '97b05396-34d4-44d9-93c2-9e4f7d1dd25e';
-var guid_base_tube = 'de093fb6-31a8-455c-8682-fb1ea0ae2da1';
+var guid_base_tube = '2e7684b7-6204-4f51-be33-730410920f35';
 var guid_base_axis = 'cc4d087d-b190-492d-a1dd-30fcea4b304c';
 var guid_base_guide = 'd12c3e0e-d53b-4787-a606-59ebcb415449';
 
-var guid_tube1_geo = '55119f8a-1469-4537-bad7-cda52b479594';
+var guid_tube1_geo = '65235b50-881c-4a56-8321-6c36085c9808';
 var guid_tube1_a_axis_1 = '869fdf2e-0b29-4b8b-9e35-0184a4e5db98';
 var guid_tube1_a_guide_1 = '604360b7-330c-4772-aeee-4226ce7d23d3';
 var guid_tube1_b_axis_1 = '5ea1588f-62dc-4958-9f16-5291f83e6151';
 var guid_tube1_b_guide_1 = '11e8391e-4575-440d-b0c4-6a91f15e221e';
 
-var guid_tube2_geo = '71441d0b-3287-47eb-b7d1-27ba4bb6b80e';
+var guid_tube2_geo = '8cd04cf0-da56-4754-bd73-c919f0614f4a';
 var guid_tube2_a_axis_1 = 'e71299db-93e8-4bd3-92c8-4493057f2f14';
 var guid_tube2_a_guide_1 = '31a42eaf-ff49-4f48-8942-a7854b20c445';
 var guid_tube2_mid_axis_1 = '600196e2-14a8-49ce-8dfb-af6d3dfec5ef';

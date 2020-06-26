@@ -4,8 +4,6 @@ var scene, camera, renderer, controls;
 // Need this to call RhinoCommon functions
 // wait for the rhino3dm web assembly to load asynchronously
 
-
-
 //This not originally commented out
 //let rhino = null;
 
@@ -78,6 +76,12 @@ function init() {
 
 var animate = function () {
     requestAnimationFrame( animate );
+    
+    //Limit framerate to boost performance
+    // setTimeout( function() {
+    //     requestAnimationFrame( animate );
+    // }, 1000 / 1 );
+
     controls.update();
     renderer.render( scene, camera );
 };
@@ -128,26 +132,37 @@ slider.oninput = function() {
     angle_A = rotation_angle * angle_factor_A;
     angle_B = rotation_angle * angle_factor_B;
  
-    //Remove previously drawn objects from the scene
-    for (let i=0; i<scene.children.length; i++) {
-        if (scene.children[i].type == 'Mesh') {
-            scene.remove(scene.children[i]);
-            i = i-1;
-        }
-    } 
-
-    //Clear lists
-    part_list_output = [];
-    target_axes = [];
-    target_guides = [];
-    target_tags = [];
-
-    //Redraw Machine
-    base();
-    draw();
+    reset_scene(); 
   }
 
 
+function rewind() {
+    var current_angle = rotation_angle / 0.0175; //Convert angle from radians to degrees
+
+    renderer.setAnimationLoop( function () {
+        if (current_angle > 0) {
+            current_angle -= 4;
+            rotation_angle = current_angle * 0.0175; //Convert angle from degrees to radians
+            angle_A = rotation_angle * angle_factor_A;
+            angle_B = rotation_angle * angle_factor_B;         
+
+            reset_scene(); 
+            renderer.render( scene, camera );
+        }
+    })
+}
+
+function play() {
+    rewind();
+}
+
+function pause() {
+
+}
+
+function reset_animation() {
+
+}
 
 //------------------------------------------Placement Controls-------------------------------------------------------------------------------------------------------------------------------------
 
@@ -155,23 +170,7 @@ function next() {
     let lastIndex = selection_list.length - 1;
     selection_list[lastIndex] = selection_list[lastIndex] + 1;
     
-    //Remove previously drawn objects from the scene
-    for (let i=0; i<scene.children.length; i++) {
-        if (scene.children[i].type == 'Mesh') {
-            scene.remove(scene.children[i]);
-            i = i-1;
-        }
-    } 
-
-    //Clear lists
-    part_list_output = [];
-    target_axes = [];
-    target_guides = [];
-    target_tags = [];
-
-    //Redraw Machine
-    base();
-    draw();
+    reset_scene();
   }
 
 function previous() {
@@ -180,6 +179,13 @@ function previous() {
     if (selection_list[lastIndex] != 0) {selection_list[lastIndex] = selection_list[lastIndex] - 1;}
     else {selection_list[lastIndex] = pair_list.length - 1;}
     
+    reset_scene();
+  }
+
+
+//------------------------------------------Helper Functions-------------------------------------------------------------------------------------------------------------------------------------
+
+function reset_scene() {
     //Remove previously drawn objects from the scene
     for (let i=0; i<scene.children.length; i++) {
         if (scene.children[i].type == 'Mesh') {
@@ -197,13 +203,12 @@ function previous() {
     //Redraw Machine
     base();
     draw();
-  }
+}
 
-
-//------------------------------------------Helper Functions-------------------------------------------------------------------------------------------------------------------------------------
 
 function draw() {
     let meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 150});
+    //meshMaterial.bumpMap = THREE.ImageUtils.loadTexture('/static/textures/grit.png');
     let curveMaterial = new THREE.LineBasicMaterial( { color: 0x9c9c9c } );
     
     for (let i=0; i<part_list_output.length; i++) {
@@ -235,6 +240,25 @@ function update_src() {
     element_next.onmouseover = function() {this.src='/static/images/icons_next_mouseover.png';}
     element_next.onmouseout = function() {this.src='/static/images/icons_next_mouseout.png';}
     element_next.setAttribute( "onClick", "next()" );
+
+    let element_play = document.getElementById("play");
+    element_play.src="/static/images/icons_play_available.png";
+    element_play.onmouseover = function() {this.src='/static/images/icons_play_mouseover.png';}
+    element_play.onmouseout = function() {this.src='/static/images/icons_play_available.png';}
+    element_play.setAttribute( "onClick", "play()" );
+
+    let element_pause = document.getElementById("pause");
+    element_pause.src="/static/images/icons_pause_available.png";
+    element_pause.onmouseover = function() {this.src='/static/images/icons_pause_mouseover.png';}
+    element_pause.onmouseout = function() {this.src='/static/images/icons_pause_available.png';}
+    element_pause.setAttribute( "onClick", "pause()" );
+
+    let element_reset = document.getElementById("reset");
+    element_reset.src="/static/images/icons_reset_available.png";
+    element_reset.onmouseover = function() {this.src='/static/images/icons_reset_mouseover.png';}
+    element_reset.onmouseout = function() {this.src='/static/images/icons_reset_available.png';}
+    element_reset.setAttribute( "onClick", "reset_animation()" );
+
 
     let tag_set = new Set();
     for (let i=0; i<target_tags.length; i++) {
@@ -917,7 +941,7 @@ function tube2(parts, target_axes, target_guides, target_tags, count, nib_item) 
     If the target is tube 1, then technically this step isn't necessary, but for any other target part this is still
     the only way to know which potential_target_axis/guide to drop*/
     
-    console.log("Adding Tube 2");
+    // console.log("Adding Tube 2");
     part_list_output.push(geo);
     
     for (let i=0; i<potential_source_tags.length; i++) {
@@ -1674,7 +1698,7 @@ function motor5(parts, target_axes, target_guides, target_tags, count, nib_item)
         for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));} 
     }
     //Otherwise, the guide associated with the "motor" connection (and only this guide) wiil rotate in place
-    else {potential_guides[0].Transform(rotation);}
+    else {potential_guides[0].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));}
     
     //Step 5B: Add Motor to target geometry
     let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
@@ -1764,9 +1788,6 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
     
     pair_list = generate_selection_pairs(source_tags, target_tags);
-
-console.log('Target tags: ', target_tags);
-console.log('Pair list: ', pair_list);
 
     let source_target_pair = pair_list[selection_index % pair_list.length];
     let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
