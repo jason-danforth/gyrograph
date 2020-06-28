@@ -42,6 +42,7 @@ var target_guides = [];
 var target_tags = [];
 
 var rotation_angle = 0;
+var rotation_increment = 1;
 /*Motors are intended to rotate at different speeds. The default settings are that motors with larger (i.e. Tube 1)
 connections will rotate at roughly half the speed of smaller (i.e. Tubes 2 and 3) connections.*/
 var angle_factor_A = 1.1;
@@ -49,6 +50,13 @@ var angle_factor_B = 1.9;
 var angle_A = 0;
 var angle_B = 0;
 
+var play_bool = true;
+var draw_bool = false;
+var play_count = 0;
+var max_play_count = 300;
+
+var window_width = window.screen.availWidth;
+var window_height = window.screen.availHeight;
 
 /*Each part (base, tube, motor, nib, etc.) and all of its source geometry is read in as a var variable.
 Inner and Outer placements for Tubes share the same geometry and can be created in the part's function

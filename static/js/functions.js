@@ -1,3 +1,4 @@
+// import { LineMaterial } from '../static/js/LineMaterial.js';
 
 var scene, camera, renderer, controls;
 
@@ -136,28 +137,44 @@ slider.oninput = function() {
   }
 
 
-function rewind() {
+// function rewind() {
+//     var current_angle = rotation_angle / 0.0175; //Convert angle from radians to degrees
+
+//     renderer.setAnimationLoop( function () {
+//         if (current_angle > 0) {
+//             current_angle -= 4;
+//             rotation_angle = current_angle * 0.0175; //Convert angle from degrees to radians
+//             angle_A = rotation_angle * angle_factor_A;
+//             angle_B = rotation_angle * angle_factor_B;         
+
+//             reset_scene(); 
+//             renderer.render( scene, camera );
+//         }
+//     })
+// }
+
+function play() {
+    play_bool = true;
+    draw_bool = true;
+
     var current_angle = rotation_angle / 0.0175; //Convert angle from radians to degrees
 
     renderer.setAnimationLoop( function () {
-        if (current_angle > 0) {
-            current_angle -= 4;
+        if ((play_count < max_play_count) && play_bool) {
+            current_angle += rotation_increment;
             rotation_angle = current_angle * 0.0175; //Convert angle from degrees to radians
             angle_A = rotation_angle * angle_factor_A;
             angle_B = rotation_angle * angle_factor_B;         
 
             reset_scene(); 
             renderer.render( scene, camera );
+            play_count += 1;
         }
     })
 }
 
-function play() {
-    rewind();
-}
-
 function pause() {
-
+    play_bool = false;
 }
 
 function reset_animation() {
@@ -209,7 +226,6 @@ function reset_scene() {
 function draw() {
     let meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 150});
     //meshMaterial.bumpMap = THREE.ImageUtils.loadTexture('/static/textures/grit.png');
-    let curveMaterial = new THREE.LineBasicMaterial( { color: 0x9c9c9c } );
     
     for (let i=0; i<part_list_output.length; i++) {
         let geo = part_list_output[i];
@@ -217,6 +233,48 @@ function draw() {
         threeMesh.castShadow = true;
         threeMesh.receiveShadow = true;
         scene.add(threeMesh);
+    }
+
+    //Draw curves
+    for (let i=0; i<traces_points.length; i++) {
+
+        let points = traces_points[i];
+
+        // //Simple line (no ability to control thickness)
+        // let curve_material = new THREE.LineBasicMaterial({color: 0xff00aa});
+        // let new_points = [];
+        // for (let i=0; i<points.length; i++) {
+        //     let THREEpt = new THREE.Vector3(points[i].location[0], points[i].location[1], points[i].location[2]);
+        //     new_points.push(THREEpt);
+        // }
+        // let curve_points = new THREE.BufferGeometry().setFromPoints(new_points);                
+        // curve_geometry = new THREE.Line( curve_points, curve_material );
+        // scene.add(curve_geometry);
+
+
+        //Lines with variable thickness
+        //tutorial: https://dustinpfister.github.io/2018/11/07/threejs-line-fat-width/
+        let geo = new THREE.LineGeometry();
+        let positions = [];
+        let colors = []
+        let color = new THREE.Color(0xff00aa);
+
+        for (let i=0; i<points.length; i++) {
+            positions.push(points[i].location[0], points[i].location[1], points[i].location[2]);
+            colors.push(color.r, color.g, color.b);
+        }
+        geo.setPositions(positions);
+        geo.setColors(colors);
+
+        var matLine = new THREE.LineMaterial({
+            linewidth: 3, // in pixels
+            vertexColors: THREE.VertexColors
+        });
+    
+        matLine.resolution.set(window_width, window_height);
+        
+        let line = new THREE.Line2(geo, matLine);
+        scene.add(line);
     }
 }
 
@@ -1809,13 +1867,15 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     /*Step 5. Transform 
     This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
     It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.*/
-    
+
+    let returned_point = orient3d(point, source_axis.duplicate(), source_guide.duplicate(), potential_axes, potential_guides, target_axis, target_guide); 
+    point = returned_point[0];
+
     let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
     geo = returned_objects[0];
     potential_axes = returned_objects[1];
     potential_guides = returned_objects[2];
 
-    
     /*Step 6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)
     Nibs don't add any new targets, so there's no need to iterate over the potential_source_tags for tags/axes/guides as with other parts.
     However, if Nib is placed in a Tube 2/3 inner position, then we have to remove the corresponding Tube 2/3 outer tag so that a Tube 1 
@@ -1834,26 +1894,21 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
         }
     }
     
-    /*Add nib_pt to traces_points
-    This is the method for exporting one point per Nib for any given angle
-    Points are then recorded in Grasshopper and converted into lines*/
-    // let path = GH_Path(nib_item);
-    // let manual_points.Add(point, path);
-    
-    /*Previously: when machine in "run" mode, this was the process for recording points
-    Presumably, this method will work in JS*/
-    // if rotation_angle == 0:
-    //     trace_point = [nib_pt]
-    //     traces_points.append(trace_point)
-    // else:
-    //     traces_points[nib_item].append(nib_pt)
-    // nib_item += 1     
-
-    
     /*nib_item refers to reach individual nib
     traces_points is a list of lists, and each list contains the points for a particular nib
     note how the initial point for each nib (when rotation_angle == 0) is added to traces_points as [nib_pt]
     so nib_item locates that particular nib*/
+
+
+    //Push points
+    if (draw_bool && play_count == 0) {
+        traces_points.push([point]);        
+    }
+    else if (draw_bool && play_count > 0) {
+        traces_points[nib_item].push(point);
+    }
+
+    nib_item += 1;
     
     // Create next block
     count += 1;
