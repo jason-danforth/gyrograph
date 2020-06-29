@@ -36,13 +36,12 @@ var selection_index = 0;
 var count = 0;
 var nib_item = 0;
 var traces_points = [];
-var traces_lines = [];
 var target_axes = [];
 var target_guides = [];
 var target_tags = [];
 
 var rotation_angle = 0;
-// var current_angle = 0;
+var current_angle = 0; //This is to capture the angle from the manual slider, so that it can be returned to with reset_animation()
 var rotation_increment = 1.5;
 
 /*Motors are intended to rotate at different speeds. The default settings are that motors with larger (i.e. Tube 1)

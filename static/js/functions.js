@@ -132,6 +132,7 @@ function curveToLineSegments(curve, material) {
 var slider = document.getElementById("myRange");
 slider.oninput = function() {
     rotation_angle = this.value * 0.0175; //Convert angle from degrees to radians
+    current_angle = rotation_angle;
     angle_A = rotation_angle * angle_factor_A;
     angle_B = rotation_angle * angle_factor_B;
  
@@ -211,7 +212,12 @@ function pause() {
 
 
 function reset_animation() {
-    for (let i=0; i<scene.children.length; i++) {console.log(scene.children[i].type);}
+    rotation_angle = current_angle;
+    traces_points = [];
+    draw_bool = false;
+    play_bool = false;
+    play_count = 0;
+    reset_scene();
 }
 
 
