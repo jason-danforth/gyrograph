@@ -42,7 +42,7 @@ var target_guides = [];
 var target_tags = [];
 
 var rotation_angle = 0;
-var rotation_increment = 1;
+var rotation_increment = 2;
 /*Motors are intended to rotate at different speeds. The default settings are that motors with larger (i.e. Tube 1)
 connections will rotate at roughly half the speed of smaller (i.e. Tubes 2 and 3) connections.*/
 var angle_factor_A = 1.1;

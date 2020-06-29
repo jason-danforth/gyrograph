@@ -178,7 +178,7 @@ function pause() {
 }
 
 function reset_animation() {
-
+    for (let i=0; i<scene.children.length; i++) {console.log(scene.children[i].type);}
 }
 
 //------------------------------------------Placement Controls-------------------------------------------------------------------------------------------------------------------------------------
@@ -205,7 +205,7 @@ function previous() {
 function reset_scene() {
     //Remove previously drawn objects from the scene
     for (let i=0; i<scene.children.length; i++) {
-        if (scene.children[i].type == 'Mesh') {
+        if ((scene.children[i].type == 'Mesh') || (scene.children[i].type == 'Line2')) {
             scene.remove(scene.children[i]);
             i = i-1;
         }
