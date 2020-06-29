@@ -21,7 +21,7 @@ function init() {
     scene.background = new THREE.Color(0x221f34);
 
     camera = new THREE.PerspectiveCamera( 10, window.innerWidth/window.innerHeight, 1, 100000 );
-    camera.position.set(2600,2600,275) //Set target in ../../resources/OrbitControls.js
+    camera.position.set(-2000,2000,2000) //Set target in ../../resources/OrbitControls.js
 
     //Directional light (lights work like cameras and need a LOT of settings)
     var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
@@ -76,15 +76,17 @@ function init() {
 }
 
 var animate = function () {
-    requestAnimationFrame( animate );
-    
-    //Limit framerate to boost performance
-    // setTimeout( function() {
-    //     requestAnimationFrame( animate );
-    // }, 1000 / 1 );
+    // requestAnimationFrame( animate );
+    // controls.update();
+    // renderer.render( scene, camera );
 
-    controls.update();
-    renderer.render( scene, camera );
+    // Limit framerate to boost performance
+    setTimeout( function() {
+        requestAnimationFrame( animate );
+        controls.update();
+        renderer.render( scene, camera );
+    }, 1000 / 30 );
+
 };
 
 function onWindowResize() {
@@ -137,32 +139,61 @@ slider.oninput = function() {
   }
 
 
-// function rewind() {
-//     var current_angle = rotation_angle / 0.0175; //Convert angle from radians to degrees
-
-//     renderer.setAnimationLoop( function () {
-//         if (current_angle > 0) {
-//             current_angle -= 4;
-//             rotation_angle = current_angle * 0.0175; //Convert angle from degrees to radians
-//             angle_A = rotation_angle * angle_factor_A;
-//             angle_B = rotation_angle * angle_factor_B;         
-
-//             reset_scene(); 
-//             renderer.render( scene, camera );
+// function find_max_play_count () {
+//     /*Delete this later. Function doesn't work, but abandonned b/c there are too many
+//     edge cases where the user would expect the rotation to stop. I.e. the simple existence
+//     of a motor doesn't guarantee that the machine will require a corresponding number of 
+//     rotations. For example: motors 3, 4, and 5 can be used to connect tubes without using the 
+//     actual motor, and motors 1, 2, and 3 can be used to conenct a tube 2 that will just rotate
+//     around it's axis. And LASTLY, the user might not want the machine to stop rotating! Why 
+//     not just let it rotate until someone actually presses pause or reset?*/
+    
+//     //Find the fewest degrees of rotation required to return machine to original position
+//     //angle_factor_A is used to adjust the rotation angle for Motors rotating Tube 1  
+//     //angle_factor_B is used to adjust the rotation angle for Motors rotating Tubes 2 and 3  
+//     let angle_motor_A;    
+//     for (let i=1; i<11; i++) {
+//         angle_motor_A = 360 * angle_factor_A * i;
+//         if (angle_motor_A.toFixed(0) % 360 == 0) {
+//             angle_motor_A = 360 * i;
+//             break;
 //         }
-//     })
+//     }
+
+//     let angle_motor_B;
+//     for (let i=1; i<11; i++) {
+//         angle_motor_B = 360 * angle_factor_B * i;
+//         if (angle_motor_B.toFixed(0) % 360 == 0) {
+//             angle_motor_B = 360 * i;
+//             break;
+//         }
+//     }
+
+//     //Adjust angles by rotation_increment
+//     angle_motor_A = angle_A / rotation_increment;
+//     angle_motor_B = angle_B / rotation_increment;
+
+//     //Determine if machine includes motors A and/or B
+//     let motors_A = ['Motor 4', 'Motor 5']; 
+//     let motors_B = ['Motor 1', 'Motor 2', 'Motor 3'];
+//     let incl_motors_A = motors_A.some(el => part_list_input.includes(el));
+//     let incl_motors_B = motors_B.some(el => part_list_input.includes(el));
+
+//     if (incl_motors_A && incl_motors_B) {max_play_count = Math.max(angle_motor_A, angle_motor_B);}
+//     else if (incl_motors_A) {max_play_count = angle_motor_A;}
+//     else if (incl_motors_B) {max_play_count = angle_motor_B;}
+//     else {max_play_count = 360;}
+
+//     console.log('Max play count: ', max_play_count);
 // }
 
 function play() {
     play_bool = true;
     draw_bool = true;
 
-    var current_angle = rotation_angle / 0.0175; //Convert angle from radians to degrees
-
     renderer.setAnimationLoop( function () {
-        if ((play_count < max_play_count) && play_bool) {
-            current_angle += rotation_increment;
-            rotation_angle = current_angle * 0.0175; //Convert angle from degrees to radians
+        if (play_bool) {
+            rotation_angle = rotation_angle + (rotation_increment * 0.0175); //Convert angle from degrees to radians
             angle_A = rotation_angle * angle_factor_A;
             angle_B = rotation_angle * angle_factor_B;         
 
@@ -173,15 +204,20 @@ function play() {
     })
 }
 
+
 function pause() {
     play_bool = false;
 }
+
 
 function reset_animation() {
     for (let i=0; i<scene.children.length; i++) {console.log(scene.children[i].type);}
 }
 
-//------------------------------------------Placement Controls-------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+//------------------------------------------Helper Functions-------------------------------------------------------------------------------------------------------------------------------------
 
 function next() {
     let lastIndex = selection_list.length - 1;
@@ -189,6 +225,7 @@ function next() {
     
     reset_scene();
   }
+
 
 function previous() {
     let lastIndex = selection_list.length - 1;
@@ -199,8 +236,6 @@ function previous() {
     reset_scene();
   }
 
-
-//------------------------------------------Helper Functions-------------------------------------------------------------------------------------------------------------------------------------
 
 function reset_scene() {
     //Remove previously drawn objects from the scene
@@ -1871,7 +1906,7 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     let returned_point = orient3d(point, source_axis.duplicate(), source_guide.duplicate(), potential_axes, potential_guides, target_axis, target_guide); 
     point = returned_point[0];
 
-    let returned_objects = orient3d(geo, source_axis, source_guide, potential_axes, potential_guides, target_axis, target_guide);
+    let returned_objects = orient3d(geo, source_axis.duplicate(), source_guide.duplicate(), potential_axes, potential_guides, target_axis, target_guide);
     geo = returned_objects[0];
     potential_axes = returned_objects[1];
     potential_guides = returned_objects[2];
@@ -1900,11 +1935,15 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     so nib_item locates that particular nib*/
 
 
-    //Push points
-    if (draw_bool && play_count == 0) {
+    /*Push points
+    If machine has made 10 full rotations, the lines being drawn are guaranteed to be complete,
+    and there's no need to continue adding points (the machine will still be allowed to rotate)*/
+    let current_angle = rotation_angle / 0.0175
+    
+    if (draw_bool && play_count == 0 && current_angle < 3701) {
         traces_points.push([point]);        
     }
-    else if (draw_bool && play_count > 0) {
+    else if (draw_bool && play_count > 0  && current_angle < 3701) {
         traces_points[nib_item].push(point);
     }
 
