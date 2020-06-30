@@ -9,8 +9,6 @@ var scene, camera, renderer, controls;
 //let rhino = null;
 
 
-
-
 rhino3dm().then(function(m) {
     rhino = m; // global
   });
@@ -86,8 +84,7 @@ var animate = function () {
         controls.update();
         renderer.render( scene, camera );
     }, 1000 / 30 );
-
-};
+}
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -337,39 +334,28 @@ function update_src() {
 
     //Make undo, previous, and next buttons available
     let element_undo = document.getElementById("undo");
-    element_undo.onmouseover = function() {this.src='/static/images/icons_undo_mouseover.png';}
+    element_undo.className = "iconAvailable"; //Change to CSS class with hover 
     element_undo.setAttribute( "onClick", "undo()" );
 
     let element_previous = document.getElementById("previous");
-    element_previous.src="/static/images/icons_previous_mouseout.png";
-    element_previous.onmouseover = function() {this.src='/static/images/icons_previous_mouseover.png';}
-    element_previous.onmouseout = function() {this.src='/static/images/icons_previous_mouseout.png';}
+    element_previous.className = "iconAvailable"; //Change to CSS class with hover 
     element_previous.setAttribute( "onClick", "previous()" );
 
     let element_next = document.getElementById("next");
-    element_next.src="/static/images/icons_next_mouseout.png";
-    element_next.onmouseover = function() {this.src='/static/images/icons_next_mouseover.png';}
-    element_next.onmouseout = function() {this.src='/static/images/icons_next_mouseout.png';}
+    element_next.className = "iconAvailable"; //Change to CSS class with hover 
     element_next.setAttribute( "onClick", "next()" );
 
     let element_play = document.getElementById("play");
-    element_play.src="/static/images/icons_play_available.png";
-    element_play.onmouseover = function() {this.src='/static/images/icons_play_mouseover.png';}
-    element_play.onmouseout = function() {this.src='/static/images/icons_play_available.png';}
+    element_play.className = "iconAvailable"; //Change to CSS class with hover 
     element_play.setAttribute( "onClick", "play()" );
 
     let element_pause = document.getElementById("pause");
-    element_pause.src="/static/images/icons_pause_available.png";
-    element_pause.onmouseover = function() {this.src='/static/images/icons_pause_mouseover.png';}
-    element_pause.onmouseout = function() {this.src='/static/images/icons_pause_available.png';}
+    element_pause.className = "iconAvailable"; //Change to CSS class with hover 
     element_pause.setAttribute( "onClick", "pause()" );
 
     let element_reset = document.getElementById("reset");
-    element_reset.src="/static/images/icons_reset_available.png";
-    element_reset.onmouseover = function() {this.src='/static/images/icons_reset_mouseover.png';}
-    element_reset.onmouseout = function() {this.src='/static/images/icons_reset_available.png';}
+    element_reset.className = "iconAvailable"; //Change to CSS class with hover 
     element_reset.setAttribute( "onClick", "reset_animation()" );
-
 
     let tag_set = new Set();
     for (let i=0; i<target_tags.length; i++) {
@@ -381,134 +367,98 @@ function update_src() {
 
     if (tag_set.has("tube1")) {
         let element = document.getElementById("tube1");
-        element.src="/static/images/icons_tube1_available.png";
-        element.onmouseover = function() {this.src='/static/images/icons_tube1_onclick.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_tube1_available.png';};
+        element.className = "iconAvailable"; //Change to CSS class with hover 
         element.setAttribute( "onClick", "add_part('Tube 1')" );
     }
     else {
         let element = document.getElementById("tube1");
-        element.src="/static/images/icons_tube1_unavailable.png";
-        element.onmouseover = function() {this.src='/static/images/icons_tube1_unavailable.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_tube1_unavailable.png';};
-        element.onclick = "";
+        element.className = "iconUnavailable";
+        element.onclick = " ";
     }
 
     //The "tube2" tag is used for Tube 2 and Tube 3 since they share all the same placements
     if (tag_set.has("tube2")) {
         let element1 = document.getElementById("tube2");
-        element1.src="/static/images/icons_tube2_available.png";
-        element1.onmouseover = function() {this.src='/static/images/icons_tube2_onclick.png';}
-        element1.onmouseout = function() {this.src='/static/images/icons_tube2_available.png';};
+        element1.className = "iconAvailable"; //Change to CSS class with hover 
         element1.setAttribute( "onClick", "add_part('Tube 2')" );
 
         let element2 = document.getElementById("tube3");
-        element2.src="/static/images/icons_tube3_available.png";
-        element2.onmouseover = function() {this.src='/static/images/icons_tube3_onclick.png';}
-        element2.onmouseout = function() {this.src='/static/images/icons_tube3_available.png';};
+        element2.className = "iconAvailable"; //Change to CSS class with hover 
         element2.setAttribute( "onClick", "add_part('Tube 3')" );
     }
     else {
         let element1 = document.getElementById("tube2");
-        element1.src="/static/images/icons_tube2_unavailable.png";
-        element1.onmouseover = function() {this.src='/static/images/icons_tube2_unavailable.png';}
-        element1.onmouseout = function() {this.src='/static/images/icons_tube2_unavailable.png';};
+        element1.className = "iconUnavailable"; 
         element1.onclick = "";
 
         let element2 = document.getElementById("tube3");
-        element2.src="/static/images/icons_tube3_unavailable.png";
-        element2.onmouseover = function() {this.src='/static/images/icons_tube3_unavailable.png';}
-        element2.onmouseout = function() {this.src='/static/images/icons_tube3_unavailable.png';};
+        element2.className = "iconUnavailable"; 
         element2.onclick = "";
     }
 
     if (tag_set.has("motor1")) {
         let element = document.getElementById("motor1");
-        element.src="/static/images/icons_motor1_available.png";
-        element.onmouseover = function() {this.src='/static/images/icons_motor1_onclick.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_motor1_available.png';};
+        element.className = "iconAvailable"; //Change to CSS class with hover 
         element.setAttribute( "onClick", "add_part('Motor 1')" );
     }
     else {
         let element = document.getElementById("motor1");
-        element.src="/static/images/icons_motor1_unavailable.png";
-        element.onmouseover = function() {this.src='/static/images/icons_motor1_unavailable.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_motor1_unavailable.png';};
+        element.className = "iconUnavailable";
         element.onclick = "";
     }
 
     if (tag_set.has("motor2")) {
         let element = document.getElementById("motor2");
-        element.src="/static/images/icons_motor2_available.png";
-        element.onmouseover = function() {this.src='/static/images/icons_motor2_onclick.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_motor2_available.png';};
+        element.className = "iconAvailable"; //Change to CSS class with hover 
         element.setAttribute( "onClick", "add_part('Motor 2')" );
     }
     else {
         let element = document.getElementById("motor2");
-        element.src="/static/images/icons_motor2_unavailable.png";
-        element.onmouseover = function() {this.src='/static/images/icons_motor2_unavailable.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_motor2_unavailable.png';};
+        element.className = "iconUnavailable"; 
         element.onclick = "";
     }
 
     if (tag_set.has("motor3")) {
         let element = document.getElementById("motor3");
-        element.src="/static/images/icons_motor3_available.png";
-        element.onmouseover = function() {this.src='/static/images/icons_motor3_onclick.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_motor3_available.png';};
+        element.className = "iconAvailable"; //Change to CSS class with hover 
         element.setAttribute( "onClick", "add_part('Motor 3')" );
     }
     else {
         let element = document.getElementById("motor3");
-        element.src="/static/images/icons_motor3_unavailable.png";
-        element.onmouseover = function() {this.src='/static/images/icons_motor3_unavailable.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_motor3_unavailable.png';};
+        element.className = "iconUnavailable";
         element.onclick = "";
     }
 
     if (tag_set.has("motor4")) {
         let element = document.getElementById("motor4");
-        element.src="/static/images/icons_motor4_available.png";
-        element.onmouseover = function() {this.src='/static/images/icons_motor4_onclick.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_motor4_available.png';};
+        element.className = "iconAvailable"; //Change to CSS class with hover 
         element.setAttribute( "onClick", "add_part('Motor 4')" );
     }
     else {
         let element = document.getElementById("motor4");
-        element.src="/static/images/icons_motor4_unavailable.png";
-        element.onmouseover = function() {this.src='/static/images/icons_motor4_unavailable.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_motor4_unavailable.png';};
+        element.className = "iconUnavailable";
         element.onclick = "";
     }
 
     if (tag_set.has("motor5")) {
         let element = document.getElementById("motor5");
-        element.src="/static/images/icons_motor5_available.png";
-        element.onmouseover = function() {this.src='/static/images/icons_motor5_onclick.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_motor5_available.png';};
+        element.className = "iconAvailable"; //Change to CSS class with hover 
         element.setAttribute( "onClick", "add_part('Motor 5')" );
     }
     else {
         let element = document.getElementById("motor5");
-        element.src="/static/images/icons_motor5_unavailable.png";
-        element.onmouseover = function() {this.src='/static/images/icons_motor5_unavailable.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_motor5_unavailable.png';};
+        element.className = "iconUnavailable"; 
         element.onclick = "";
     }
 
     if (tag_set.has("nib") && selection_list.length > 0) {
         let element = document.getElementById("nib");
-        element.src="/static/images/icons_nib_available.png";
-        element.onmouseover = function() {this.src='/static/images/icons_nib_onclick.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_nib_available.png';};
+        element.className = "iconAvailable"; //Change to CSS class with hover 
         element.setAttribute( "onClick", "add_part('Nib')" );
     }
     else {
         let element = document.getElementById("nib");
-        element.src="/static/images/icons_nib_unavailable.png";
-        element.onmouseover = function() {this.src='/static/images/icons_nib_unavailable.png';}
-        element.onmouseout = function() {this.src='/static/images/icons_nib_unavailable.png';};
+        element.className = "iconUnavailable"; 
         element.onclick = "";
     }
 }
@@ -522,74 +472,51 @@ function freeze_src() {
 
     //Make undo, previous, and next buttons available
     let element_undo = document.getElementById("undo");
-    element_undo.onmouseover = function() {this.src='/static/images/icons_undo_mouseout.png';}
+    element_undo.className = "iconUnavailable";
     element_undo.setAttribute( "onClick", " " );
 
     let element_previous = document.getElementById("previous");
-    element_previous.src="/static/images/icons_previous_unavailable.png";
-    element_previous.onmouseover = function() {this.src='/static/images/icons_previous_unavailable.png';}
-    element_previous.onmouseout = function() {this.src='/static/images/icons_previous_unavailable.png';}
+    element_previous.className = "iconUnavailable";
     element_previous.setAttribute( "onClick", " " );
 
     let element_next = document.getElementById("next");
-    element_next.src="/static/images/icons_next_unavailable.png";
-    element_next.onmouseover = function() {this.src='/static/images/icons_next_unavailable.png';}
-    element_next.onmouseout = function() {this.src='/static/images/icons_next_unavailable.png';}
+    element_next.className = "iconUnavailable";
     element_next.setAttribute( "onClick", " " );
 
-
     let element_tube1 = document.getElementById("tube1");
-    element_tube1.src="/static/images/icons_tube1_unavailable.png";
-    element_tube1.onmouseover = function() {this.src='/static/images/icons_tube1_unavailable.png';}
-    element_tube1.onmouseout = function() {this.src='/static/images/icons_tube1_unavailable.png';};
+    element_tube1.className = "iconUnavailable";
     element_tube1.setAttribute( "onClick", " " );
     
     let element_tube2 = document.getElementById("tube2");
-    element_tube2.src="/static/images/icons_tube2_unavailable.png";
-    element_tube2.onmouseover = function() {this.src='/static/images/icons_tube2_unavailable.png';}
-    element_tube2.onmouseout = function() {this.src='/static/images/icons_tube2_unavailable.png';};
+    element_tube2.className = "iconUnavailable";
     element_tube2.setAttribute( "onClick", " " );
 
     let element_tube3 = document.getElementById("tube3");
-    element_tube3.src="/static/images/icons_tube3_unavailable.png";
-    element_tube3.onmouseover = function() {this.src='/static/images/icons_tube3_unavailable.png';}
-    element_tube3.onmouseout = function() {this.src='/static/images/icons_tube3_unavailable.png';};
+    element_tube3.className = "iconUnavailable";
     element_tube3.setAttribute( "onClick", " " );
     
     let element_motor1 = document.getElementById("motor1");
-    element_motor1.src="/static/images/icons_motor1_unavailable.png";
-    element_motor1.onmouseover = function() {this.src='/static/images/icons_motor1_unavailable.png';}
-    element_motor1.onmouseout = function() {this.src='/static/images/icons_motor1_unavailable.png';};
+    element_motor1.className = "iconUnavailable";
     element_motor1.setAttribute( "onClick", " " );
 
     let element_motor2 = document.getElementById("motor2");
-    element_motor2.src="/static/images/icons_motor2_unavailable.png";
-    element_motor2.onmouseover = function() {this.src='/static/images/icons_motor2_unavailable.png';}
-    element_motor2.onmouseout = function() {this.src='/static/images/icons_motor2_unavailable.png';};
+    element_motor2.className = "iconUnavailable";
     element_motor2.setAttribute( "onClick", " " );
 
     let element_motor3 = document.getElementById("motor3");
-    element_motor3.src="/static/images/icons_motor3_unavailable.png";
-    element_motor3.onmouseover = function() {this.src='/static/images/icons_motor3_unavailable.png';}
-    element_motor3.onmouseout = function() {this.src='/static/images/icons_motor3_unavailable.png';};
+    element_motor3.className = "iconUnavailable";
     element_motor3.setAttribute( "onClick", " " );
 
     let element_motor4 = document.getElementById("motor4");
-    element_motor4.src="/static/images/icons_motor4_unavailable.png";
-    element_motor4.onmouseover = function() {this.src='/static/images/icons_motor4_unavailable.png';}
-    element_motor4.onmouseout = function() {this.src='/static/images/icons_motor4_unavailable.png';};
+    element_motor4.className = "iconUnavailable";
     element_motor4.setAttribute( "onClick", " " );
 
     let element_motor5 = document.getElementById("motor5");
-    element_motor5.src="/static/images/icons_motor5_unavailable.png";
-    element_motor5.onmouseover = function() {this.src='/static/images/icons_motor5_unavailable.png';}
-    element_motor5.onmouseout = function() {this.src='/static/images/icons_motor5_unavailable.png';};
+    element_motor5.className = "iconUnavailable";
     element_motor5.setAttribute( "onClick", " " );
 
     let element_nib = document.getElementById("nib");
-    element_nib.src="/static/images/icons_nib_unavailable.png";
-    element_nib.onmouseover = function() {this.src='/static/images/icons_nib_unavailable.png';}
-    element_nib.onmouseout = function() {this.src='/static/images/icons_nib_unavailable.png';};
+    element_nib.className = "iconUnavailable";
     element_nib.setAttribute( "onClick", " " );
 }
 
