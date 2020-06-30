@@ -75,3 +75,40 @@ canvas { width: 100%; height: 100%; }
   background: rgb(255, 255, 255); /* Green background */
   cursor: pointer; /* Cursor on hover */
 }
+
+
+
+
+/* The unavailable slider */
+.sliderUnavailable {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  /* width: 50%;  */
+  height: 3px; /* Specified height */
+  border-radius: 1px; 
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.2; /* Set transparency (for mouse-over effects on hover) */
+  margin-top: 25px;
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.sliderUnavailable::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 10px; /* Set a specific slider handle width */
+  height: 10px; /* Slider handle height */
+  border-radius: 50%; 
+  background: rgb(255, 255, 255); /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.sliderUnavailable::-moz-range-thumb {
+  width: 10px; /* Set a specific slider handle width */
+  height: 10px; /* Slider handle height */
+  border-radius: 50%; 
+  background: rgb(255, 255, 255); /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}

@@ -135,7 +135,7 @@ slider.oninput = function() {
     current_angle = rotation_angle;
     angle_A = rotation_angle * angle_factor_A;
     angle_B = rotation_angle * angle_factor_B;
- 
+    
     reset_scene(); 
   }
 
@@ -189,6 +189,9 @@ slider.oninput = function() {
 // }
 
 function play() {
+    
+    freeze_src(); //Disable all buttons other than play/pause/reset
+
     play_bool = true;
     draw_bool = true;
 
@@ -212,7 +215,16 @@ function pause() {
 
 
 function reset_animation() {
+    
+    document.getElementById("myRange").className = "slider"; //enable slider
+    document.getElementById("myRange").disabled = false;
+
+    update_src(); //enable all other buttons;
+    
     rotation_angle = current_angle;
+    angle_A = rotation_angle * angle_factor_A;
+    angle_B = rotation_angle * angle_factor_B;
+
     traces_points = [];
     draw_bool = false;
     play_bool = false;
@@ -499,6 +511,86 @@ function update_src() {
         element.onmouseout = function() {this.src='/static/images/icons_nib_unavailable.png';};
         element.onclick = "";
     }
+}
+
+
+function freeze_src() {
+    //Turn off all controls during play / pause / reset
+
+    document.getElementById("myRange").className = "sliderUnavailable"; //Disable slider
+    document.getElementById("myRange").disabled = true;
+
+    //Make undo, previous, and next buttons available
+    let element_undo = document.getElementById("undo");
+    element_undo.onmouseover = function() {this.src='/static/images/icons_undo_mouseout.png';}
+    element_undo.setAttribute( "onClick", " " );
+
+    let element_previous = document.getElementById("previous");
+    element_previous.src="/static/images/icons_previous_unavailable.png";
+    element_previous.onmouseover = function() {this.src='/static/images/icons_previous_unavailable.png';}
+    element_previous.onmouseout = function() {this.src='/static/images/icons_previous_unavailable.png';}
+    element_previous.setAttribute( "onClick", " " );
+
+    let element_next = document.getElementById("next");
+    element_next.src="/static/images/icons_next_unavailable.png";
+    element_next.onmouseover = function() {this.src='/static/images/icons_next_unavailable.png';}
+    element_next.onmouseout = function() {this.src='/static/images/icons_next_unavailable.png';}
+    element_next.setAttribute( "onClick", " " );
+
+
+    let element_tube1 = document.getElementById("tube1");
+    element_tube1.src="/static/images/icons_tube1_unavailable.png";
+    element_tube1.onmouseover = function() {this.src='/static/images/icons_tube1_unavailable.png';}
+    element_tube1.onmouseout = function() {this.src='/static/images/icons_tube1_unavailable.png';};
+    element_tube1.setAttribute( "onClick", " " );
+    
+    let element_tube2 = document.getElementById("tube2");
+    element_tube2.src="/static/images/icons_tube2_unavailable.png";
+    element_tube2.onmouseover = function() {this.src='/static/images/icons_tube2_unavailable.png';}
+    element_tube2.onmouseout = function() {this.src='/static/images/icons_tube2_unavailable.png';};
+    element_tube2.setAttribute( "onClick", " " );
+
+    let element_tube3 = document.getElementById("tube3");
+    element_tube3.src="/static/images/icons_tube3_unavailable.png";
+    element_tube3.onmouseover = function() {this.src='/static/images/icons_tube3_unavailable.png';}
+    element_tube3.onmouseout = function() {this.src='/static/images/icons_tube3_unavailable.png';};
+    element_tube3.setAttribute( "onClick", " " );
+    
+    let element_motor1 = document.getElementById("motor1");
+    element_motor1.src="/static/images/icons_motor1_unavailable.png";
+    element_motor1.onmouseover = function() {this.src='/static/images/icons_motor1_unavailable.png';}
+    element_motor1.onmouseout = function() {this.src='/static/images/icons_motor1_unavailable.png';};
+    element_motor1.setAttribute( "onClick", " " );
+
+    let element_motor2 = document.getElementById("motor2");
+    element_motor2.src="/static/images/icons_motor2_unavailable.png";
+    element_motor2.onmouseover = function() {this.src='/static/images/icons_motor2_unavailable.png';}
+    element_motor2.onmouseout = function() {this.src='/static/images/icons_motor2_unavailable.png';};
+    element_motor2.setAttribute( "onClick", " " );
+
+    let element_motor3 = document.getElementById("motor3");
+    element_motor3.src="/static/images/icons_motor3_unavailable.png";
+    element_motor3.onmouseover = function() {this.src='/static/images/icons_motor3_unavailable.png';}
+    element_motor3.onmouseout = function() {this.src='/static/images/icons_motor3_unavailable.png';};
+    element_motor3.setAttribute( "onClick", " " );
+
+    let element_motor4 = document.getElementById("motor4");
+    element_motor4.src="/static/images/icons_motor4_unavailable.png";
+    element_motor4.onmouseover = function() {this.src='/static/images/icons_motor4_unavailable.png';}
+    element_motor4.onmouseout = function() {this.src='/static/images/icons_motor4_unavailable.png';};
+    element_motor4.setAttribute( "onClick", " " );
+
+    let element_motor5 = document.getElementById("motor5");
+    element_motor5.src="/static/images/icons_motor5_unavailable.png";
+    element_motor5.onmouseover = function() {this.src='/static/images/icons_motor5_unavailable.png';}
+    element_motor5.onmouseout = function() {this.src='/static/images/icons_motor5_unavailable.png';};
+    element_motor5.setAttribute( "onClick", " " );
+
+    let element_nib = document.getElementById("nib");
+    element_nib.src="/static/images/icons_nib_unavailable.png";
+    element_nib.onmouseover = function() {this.src='/static/images/icons_nib_unavailable.png';}
+    element_nib.onmouseout = function() {this.src='/static/images/icons_nib_unavailable.png';};
+    element_nib.setAttribute( "onClick", " " );
 }
 
 
