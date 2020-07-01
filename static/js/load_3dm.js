@@ -54,7 +54,8 @@ var angle_B = 0;
 var play_bool = true; 
 var draw_bool = false;
 var play_count = 0;
-// var max_play_count = 300;
+var line_weight = 3;
+var line_color;
 
 var window_width = window.screen.availWidth;
 var window_height = window.screen.availHeight;

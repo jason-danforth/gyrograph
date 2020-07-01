@@ -124,6 +124,10 @@ function curveToLineSegments(curve, material) {
 }
 
 
+
+
+//------------------------------------------Nib Input-------------------------------------------------------------------------------------------------------------------------------------
+
 var colorWheel = new iro.ColorPicker("#colorWheel", {
     layout: [
         { 
@@ -135,7 +139,7 @@ var colorWheel = new iro.ColorPicker("#colorWheel", {
             width: 105,
             borderWidth: 1,
             borderColor: '#fff',
-            handleRadius: 10,
+            handleRadius: 5,
             // handleSvg: '#handle'
           } 
         }
@@ -144,17 +148,24 @@ var colorWheel = new iro.ColorPicker("#colorWheel", {
 
 colorWheel.on('input:end', function(color){
     // when the user has finished interacting with the color picker, the callback gets passed the color object
-    console.log(color.hexString);
+    // console.log(color.hexString);
+    line_color = color.hexString;
   })
 
+  var sliderLineWeight = document.getElementById("lineWeightSlider");
+  sliderLineWeight.oninput = function() {
+      line_weight = this.value //Set thickness of lines
+      let slider_thickness = line_weight.concat('px');
+      document.getElementById("lineWeightSlider").style.height = slider_thickness;
+    }
 
 
 
 
 //------------------------------------------Animate-------------------------------------------------------------------------------------------------------------------------------------
 
-var slider = document.getElementById("myRange");
-slider.oninput = function() {
+var sliderRotation = document.getElementById("rotationSlider");
+sliderRotation.oninput = function() {
     rotation_angle = this.value * 0.0175; //Convert angle from degrees to radians
     current_angle = rotation_angle;
     angle_A = rotation_angle * angle_factor_A;
@@ -235,6 +246,7 @@ function play() {
 
 function pause() {
     document.getElementById("colorWheel").className = "wheelUnavailable"; //disable color wheel
+    document.getElementById("lineWeightSlider").className = "sliderLinesUnavailable"; //disable color wheel
     play_bool = false;
 }
 
@@ -242,9 +254,10 @@ function pause() {
 function reset_animation() {
     
     document.getElementById("colorWheel").className = "wheelAvailable"; //enable color wheel
+    document.getElementById("lineWeightSlider").className = "sliderLines"; //disable color wheel
 
-    document.getElementById("myRange").className = "slider"; //enable slider
-    document.getElementById("myRange").disabled = false;
+    document.getElementById("rotationSlider").className = "slider"; //enable slider
+    document.getElementById("rotationSlider").disabled = false;
 
     update_src(); //enable all other buttons;
     
@@ -337,7 +350,7 @@ function draw() {
         let geo = new THREE.LineGeometry();
         let positions = [];
         let colors = []
-        let color = new THREE.Color(0xff00aa);
+        let color = new THREE.Color(line_color);
 
         for (let i=0; i<points.length; i++) {
             positions.push(points[i].location[0], points[i].location[1], points[i].location[2]);
@@ -347,7 +360,7 @@ function draw() {
         geo.setColors(colors);
 
         var matLine = new THREE.LineMaterial({
-            linewidth: 3, // in pixels
+            linewidth: line_weight, // in pixels
             vertexColors: THREE.VertexColors
         });
     
@@ -497,8 +510,8 @@ function update_src() {
 function freeze_src() {
     //Turn off all controls during play / pause / reset
 
-    document.getElementById("myRange").className = "sliderUnavailable"; //Disable slider
-    document.getElementById("myRange").disabled = true;
+    document.getElementById("rotationSlider").className = "sliderUnavailable"; //Disable slider
+    document.getElementById("rotationSlider").disabled = true;
 
     //Make undo, previous, and next buttons available
     let element_undo = document.getElementById("undo");
