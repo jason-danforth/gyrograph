@@ -30,6 +30,18 @@ canvas { width: 100%; height: 100%; }
 }
 
 
+.wheelAvailable {
+  margin-top: 3px;
+  opacity: 1.0;
+  transition: opacity 0.25s;
+}
+
+.wheelUnavailable {
+  margin-top: 3px;
+  opacity: 0.0;
+  transition: opacity 0.25s;
+}
+
 
 /*---------------------------------- Icons -----------------------------*/
 
@@ -43,9 +55,11 @@ canvas { width: 100%; height: 100%; }
 }
 
 .iconUnavailable {
-  opacity: 0.4;
+  opacity: 0.3;
   transition: opacity 0.3s;
 }
+
+
 
 /*---------------------------------- Slider -----------------------------*/
 .slidecontainer {

@@ -86,6 +86,7 @@ var animate = function () {
     }, 1000 / 30 );
 }
 
+
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -93,17 +94,20 @@ function onWindowResize() {
     animate();
 }
 
+
 function meshToThreejs(mesh, material) {
     let loader = new THREE.BufferGeometryLoader();
     var geometry = loader.parse(mesh.toThreejsJSON());
     return new THREE.Mesh(geometry, material);
 }
 
+
 function curveToThreejs(curve, material) {
     let loader = new THREE.BufferGeometryLoader();
     var geometry = loader.parse(curve.toJSON());
     return new THREE.Line(geometry, material);
 }
+
 
 function curveToLineSegments(curve, material) {
     var geometry = new THREE.Geometry();
@@ -119,6 +123,29 @@ function curveToLineSegments(curve, material) {
     return new THREE.Line(geometry, material);
 }
 
+
+var colorWheel = new iro.ColorPicker("#colorWheel", {
+    layout: [
+        { 
+          component: iro.ui.Wheel,
+          options: {
+            wheelLightness: true,
+            wheelAngle: 0,
+            wheelDirection: "anticlockwise",
+            width: 105,
+            borderWidth: 1,
+            borderColor: '#fff',
+            handleRadius: 10,
+            // handleSvg: '#handle'
+          } 
+        }
+        ]
+});
+
+colorWheel.on('input:end', function(color){
+    // when the user has finished interacting with the color picker, the callback gets passed the color object
+    console.log(color.hexString);
+  })
 
 
 
@@ -186,7 +213,7 @@ slider.oninput = function() {
 // }
 
 function play() {
-    
+
     freeze_src(); //Disable all buttons other than play/pause/reset
 
     play_bool = true;
@@ -207,12 +234,15 @@ function play() {
 
 
 function pause() {
+    document.getElementById("colorWheel").className = "wheelUnavailable"; //disable color wheel
     play_bool = false;
 }
 
 
 function reset_animation() {
     
+    document.getElementById("colorWheel").className = "wheelAvailable"; //enable color wheel
+
     document.getElementById("myRange").className = "slider"; //enable slider
     document.getElementById("myRange").disabled = false;
 

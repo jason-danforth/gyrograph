@@ -83,6 +83,23 @@
                                 <img class="iconUnavailable" id="next" src="/static/images/icons_next.png" onclick=" ">
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <!-- Color Wheel from: https://www.cssscript.com/sleek-html5-javascript-color-picker-iro-js/ -->
+                                <!-- custom handle svg -->
+                                <!-- <svg style="display:none;">
+                                    <defs>
+                                        <g id="handle" stroke-width="2" >
+                                            <path d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0" stroke="#FFFFFF" stroke-width="2"></path>
+                                        </g>
+                                    </defs>
+                                </svg> -->
+                                <!-- <svg id="handle" height="10" width="10">
+                                    <circle cx="5" cy="5" r="5" stroke="white" stroke-width="1" fill="red" />
+                                </svg> -->
+                                <div class="wheelAvailable" id="colorWheel"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -95,7 +112,8 @@
                 <input type="range" min="1" max="360" value="0" class="slider" id="myRange">
             </div>
         </div>
-        
+
+
 
         <!-- Play, Pause, Reset -->
         <div class="col-md-6">
@@ -163,16 +181,20 @@
 
 <!----------JS---------------------------------------------------------------------------------------------------------------------->
     
+    <!-- THREEjs -->
     <script type="text/javascript" src="../static/js/three.min.js"></script>
     <script type="text/javascript" src="../static/js/OrbitControls.js"></script>
     
-    <!-- Needed for thick lines -->
+    <!-- Thick Lines -->
     <script type="text/javascript" src="../static/js/LineSegmentsGeometry.js"></script>
     <script type="text/javascript" src="../static/js/LineGeometry.js"></script>
     <script type="text/javascript" src="../static/js/LineMaterial.js"></script>
     <script type="text/javascript" src="../static/js/LineSegments2.js"></script>
     <script type="text/javascript" src="../static/js/Line2.js"></script>    
     
+    <!-- Color Wheel -->
+    <script type="text/javascript" src="../static/js/iro.js"></script>    
+
     <!-- Rhino and main functions -->
     <script type="text/javascript" src="../static/js/rhino3dm.js"></script>
     <script type="text/javascript" src="../static/js/load_3dm.js"></script>
