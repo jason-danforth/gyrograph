@@ -34,8 +34,9 @@ var pair_list //Array of potential source/target pairs. Global b/c needs to be a
 var selection_list = [];
 var selection_index = 0;
 var count = 0;
-var nib_item = 0;
-var traces_points = [];
+var nib_objects = {}; //JSON to track each nib (color, line weight, and points)
+var nib_item = 0; //int to track each nib sequentially
+var nib_key; //str used as key in nib_objects
 var target_axes = [];
 var target_guides = [];
 var target_tags = [];
