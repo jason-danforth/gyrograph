@@ -55,7 +55,8 @@ var play_bool = true;
 var draw_bool = false;
 var play_count = 0;
 var line_weight = 3;
-var line_color;
+var line_color = 0xffffff;
+var nib_UI_bool = false;
 
 var window_width = window.screen.availWidth;
 var window_height = window.screen.availHeight;
@@ -209,6 +210,7 @@ that Tubes 2/3 can be placed, as well as into either end of Tubes 2/3 themselves
 The thing that makes Nibs complicated is that the Motors are not all the same size, resulting in more axes and guides 
 than should be necessary.*/
 var nib_geo;
+var nib_sphere;
 var nib_pt;
 var nib_tube1_axis_1;
 var nib_tube1_axis_2;
@@ -319,7 +321,8 @@ var guid_motor5_tube2_axis_2 = '3e7e29e3-0dc7-406f-b0ae-b7ba078762df';
 var guid_motor5_tube2_guide_1 = 'bfa66d13-8af2-44af-b147-9cedf04d7efb';
 var guid_motor5_tube2_guide_2 = 'cd949e11-fa56-44df-bd9c-c75d50cdd37d';
 
-var guid_nib_geo = '991612b7-9699-4abe-bc9b-99ddf5098854';
+var guid_nib_geo = '01f86def-67fa-4e1f-aef5-a6bc0c314f17';
+var guid_nib_sphere = 'cf6df439-e2bf-4c14-9231-a5eaf071b7c4';
 var guid_nib_pt = '92657b99-21a1-4efa-ad06-c56247726c7e';
 var guid_nib_tube2_axis_1 = 'd88f9519-939c-4293-8139-ad176efd6e48';
 var guid_nib_tube2_axis_2 = '5f3e532e-059c-42d4-b808-75ca54fb287b';
@@ -537,6 +540,7 @@ rhino3dm().then(async m => {
         else if (objects.get(i).attributes().id == guid_motor5_tube2_guide_2) {motor5_tube2_guide_2 = objects.get(i).geometry();}
         
         else if (objects.get(i).attributes().id == guid_nib_geo) {nib_geo = objects.get(i).geometry();}
+        else if (objects.get(i).attributes().id == guid_nib_sphere) {nib_sphere = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_nib_pt) {nib_pt = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_nib_tube2_axis_1) {nib_tube2_axis_1 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_nib_tube2_axis_2) {nib_tube2_axis_2 = objects.get(i).geometry();}

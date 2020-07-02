@@ -126,7 +126,7 @@ function curveToLineSegments(curve, material) {
 
 
 
-//------------------------------------------Nib Input-------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------Nib Input Panel-------------------------------------------------------------------------------------------------------------------------------------
 
 var colorWheel = new iro.ColorPicker("#colorWheel", {
     layout: [
@@ -146,18 +146,21 @@ var colorWheel = new iro.ColorPicker("#colorWheel", {
         ]
 });
 
-colorWheel.on('input:end', function(color){
-    // when the user has finished interacting with the color picker, the callback gets passed the color object
-    // console.log(color.hexString);
-    line_color = color.hexString;
-  })
 
-  var sliderLineWeight = document.getElementById("lineWeightSlider");
-  sliderLineWeight.oninput = function() {
-      line_weight = this.value //Set thickness of lines
-      let slider_thickness = line_weight.concat('px');
-      document.getElementById("lineWeightSlider").style.height = slider_thickness;
-    }
+colorWheel.on('input:end', function(color){
+    //'input' settings here: https://www.cssscript.com/sleek-html5-javascript-color-picker-iro-js/
+    line_color = color.hexString;
+    reset_scene();
+})
+
+
+var sliderLineWeight = document.getElementById("lineWeightSlider");
+sliderLineWeight.oninput = function() {
+    line_weight = this.value //Set thickness of lines
+    let slider_thickness = line_weight.concat('px'); //Convet to "pixels"
+    document.getElementById("lineWeightSlider").style.height = slider_thickness; //Update CSS property
+    reset_scene();
+}
 
 
 
@@ -245,17 +248,11 @@ function play() {
 
 
 function pause() {
-    document.getElementById("colorWheel").className = "wheelUnavailable"; //disable color wheel
-    document.getElementById("lineWeightSlider").className = "sliderLinesUnavailable"; //disable color wheel
     play_bool = false;
 }
 
 
 function reset_animation() {
-    
-    document.getElementById("colorWheel").className = "wheelAvailable"; //enable color wheel
-    document.getElementById("lineWeightSlider").className = "sliderLines"; //disable color wheel
-
     document.getElementById("rotationSlider").className = "slider"; //enable slider
     document.getElementById("rotationSlider").disabled = false;
 
@@ -276,6 +273,20 @@ function reset_animation() {
 
 
 //------------------------------------------Helper Functions-------------------------------------------------------------------------------------------------------------------------------------
+
+function nib_UI() {
+    //Controls whether or not the Nib UI panel is visible
+    if (nib_UI_bool) {
+        document.getElementById("colorWheel").className = "wheelAvailable"; //enable color wheel
+        document.getElementById("lineWeightSlider").className = "sliderLines"; //enable line weight slider
+    }
+
+    else {
+        document.getElementById("colorWheel").className = "wheelHidden"; //disable color wheel
+        document.getElementById("lineWeightSlider").className = "sliderLinesUnavailable"; //disable line weight slider
+    }
+}
+
 
 function next() {
     let lastIndex = selection_list.length - 1;
@@ -318,13 +329,24 @@ function reset_scene() {
 
 function draw() {
     let meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 150});
+    let nibMaterial = new THREE.MeshBasicMaterial({color: line_color});
     //meshMaterial.bumpMap = THREE.ImageUtils.loadTexture('/static/textures/grit.png');
     
     for (let i=0; i<part_list_output.length; i++) {
         let geo = part_list_output[i];
-        let threeMesh = meshToThreejs(geo, meshMaterial);
-        threeMesh.castShadow = true;
-        threeMesh.receiveShadow = true;
+        let threeMesh;
+
+        if (geo.getUserString('name') == "nib") {
+            threeMesh = meshToThreejs(geo, nibMaterial);
+            threeMesh.castShadow = false;
+            threeMesh.receiveShadow = false;
+        } 
+        else { 
+            threeMesh = meshToThreejs(geo, meshMaterial); 
+            threeMesh.castShadow = true;
+            threeMesh.receiveShadow = true;
+        }
+
         scene.add(threeMesh);
     }
 
@@ -898,6 +920,10 @@ function tube1(parts, target_axes, target_guides, target_tags, count, nib_item) 
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
     
+    //Hide Nib UI if enabled
+    nib_UI_bool = false;
+    nib_UI();
+
     try {
         if (typeof selection_list[count] == 'number') {
             selection_index = selection_list[count];
@@ -1008,6 +1034,10 @@ function tube2(parts, target_axes, target_guides, target_tags, count, nib_item) 
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
     
+    //Hide Nib UI if enabled
+    nib_UI_bool = false;
+    nib_UI();
+
     try {
         if (typeof selection_list[count] == 'number') {
             selection_index = selection_list[count];
@@ -1129,6 +1159,10 @@ function tube3(part_list_output, target_axes, target_guides, target_tags, count,
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (part_list_output/tags/axes/guides)*/
     
+    //Hide Nib UI if enabled
+    nib_UI_bool = false;
+    nib_UI();
+        
     try {
         if (typeof selection_list[count] == 'number') {
             selection_index = selection_list[count];
@@ -1257,6 +1291,10 @@ function motor1(part_list_output, target_axes, target_guides, target_tags, count
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
     
+    //Hide Nib UI if enabled
+    nib_UI_bool = false;
+    nib_UI();
+        
     try {
         if (typeof selection_list[count] == 'number') {
             selection_index = selection_list[count];
@@ -1379,6 +1417,10 @@ function motor2(parts, target_axes, target_guides, target_tags, count, nib_item)
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
     
+    //Hide Nib UI if enabled
+    nib_UI_bool = false;
+    nib_UI();
+
     try {
         if (typeof selection_list[count] == 'number') {
             selection_index = selection_list[count];
@@ -1514,6 +1556,10 @@ function motor3(parts, target_axes, target_guides, target_tags, count, nib_item)
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
     
+    //Hide Nib UI if enabled
+    nib_UI_bool = false;
+    nib_UI();
+
     try {
         if (typeof selection_list[count] == 'number') {
             selection_index = selection_list[count];
@@ -1644,6 +1690,10 @@ function motor4(parts, target_axes, target_guides, target_tags, count, nib_item)
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
     
+    //Hide Nib UI if enabled
+    nib_UI_bool = false;
+    nib_UI();
+
     try {
         if (typeof selection_list[count] == 'number') {
             selection_index = selection_list[count];
@@ -1774,6 +1824,10 @@ function motor5(parts, target_axes, target_guides, target_tags, count, nib_item)
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
     
+    //Hide Nib UI if enabled
+    nib_UI_bool = false;
+    nib_UI();
+
     try {
         if (typeof selection_list[count] == 'number') {
             selection_index = selection_list[count];
@@ -1901,7 +1955,11 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically fewer options than the source placements)
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
-        
+    
+    //Enable Nib UI
+    nib_UI_bool = true;
+    nib_UI();
+
     try {
         if (typeof selection_list[count] == 'number') {
             selection_index = selection_list[count];
@@ -1918,6 +1976,7 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     placements are all detailed below in Step 2*/
     
     let geo = nib_geo.duplicate();
+    let sphere = nib_sphere.duplicate();
     let point = nib_pt.duplicate();
     let tube1_axis_1 = nib_tube1_axis_1.duplicate();
     let tube1_axis_2 = nib_tube1_axis_2.duplicate();
@@ -1931,6 +1990,8 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     let motors2_axis_2 = nib_motors2_axis_2.duplicate();
     let motors1_guide_1 = nib_motors1_guide_1.duplicate();
     let motors2_guide_1 = nib_motors2_guide_1.duplicate();
+    
+    sphere.scale(line_weight / 3);
     
     /*Step 2. Create source_tag/axis/guide pairs
     The source_tags will be compared to available target_tags, and the selection_index will be used to choose from the available pairings
@@ -1974,6 +2035,9 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     let returned_point = orient3d(point, source_axis.duplicate(), source_guide.duplicate(), potential_axes, potential_guides, target_axis, target_guide); 
     point = returned_point[0];
 
+    let returned_sphere = orient3d(sphere, source_axis.duplicate(), source_guide.duplicate(), potential_axes, potential_guides, target_axis, target_guide); 
+    sphere = returned_sphere[0];
+
     let returned_objects = orient3d(geo, source_axis.duplicate(), source_guide.duplicate(), potential_axes, potential_guides, target_axis, target_guide);
     geo = returned_objects[0];
     potential_axes = returned_objects[1];
@@ -1985,8 +2049,9 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     can't be placed over it (but a Motor still could)*/
     
     // console.log('Adding Nib');
+    sphere.setUserString("name", "nib");
     part_list_output.push(geo);
-
+    part_list_output.push(sphere);
 
     //Step 7A: confirm target is Tube 2/3
     if (target_tag == "nib_tube2_a" || target_tag == "nib_tube2_b") {
