@@ -139,8 +139,8 @@ var colorWheel = new iro.ColorPicker("#colorWheel", {
             width: 105,
             borderWidth: 1,
             borderColor: '#fff',
-            handleRadius: 5,
-            // handleSvg: '#handle'
+            // handleRadius: 5,
+            handleSvg: '#handle'
           } 
         }
         ]
