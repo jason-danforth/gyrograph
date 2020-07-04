@@ -219,3 +219,43 @@ canvas { width: 100%; height: 100%; }
   background: rgb(255, 255, 255); /* Green background */
   cursor: pointer; /* Cursor on hover */
 }
+
+
+
+
+/*---------------------------------- Circular Slider -----------------------------*/
+
+#circularSlider .rs-handle  {
+  background-color: #ffffff;
+  padding: 7px;
+  border: 0px solid #ffffff;
+}
+
+#circularSlider .rs-handle.rs-focus  {
+  border-color: #ffffff;
+
+}
+#circularSlider .rs-handle:after  {
+  border-color: #ffffff;
+  background-color: #ffffff;
+}
+
+.circularAvailable {
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.circularAvailable:hover {
+  opacity: 1.0;
+}
+
+.circularUnavailable {
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+
+.slider-margin {
+  margin-top: 10px;
+  margin-bottom: 40px;
+  margin-left: 20px;
+}

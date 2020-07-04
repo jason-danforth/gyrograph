@@ -6,9 +6,14 @@
     <!-- CSS -->
     <link rel="stylesheet" href="../static/css/style.css">
 
+    <!-- JQuery for circular slider -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/round-slider@1.6.0/dist/roundslider.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.0/dist/roundslider.min.js"></script>
+
     <!-- Bootstrap and AJAX (need these versions for Modal popup to work) -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
@@ -114,24 +119,19 @@
 
 
         <!-- Rotation Slider -->
-        <div class="col-md-12">
+        <!-- <div class="col-md-12">
             <div class="slidecontainer">
                 <input type="range" min="0" max="360" value="0" class="slider" id="rotationSlider">
             </div>
-        </div>
-
+        </div> -->
 
 
         <!-- Play, Pause, Reset -->
         <div class="col-md-6">
-            <div class="content with-margin">
-                <div class="row">
-                    <img src="/static/images/icons_blank.png">
-                </div>
-            </div>
-            <div class="content with-margin">
-                <div class="row">
-                    <img src="/static/images/icons_blank.png">
+            <div class="content slider-margin">
+                <div class="row">                    
+                    <!-- Circular Slider -->
+                    <div id="circularSlider" class="circularAvailable"></div>        
                 </div>
             </div>
             <div class="content with-margin">

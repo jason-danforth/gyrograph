@@ -22,7 +22,7 @@ function init() {
     camera.position.set(-2000,2000,2000) //Set target in ../../resources/OrbitControls.js
 
     //Directional light (lights work like cameras and need a LOT of settings)
-    var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
+    var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
     directionalLight.position.set(100, 100, 100);
     directionalLight.target.position.set(0, 0, 0);
     directionalLight.shadow.camera.near = 0.5;       
@@ -37,7 +37,7 @@ function init() {
     scene.add(directionalLight);
 
     //Directional light in opposite direction
-    var directionalLight2 = new THREE.DirectionalLight( 0xffffff, 0.2 );
+    var directionalLight2 = new THREE.DirectionalLight( 0xffffff, 0.1 );
     directionalLight2.position.set(-100, -100, -100);
     directionalLight2.target.position.set(0, 0, 0);
     directionalLight2.shadow.camera.near = 0.5;       
@@ -56,7 +56,7 @@ function init() {
     //scene.add(cameraHelper);
 
     //var ambientLight = new THREE.AmbientLight(0xbebad6);
-    var ambientLight = new THREE.AmbientLight(0xa39fbf);
+    var ambientLight = new THREE.AmbientLight(0x8985a6);
     scene.add(ambientLight);
 
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -170,15 +170,79 @@ sliderLineWeight.oninput = function() {
 
 //------------------------------------------Animate-------------------------------------------------------------------------------------------------------------------------------------
 
-var sliderRotation = document.getElementById("rotationSlider");
-sliderRotation.oninput = function() {
-    rotation_angle = this.value * 0.0175; //Convert angle from degrees to radians
-    current_angle = rotation_angle;
-    angle_A = rotation_angle * angle_factor_A;
-    angle_B = rotation_angle * angle_factor_B;
+// var sliderRotation = document.getElementById("rotationSlider");
+// sliderRotation.oninput = function() {
+//     rotation_angle = this.value * 0.0175; //Convert angle from degrees to radians
+//     current_angle = rotation_angle;
+//     angle_A = rotation_angle * angle_factor_A;
+//     angle_B = rotation_angle * angle_factor_B;
     
+//     reset_scene(); 
+//   }
+
+$("#circularSlider").roundSlider({
+    min: 1.0,
+    max: 2.0,
+    step: 0.05,
+    value: null,
+    radius: 75,
+    width: 3,
+    handleSize: "+11",
+    startAngle: 180,
+    endAngle: "+360",
+    animation: false,
+    showTooltip: false,
+    editableTooltip: true,
+    readOnly: false,
+    disabled: false,
+    keyboardAction: false,
+    mouseScrollAction: false,
+    sliderType: "min-range",
+    circleShape: "full",
+    handleShape: "dot",
+    lineCap: "round",
+
+    // the 'startValue' property decides at which point the slider should start.
+    // otherwise, by default the slider starts with min value. this is mainly used
+    // for min-range slider, where you can customize the min-range start position.
+    startValue: null,
+
+    // SVG related properties
+    svgMode: true,
+    borderWidth: 0,
+    borderColor: null,
+    pathColor: '#686773',
+    rangeColor: '#ffffff',
+    tooltipColor: null,
+
+    // events
+    beforeCreate: null,
+    create: null,
+    start: null,
+    // 'beforeValueChange' will be triggered before 'valueChange', and it can be cancellable
+    beforeValueChange: null,
+    drag: null,
+    change: null,
+    // 'update' event is the combination of 'drag' and 'change'
+    update: null,
+    // 'valueChange' event is similar to 'update' event, in addition it will trigger
+    // even the value was changed through programmatically also.
+    valueChange: null,
+    stop: null,
+    tooltipFormat: null
+});
+
+$("#circularSlider").roundSlider("option", "value", 1.9);
+$("#circularSlider").roundSlider();
+$("#circularSlider").on("valueChange", function (e) {
+    update_angle_factor_B(e.value);
+})
+
+function update_angle_factor_B(value) {
+    angle_factor_B = value;
+    angle_B = rotation_angle * angle_factor_B;         
     reset_scene(); 
-  }
+}
 
 
 // function find_max_play_count () {
@@ -256,8 +320,11 @@ function pause() {
 
 
 function reset_animation() {
-    document.getElementById("rotationSlider").className = "slider"; //enable slider
-    document.getElementById("rotationSlider").disabled = false;
+    // document.getElementById("rotationSlider").className = "slider"; //enable slider
+    // document.getElementById("rotationSlider").disabled = false;
+
+    $("#circularSlider").roundSlider("enable"); //enable slider
+    document.getElementById("circularSlider").className = "circularAvailable";
 
     update_src(); //enable all other buttons;
     
@@ -351,7 +418,7 @@ function reset_scene() {
 
 
 function draw() {
-    let meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 150});
+    let meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 1000});
     //meshMaterial.bumpMap = THREE.ImageUtils.loadTexture('/static/textures/grit.png');
     
     for (let i=0; i<part_list_output.length; i++) {
@@ -562,8 +629,12 @@ function update_src() {
 function freeze_src() {
     //Turn off all controls during play / pause / reset
 
-    document.getElementById("rotationSlider").className = "sliderUnavailable"; //Disable slider
-    document.getElementById("rotationSlider").disabled = true;
+    // document.getElementById("rotationSlider").className = "sliderUnavailable"; //Disable slider
+    // document.getElementById("rotationSlider").disabled = true;
+
+    //Disable circular slider
+    $("#circularSlider").roundSlider("disable");
+    document.getElementById("circularSlider").className = "circularUnavailable";
 
     //Make undo, previous, and next buttons available
     let element_undo = document.getElementById("undo");
