@@ -56,7 +56,7 @@ var play_bool = true;
 var draw_bool = false;
 var play_count = 0;
 var line_weight = 3;
-var line_color = 0xffffff;
+var line_color = 0xff0077;
 var nib_UI_bool = false;
 
 var window_width = window.screen.availWidth;

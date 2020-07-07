@@ -129,6 +129,7 @@ function curveToLineSegments(curve, material) {
 //------------------------------------------Nib Input Panel-------------------------------------------------------------------------------------------------------------------------------------
 
 var colorWheel = new iro.ColorPicker("#colorWheel", {
+    color: '#ff0077', //this value should match line_color
     layout: [
         { 
           component: iro.ui.Wheel,
@@ -145,7 +146,6 @@ var colorWheel = new iro.ColorPicker("#colorWheel", {
         }
         ]
 });
-
 
 colorWheel.on('input:end', function(color){
     //'input' settings here: https://www.cssscript.com/sleek-html5-javascript-color-picker-iro-js/
@@ -189,7 +189,7 @@ $("#circularSlider").roundSlider({
     width: 3,
     handleSize: "+11",
     startAngle: 180,
-    endAngle: "+360",
+    endAngle: "+340",
     animation: false,
     showTooltip: false,
     editableTooltip: true,
@@ -490,7 +490,14 @@ function draw() {
 
 
 function update_src() {
-    //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
+    //Make pause and reset buttons Unavailable
+    let element_pause = document.getElementById("pause");
+    element_pause.className = "iconUnavailable";
+    element_pause.setAttribute( "onClick", " " );
+
+    let element_reset = document.getElementById("reset");
+    element_reset.className = "iconUnavailable";
+    element_reset.setAttribute( "onClick", " " );
 
     //Make undo, previous, and next buttons available
     if (part_list_input.length > 0) {
@@ -511,14 +518,9 @@ function update_src() {
     element_play.className = "iconAvailable"; //Change to CSS class with hover 
     element_play.setAttribute( "onClick", "play()" );
 
-    let element_pause = document.getElementById("pause");
-    element_pause.className = "iconAvailable"; //Change to CSS class with hover 
-    element_pause.setAttribute( "onClick", "pause()" );
 
-    let element_reset = document.getElementById("reset");
-    element_reset.className = "iconAvailable"; //Change to CSS class with hover 
-    element_reset.setAttribute( "onClick", "reset_animation()" );
 
+    //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
     let tag_set = new Set();
     for (let i=0; i<target_tags.length; i++) {
         individual_tags = target_tags[i].split(", ");
@@ -636,7 +638,17 @@ function freeze_src() {
     $("#circularSlider").roundSlider("disable");
     document.getElementById("circularSlider").className = "circularUnavailable";
 
-    //Make undo, previous, and next buttons available
+    //Make pause and reset buttons available
+    let element_pause = document.getElementById("pause");
+    element_pause.className = "iconAvailable";
+    element_pause.setAttribute( "onClick", "pause()" );
+
+    let element_reset = document.getElementById("reset");
+    element_reset.className = "iconAvailable";
+    element_reset.setAttribute( "onClick", "reset_animation()" );
+
+
+    //Make undo, previous, and next buttons unavailable
     let element_undo = document.getElementById("undo");
     element_undo.className = "iconUnavailable";
     element_undo.setAttribute( "onClick", " " );
