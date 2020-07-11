@@ -106,6 +106,7 @@
                             </div>
                         </div>
                         <div class="row">
+                            <!-- Line-weight slider -->
                             <div class="col-md-10">
                                 <div class="slidecontainer">
                                     <input type="range" min="1" max="10" value="3" class="sliderLinesUnavailable" id="lineWeightSlider">
@@ -181,6 +182,23 @@
         </div>
     </div>
 
+
+    <!-- Navigation Icons -->
+    <div id="overlay_right">
+        <div class="col-md-4">
+            <div class="row">
+                <img class="iconAvailable" id="top" src="/static/images/icons_top.png" onclick="topView()">
+            </div>
+            <div class="row">
+                <img class="iconAvailable" id="3D" src="/static/images/icons_3d.png" onclick="axonView()">
+            </div>
+            <div class="row">
+                <img class="iconAvailable" id="front" src="/static/images/icons_front.png" onclick="frontView()">
+            </div>
+        </div>
+    </div>
+
+
     <div id="container">
         <div id="canvas"></div>
     </div>
@@ -191,6 +209,9 @@
     <!-- THREEjs -->
     <script type="text/javascript" src="../static/js/three.min.js"></script>
     <script type="text/javascript" src="../static/js/OrbitControls.js"></script>
+
+    <!-- Tween -->
+    <script type="text/javascript" src="../static/js/tween.umd.js"></script>
     
     <!-- Thick Lines -->
     <script type="text/javascript" src="../static/js/LineSegmentsGeometry.js"></script>

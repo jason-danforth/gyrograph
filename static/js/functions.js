@@ -19,11 +19,13 @@ function init() {
     scene.background = new THREE.Color(0x221f34);
 
     camera = new THREE.PerspectiveCamera( 10, window.innerWidth/window.innerHeight, 1, 100000 );
-    camera.position.set(-2000,2000,2000) //Set target in ../../resources/OrbitControls.js
+    // camera = new THREE.OrthographicCamera( window.innerWidth/-2, window.innerWidth/2, window.innerHeight/2, window.innerHeight/-2, 1, 1000 );
+
+    camera.position.set(2000,2000,2000); //Set target in ../../resources/OrbitControls.js
 
     //Directional light (lights work like cameras and need a LOT of settings)
     var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
-    directionalLight.position.set(100, 100, 100);
+    directionalLight.position.set(-100, 100, 100);
     directionalLight.target.position.set(0, 0, 0);
     directionalLight.shadow.camera.near = 0.5;       
     directionalLight.shadow.camera.far = 1000;      
@@ -38,7 +40,7 @@ function init() {
 
     //Directional light in opposite direction
     var directionalLight2 = new THREE.DirectionalLight( 0xffffff, 0.1 );
-    directionalLight2.position.set(-100, -100, -100);
+    directionalLight2.position.set(100, -100, -100);
     directionalLight2.target.position.set(0, 0, 0);
     directionalLight2.shadow.camera.near = 0.5;       
     directionalLight2.shadow.camera.far = 1000;      
@@ -83,6 +85,8 @@ var animate = function () {
         requestAnimationFrame( animate );
         controls.update();
         renderer.render( scene, camera );
+        TWEEN.update();
+        camera.updateProjectionMatrix();
     }, 1000 / 30 );
 }
 
@@ -122,6 +126,181 @@ function curveToLineSegments(curve, material) {
     }
     return new THREE.Line(geometry, material);
 }
+
+
+
+function axonView() {
+    // //Simple controls (no animated transition)
+    // controls.target.set( 0, 0, 275 ); //Readjust after panning
+    // camera.position.set(-2000,2000,2000);
+    // camera.updateProjectionMatrix();
+
+    //With Tweens
+    let duration = 500;
+
+    new TWEEN.Tween( camera.position ).to( {
+        x: 2000,
+        y: 2000,
+        z: 2000}, duration )
+        .easing( TWEEN.Easing.Quadratic.InOut)
+        .start();
+    
+    new TWEEN.Tween( controls.target ).to( {
+        x: 0,
+        y: 0,
+        z: 275}, duration )
+        .easing( TWEEN.Easing.Quadratic.InOut)
+        .start();
+}
+
+
+function topView() {
+    let duration = 500;
+
+    new TWEEN.Tween( camera.position ).to( {
+        x: 10,
+        y: 10,
+        z: 4000}, duration )
+        .easing( TWEEN.Easing.Quadratic.InOut )
+        .start();
+    
+    new TWEEN.Tween( controls.target ).to( {
+        x: 0,
+        y: 0,
+        z: 275}, duration )
+        .easing( TWEEN.Easing.Quadratic.InOut )
+        .start();
+
+
+    
+    /*The unsolved problem explored in all the code below is the camera rotates so 
+    suddenly when changing to top view. This behavior can be seen if you change the
+    duration to something huge like 10000 and are already in top view but with a 
+    different rotation (in which case the rotation happens right away) or are in front 
+    view (in which case the rotation happens after the position Tween). In either case,
+    the rotation is still smooth, but it is MUCH faster than the change in position.
+    The rotation happens solely because of the position tween, and note that what appears
+    to be a 45 degree angle, is actually aligned with the x and y axes (the model is rotated)*/ 
+    
+    
+    
+    // // interpolate quaternions with the current tween value
+    // //let initQ = new THREE.Quaternion().copy(camera.quaternion);
+    // let initQ = new THREE.Quaternion();
+    // initQ.copy(camera.quaternion);
+
+    // // let initQ = camera.quaternion.clone();
+    // // let endQ = new THREE.Quaternion(0.18734214884075126, 0.4522839565354606, 0.8056007778384423, 0.3336907680389976);
+    // let curQ = new THREE.Quaternion();
+    // let endQ = new THREE.Quaternion();
+    // let euler = new THREE.Euler( 0, 0, 2.5, 'XYZ' );
+    // endQ.setFromEuler(euler);        
+
+    // console.log('Init: ', initQ);
+    // console.log('End: ', endQ);
+
+    // let time = {t: 0};
+    // //This doesn't actually do anything... All the rotation is happening bc of the position tween
+    // new TWEEN.Tween( time ).to( {t: 1}, duration )
+    //     .easing(TWEEN.Easing.Quadratic.InOut)
+    //     .onUpdate(() => {
+    //         THREE.Quaternion.slerp(initQ, endQ, curQ, time.t);
+    //         camera.quaternion = curQ;
+    //         console.log("T: ", time.t);
+    //     })
+    //     .start();
+
+
+
+
+
+    
+    // // interpolate quaternions with the current tween value
+    // let initQ = new THREE.Quaternion().copy(camera.quaternion); //may not even need this
+    // let curQ = new THREE.Quaternion();
+    // let endQ = new THREE.Quaternion();
+    // let euler = new THREE.Euler( 0, 0, 2.5, 'XYZ' );
+    // endQ.setFromEuler(euler);
+
+    // THREE.Quaternion.slerp(initQ, endQ, curQ, 0.9);
+
+    // let vec3 = new THREE.Vector3();
+
+    // // apply new quaternion to camera position
+    // vec3.x = camera.position.x;
+    // vec3.y = camera.position.y;
+    // vec3.z = camera.position.z;
+    // vec3.applyQuaternion(curQ)
+    // camera.position.copy(vec3)
+
+    // // apply new quaternion to camera up
+    // vec3 = camera.up.clone();
+    // vec3.applyQuaternion(curQ);
+    // camera.up.copy(vec3);
+
+    // const currentCamPosition = {x: camera.postion.x, y: camera.position.y, z: camera.position.z};
+    // const storedMarkerPosition = new THREE.Vector3(0, 0, 4000);
+    // const newCameraTarget = new THREE.Vector3(0, 0, 275);
+    // const markerPosition = new THREE.Vector3(...Object.values(newCameraTarget));
+    // const startRotation = new THREE.Euler().copy(camera.rotation);
+
+    // camera.lookAt(storedMarkerPosition);
+    // const endRotation = new THREE.Euler().copy(camera.rotation);
+
+    // camera.rotation.copy(startRotation);
+    
+    // new TWEEN.Tween(camera.rotation)
+    //     .to(
+    //     {
+    //         x: endRotation.x,
+    //         y: endRotation.y,
+    //         z: endRotation.z,
+    //     }, 500)
+    //     .easing(TWEEN.Easing.Quadratic.InOut)
+    //     .onComplete(() => {
+    //         new TWEEN.Tween(camera.position)
+    //             .to({
+    //                 x: marker.cameraPositionX,
+    //                 y: camera.position.y,
+    //                 z: marker.cameraPositionZ,
+    //             })
+    //             .easing(TWEEN.Easing.Quadratic.InOut)
+    //             .onUpdate(() => {
+    //                 camera.lookAt(storedMarkerPosition);
+    //             })
+    //             .onComplete(() => {
+    //                 camera.lookAt(storedMarkerPosition);
+    //                 radius = Math.hypot(...Object.values(markerPosition));
+    //                 phi = Math.acos(markerPosition.y / radius);
+    //                 theta = Math.atan2(markerPosition.z, markerPosition.x);
+    //                 lon = THREE.Math.radToDeg(theta);
+    //                 lat = 90 - THREE.Math.radToDeg(phi);
+    //     })
+    //     .start();
+    // })
+    // .start();
+
+}
+
+
+function frontView() {
+    let duration = 500;
+
+    new TWEEN.Tween( camera.position ).to( {
+        x: 0,
+        y: 4000,
+        z: 275}, duration )
+        .easing( TWEEN.Easing.Quadratic.InOut)
+        .start();
+    
+    new TWEEN.Tween( controls.target ).to( {
+        x: 0,
+        y: 0,
+        z: 275}, duration )
+        .easing( TWEEN.Easing.Quadratic.InOut)
+        .start();
+}
+
 
 
 
@@ -316,6 +495,9 @@ function play() {
 
 function pause() {
     play_bool = false;
+    
+    console.log(camera.quaternion);
+
 }
 
 
