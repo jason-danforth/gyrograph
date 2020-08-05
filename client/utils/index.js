@@ -16,6 +16,12 @@ export const curveToLineSegment = (curve, material) => {
   return new THREE.Line(geometry, material);
 };
 
+export const meshToThreejs = (mesh, material) => {
+  const loader = new THREE.BufferGeometryLoader();
+  const geometry = loader.parse(mesh.toThreejsJSON());
+  return new THREE.Mesh(geometry, material);
+};
+
 export const draw = (partList, scene, nibObjects, lineColor) => {
   const materialOptions = {
     color: 0xffffff,
@@ -68,3 +74,9 @@ export const draw = (partList, scene, nibObjects, lineColor) => {
     }
   });
 };
+
+const base = () => {
+  const
+}
+
+export const getPrevious = () => { }
