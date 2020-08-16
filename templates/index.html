@@ -21,163 +21,57 @@
 
 <body>
     <div id="overlay">
-        <div class="row">
-            <div class="content with-margin">
-                <div class="col-md-6">
-                    <div class="content with-margin">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <img class="iconUnavailable" id="tube1" src="/static/images/icons_tube1.png" onclick=" ">
-                            </div>
-                            <div class="col-md-4">
-                                <img class="iconUnavailable" id="tube2" src="/static/images/icons_tube2.png" onclick=" ">
-                            </div>
-                            <div class="col-md-4">
-                                <img class="iconUnavailable" id="tube3" src="/static/images/icons_tube3.png" onclick=" ">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="content with-margin">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <img class="iconUnavailable" id="motor1" src="/static/images/icons_motor1.png" onclick=" ">
-                            </div>
-                            <div class="col-md-4">
-                                <img class="iconUnavailable" id="motor2" src="/static/images/icons_motor2.png" onclick=" ">
-                            </div>
-                            <div class="col-md-4">
-                                <img class="iconUnavailable" id="motor3" src="/static/images/icons_motor3.png" onclick=" ">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="content with-margin">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <img class="iconUnavailable" id="motor4" src="/static/images/icons_motor4.png" onclick=" ">
-                            </div>
-                            <div class="col-md-4">
-                                <img class="iconUnavailable" id="motor5" src="/static/images/icons_motor5.png" onclick=" ">
-                            </div>
-                            <div class="col-md-4">
-                                <img class="iconUnavailable" id="nib" src="/static/images/icons_nib.png" onclick=" ">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="content with-margin">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <img src="/static/images/icons_blank.png">
-                            </div>
-                            <div class="col-md-4">
-                            <img class="iconUnavailable" id="undo" src="/static/images/icons_undo.png" onclick=" ">
-                            </div>
-                            <div class="col-md-4">
-                                <img src="/static/images/icons_blank.png">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                
-                
-                <!-- Controls -->
-                <div class="col-md-6">
-                    <div class="content with-margin">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <img class="iconUnavailable" id="previous" src="/static/images/icons_previous.png" onclick=" ">
-                            </div>
-                            <div class="col-md-4">
-                                <img class="iconUnavailable" id="next" src="/static/images/icons_next.png" onclick=" ">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <!-- Color Wheel from: https://www.cssscript.com/sleek-html5-javascript-color-picker-iro-js/ -->
-                                <!-- custom handle svg -->
-                                <svg style="display:none;">
-                                    <defs>
-                                        <g id="handle" stroke-width="2" >
-                                            <circle cx="0" cy="0" r="5" stroke="white" stroke-width="1" fill=none />
-                                        </g>
-                                    </defs>
-                                </svg>
-                                <div class="wheelHidden" id="colorWheel"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <!-- Line-weight slider -->
-                            <div class="col-md-10">
-                                <div class="slidecontainer">
-                                    <input type="range" min="1" max="10" value="3" class="sliderLinesUnavailable" id="lineWeightSlider">
-                                </div>                              
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-md-12">
+            <div class="row">
+                <img class="iconUnavailable" id="play" src="/static/images/icons_play.png" onclick=" ">
+                <img class="iconUnavailable" id="pause" src="/static/images/icons_pause.png" onclick=" ">
+                <img class="iconUnavailable" id="reset" src="/static/images/icons_reset.png" onclick=" ">
             </div>
-        </div>
-
-
-        <!-- Rotation Slider -->
-        <!-- <div class="col-md-12">
-            <div class="slidecontainer">
-                <input type="range" min="0" max="360" value="0" class="slider" id="rotationSlider">
+            <br>
+            <div class="row">
+                <img class="iconUnavailable" id="tube1" src="/static/images/icons_tube1.png" onclick=" ">
+                <img class="iconUnavailable" id="tube2" src="/static/images/icons_tube2.png" onclick=" ">
+                <img class="iconUnavailable" id="tube3" src="/static/images/icons_tube3.png" onclick=" ">
             </div>
-        </div> -->
-
-
-        <!-- Play, Pause, Reset -->
-        <div class="col-md-6">
-            <div class="content slider-margin">
-                <div class="row">                    
-                    <!-- Circular Slider -->
-                    <div id="circularSlider" class="circularAvailable"></div>        
-                </div>
+            <div class="row">
+                <img class="iconUnavailable" id="motor1" src="/static/images/icons_motor1.png" onclick=" ">
+                <img class="iconUnavailable" id="motor2" src="/static/images/icons_motor2.png" onclick=" ">
+                <img class="iconUnavailable" id="motor3" src="/static/images/icons_motor3.png" onclick=" ">
             </div>
-            <div class="content with-margin">
-                <div class="row">
-                    <img src="/static/images/icons_blank.png">
-                </div>
+            <div class="row">
+                <img class="iconUnavailable" id="motor4" src="/static/images/icons_motor4.png" onclick=" ">
+                <img class="iconUnavailable" id="motor5" src="/static/images/icons_motor5.png" onclick=" ">
+                <img class="iconUnavailable" id="nib" src="/static/images/icons_nib.png" onclick=" ">
             </div>
-            <div class="content with-margin">
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src="/static/images/icons_blank.png">
-                    </div>
-                    <div class="col-md-4">
-                        <img class="iconUnavailable" id="play" src="/static/images/icons_play.png" onclick=" ">
-                    </div>
-                    <div class="col-md-4">
-                        <img src="/static/images/icons_blank.png">
-                    </div>
-                </div>
+            <br>
+            <div class="row">
+                <img class="iconUnavailable" src="/static/images/icons_spacer.png">
+                <img class="iconUnavailable" id="previous" src="/static/images/icons_previous.png" onclick=" ">
+                <img class="iconUnavailable" id="next" src="/static/images/icons_next.png" onclick=" ">
+                <img class="iconUnavailable" id="undo" src="/static/images/icons_undo.png" onclick=" ">            
             </div>
-            <div class="content with-margin">
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src="/static/images/icons_blank.png">
-                    </div>
-                    <div class="col-md-4">
-                        <img class="iconUnavailable" id="pause" src="/static/images/icons_pause.png" onclick=" ">
-                    </div>
-                    <div class="col-md-4">
-                        <img src="/static/images/icons_blank.png">
-                    </div>
-                </div>
+            <div class="row">
+                <!-- Line-weight slider -->
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="10" value="3" class="sliderLinesUnavailable" id="lineWeightSlider">
+                </div>                              
             </div>
-            <div class="content with-margin">
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src="/static/images/icons_blank.png">
-                    </div>
-                    <div class="col-md-4">
-                        <img class="iconUnavailable" id="reset" src="/static/images/icons_reset.png" onclick=" ">
-                    </div>
-                    <div class="col-md-4">
-                        <img src="/static/images/icons_blank.png">
-                    </div>
-                </div>
+            <div class="row">
+                <!-- Color Wheel from: https://www.cssscript.com/sleek-html5-javascript-color-picker-iro-js/ -->
+                <svg style="display:none;">
+                    <defs>
+                        <g id="handle" stroke-width="2" >
+                            <circle cx="0" cy="0" r="5" stroke="white" stroke-width="1" fill=none />
+                        </g>
+                    </defs>
+                </svg>
+                <div class="wheelUnavailable" id="colorWheel"></div>
+            </div>
+            <div class="row">
+                <div class="slider-margin">
+                    <!-- Circular slider -->
+                    <div id="circularSlider" class="circularAvailable"></div>
+                </div>                
             </div>
         </div>
     </div>
@@ -186,6 +80,7 @@
     <!-- Navigation Icons -->
     <div id="overlay_right">
         <div class="col-md-4">
+            <div><br></div>
             <div class="row">
                 <img class="iconAvailable" id="top" src="/static/images/icons_top.png" onclick="topView()">
             </div>
