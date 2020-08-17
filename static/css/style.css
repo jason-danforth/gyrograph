@@ -11,12 +11,11 @@ canvas { width: 100%; height: 100%; }
     display: block;
     width: 315px;
     height: 100%;
-    top: 10;
-    left: 10;
+    top: 17;
+    left: 0;
     right: 0;
     bottom: 0;
     z-index: 1;
-    overflow-y: auto; 
 }
 
 #overlay_right {
@@ -56,16 +55,12 @@ canvas { width: 100%; height: 100%; }
 
 
 
-
-
-
-
 /*---------------------------------- Nib Input -----------------------------*/
 
 .wheelAvailable {
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-left: 36;
+  margin-left: 48;
   opacity: 1.0;
   transition: opacity 0.25s;
 }
@@ -73,7 +68,7 @@ canvas { width: 100%; height: 100%; }
 .wheelUnavailable {
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-left: 36;
+  margin-left: 48;
   opacity: 0.3;
   transition: opacity 0.25s;
   filter: grayscale(70%);
@@ -82,7 +77,7 @@ canvas { width: 100%; height: 100%; }
 .wheelHidden {
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-left: 36;
+  margin-left: 48;
   opacity: 0.0;
   transition: opacity 0.25s;
 }
@@ -98,9 +93,10 @@ canvas { width: 100%; height: 100%; }
   border-radius: 5px; 
   background: #d3d3d3; /* Grey background */
   outline: none; /* Remove outline */
-  opacity: 0.8; /* Set transparency (for mouse-over effects on hover) */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
   margin-top: 5px;
   margin-bottom: 11px;
+  margin-left: 12px;
   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
   transition: opacity .2s;
 }
@@ -139,6 +135,7 @@ canvas { width: 100%; height: 100%; }
   opacity: 0.2; /* Set transparency (for mouse-over effects on hover) */
   margin-top: 5px;
   margin-bottom: 11px;
+  margin-left: 12px;
   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
   transition: opacity .2s;
 }
@@ -198,5 +195,76 @@ canvas { width: 100%; height: 100%; }
 .slider-margin {
   margin-top: 10px;
   margin-bottom: 20px;
-  margin-left: 10px;
+  margin-left: 22px;
+}
+
+
+
+
+
+/*---------------------------------- Nano Scrollbar (https://jamesflorentino.github.io/nanoScrollerJS/) -----------------------------*/
+
+/** initial setup **/
+.nano {
+  position : relative;
+  width    : 100%;
+  height   : 100%;
+  overflow : hidden;
+}
+.nano > .nano-content {
+  position      : absolute;
+  overflow      : scroll;
+  overflow-x    : hidden;
+  top           : 0;
+  right         : 0;
+  bottom        : 0;
+  left          : 0;
+}
+.nano > .nano-content:focus {
+  outline: thin dotted;
+}
+.nano > .nano-content::-webkit-scrollbar {
+  display: none;
+}
+.has-scrollbar > .nano-content::-webkit-scrollbar {
+  display: block;
+}
+.nano > .nano-pane {
+  background : rgba(0, 0, 0, 0);
+  position   : fixed;
+  width      : 6px; /* Width of scroll bar */
+  left      : 0;
+  top        : 0;
+  bottom     : 0;
+  visibility : hidden\9; /* Target only IE7 and IE8 with this hack */
+  opacity    : .01; 
+  -webkit-transition    : .2s;
+  -moz-transition       : .2s;
+  -o-transition         : .2s;
+  transition            : .2s;
+  -moz-border-radius    : 5px;
+  -webkit-border-radius : 5px;
+  border-radius         : 5px;
+}
+.nano > .nano-pane > .nano-slider {
+  background: rgba(199, 199, 199, 0.5);
+  position              : relative;
+  margin                : 0 1px;
+  -moz-border-radius    : 3px; /* This is the radius of the tip of the slider bar */ 
+  -webkit-border-radius : 3px;
+  border-radius         : 3px;
+}
+.nano > .nano-pane > .nano-slider:hover {
+  background: rgba(255, 255, 255, 0.7);
+  position              : relative;
+  margin                : 0 1px;
+  -moz-border-radius    : 3px; /* This is the radius of the tip of the slider bar */ 
+  -webkit-border-radius : 3px;
+  border-radius         : 3px;
+}
+
+
+.nano:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
+  visibility : visible\9; /* Target only IE7 and IE8 with this hack */
+  opacity    : 0.99;
 }

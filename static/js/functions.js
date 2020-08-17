@@ -350,9 +350,13 @@ sliderLineWeight.oninput = function() {
 }
 
 
+// Scroll Bar https://jamesflorentino.github.io/nanoScrollerJS/
+function activateScroll() {
+    $(".nano").nanoScroller();
+}
 
 
-//------------------------------------------Animate-------------------------------------------------------------------------------------------------------------------------------------
+
 
 // var sliderRotation = document.getElementById("rotationSlider");
 // sliderRotation.oninput = function() {
@@ -428,6 +432,12 @@ function update_angle_factor_B(value) {
     angle_B = rotation_angle * angle_factor_B;         
     reset_scene(); 
 }
+
+
+
+
+
+//------------------------------------------Animate-------------------------------------------------------------------------------------------------------------------------------------
 
 
 function play() {
