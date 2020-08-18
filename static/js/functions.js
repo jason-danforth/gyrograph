@@ -316,7 +316,7 @@ var colorWheel = new iro.ColorPicker("#colorWheel", {
             wheelLightness: true,
             wheelAngle: 0,
             wheelDirection: "anticlockwise",
-            width: 105,
+            width: 85,
             borderWidth: 1,
             borderColor: '#fff',
             // handleRadius: 5,
@@ -336,18 +336,27 @@ colorWheel.on('input:end', function(color){
 
 var sliderLineWeight = document.getElementById("lineWeightSlider");
 sliderLineWeight.oninput = function() {
-    line_weight = this.value //Set thickness of lines
+    let line_weight = this.value //Set thickness of lines
     nib_objects[nib_key].weight = line_weight;
 
     let slider_thickness = line_weight.concat('px'); //Convet to "pixels"
+    let slider_margin = (parseInt(14) - line_weight).toString().concat('px'); //.sliderLines.margin_bottom + 3 in style.css
+
     document.getElementById("lineWeightSlider").style.height = slider_thickness; //Update CSS property
+    document.getElementById("lineWeightSlider").style.marginBottom = slider_margin; //Update CSS property
+
+
     reset_scene();
 }
 
 
+// Scroll Bar https://jamesflorentino.github.io/nanoScrollerJS/
+function activateScroll() {
+    $(".nano").nanoScroller();
+}
 
 
-//------------------------------------------Animate-------------------------------------------------------------------------------------------------------------------------------------
+
 
 // var sliderRotation = document.getElementById("rotationSlider");
 // sliderRotation.oninput = function() {
@@ -359,14 +368,15 @@ sliderLineWeight.oninput = function() {
 //     reset_scene(); 
 //   }
 
+// Circular slider from here: https://www.npmjs.com/package/round-slider
 $("#circularSlider").roundSlider({
     min: 1.0,
     max: 2.0,
     step: 0.05,
     value: null,
-    radius: 75,
-    width: 3,
-    handleSize: "+11",
+    radius: 70,
+    width: 2,
+    handleSize: "+10",
     startAngle: 180,
     endAngle: "+340",
     animation: false,
@@ -424,53 +434,11 @@ function update_angle_factor_B(value) {
 }
 
 
-// function find_max_play_count () {
-//     /*Delete this later. Function doesn't work, but abandonned b/c there are too many
-//     edge cases where the user would expect the rotation to stop. I.e. the simple existence
-//     of a motor doesn't guarantee that the machine will require a corresponding number of 
-//     rotations. For example: motors 3, 4, and 5 can be used to connect tubes without using the 
-//     actual motor, and motors 1, 2, and 3 can be used to conenct a tube 2 that will just rotate
-//     around it's axis. And LASTLY, the user might not want the machine to stop rotating! Why 
-//     not just let it rotate until someone actually presses pause or reset?*/
-    
-//     //Find the fewest degrees of rotation required to return machine to original position
-//     //angle_factor_A is used to adjust the rotation angle for Motors rotating Tube 1  
-//     //angle_factor_B is used to adjust the rotation angle for Motors rotating Tubes 2 and 3  
-//     let angle_motor_A;    
-//     for (let i=1; i<11; i++) {
-//         angle_motor_A = 360 * angle_factor_A * i;
-//         if (angle_motor_A.toFixed(0) % 360 == 0) {
-//             angle_motor_A = 360 * i;
-//             break;
-//         }
-//     }
 
-//     let angle_motor_B;
-//     for (let i=1; i<11; i++) {
-//         angle_motor_B = 360 * angle_factor_B * i;
-//         if (angle_motor_B.toFixed(0) % 360 == 0) {
-//             angle_motor_B = 360 * i;
-//             break;
-//         }
-//     }
 
-//     //Adjust angles by rotation_increment
-//     angle_motor_A = angle_A / rotation_increment;
-//     angle_motor_B = angle_B / rotation_increment;
 
-//     //Determine if machine includes motors A and/or B
-//     let motors_A = ['Motor 4', 'Motor 5']; 
-//     let motors_B = ['Motor 1', 'Motor 2', 'Motor 3'];
-//     let incl_motors_A = motors_A.some(el => part_list_input.includes(el));
-//     let incl_motors_B = motors_B.some(el => part_list_input.includes(el));
+//------------------------------------------Animate-------------------------------------------------------------------------------------------------------------------------------------
 
-//     if (incl_motors_A && incl_motors_B) {max_play_count = Math.max(angle_motor_A, angle_motor_B);}
-//     else if (incl_motors_A) {max_play_count = angle_motor_A;}
-//     else if (incl_motors_B) {max_play_count = angle_motor_B;}
-//     else {max_play_count = 360;}
-
-//     console.log('Max play count: ', max_play_count);
-// }
 
 function play() {
 
@@ -496,8 +464,6 @@ function play() {
 function pause() {
     play_bool = false;
     
-    console.log(camera.quaternion);
-
 }
 
 
@@ -533,7 +499,7 @@ function nib_UI() {
     }
 
     else {
-        document.getElementById("colorWheel").className = "wheelHidden"; //disable color wheel
+        document.getElementById("colorWheel").className = "wheelUnavailable"; //disable color wheel
         document.getElementById("lineWeightSlider").className = "sliderLinesUnavailable"; //disable line weight slider
     }
 }

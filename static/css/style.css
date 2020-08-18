@@ -9,9 +9,9 @@ canvas { width: 100%; height: 100%; }
 #overlay {
     position: fixed;
     display: block;
-    width: 315px;
+    width: 180px;
     height: 100%;
-    top: 20;
+    top: 17;
     left: 0;
     right: 0;
     bottom: 0;
@@ -23,24 +23,12 @@ canvas { width: 100%; height: 100%; }
   display: block;
   width: 50px;
   height: 100%;
-  top: 20;
+  top: 0;
   right: 20;
   bottom: 0;
   z-index: 1;
 }
 
-.with-margin {
-    margin-bottom: 2px;
-    margin-left: 10px;
-  }
-
-/* Modify bootstrap buttons: https://bootstrapbay.com/blog/bootstrap-button-styles/ */
-.btn {
-    color: #4a4a4a;
-    background: #dfe8f7;
-}
-
-  
 
 
 /*---------------------------------- Icons -----------------------------*/
@@ -48,15 +36,21 @@ canvas { width: 100%; height: 100%; }
 .iconAvailable {
   opacity: 0.6;
   transition: opacity 0.2s;
+  float: left;
+  margin: 1px;
 }
 
 .iconAvailable:hover {
   opacity: 1.0;
+  float: left;
+  margin: 1px;
 }
 
 .iconUnavailable {
-  opacity: 0.2;
+  opacity: 0.3;
   transition: opacity 0.3s;
+  float: left;
+  margin: 1px;
 }
 
 
@@ -65,20 +59,31 @@ canvas { width: 100%; height: 100%; }
 
 .wheelAvailable {
   margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 48;
   opacity: 1.0;
   transition: opacity 0.25s;
 }
 
 .wheelUnavailable {
   margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 48;
   opacity: 0.3;
   transition: opacity 0.25s;
+  filter: grayscale(70%);
 }
 
 .wheelHidden {
   margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 48;
   opacity: 0.0;
   transition: opacity 0.25s;
+}
+
+.slidecontainer {
+  width: 50%; /* Width of the outside container */
 }
 
 .sliderLines {
@@ -88,8 +93,10 @@ canvas { width: 100%; height: 100%; }
   border-radius: 5px; 
   background: #d3d3d3; /* Grey background */
   outline: none; /* Remove outline */
-  opacity: 0.8; /* Set transparency (for mouse-over effects on hover) */
-  margin-top: 15px;
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  margin-top: 5px;
+  margin-bottom: 11px;
+  margin-left: 12px;
   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
   transition: opacity .2s;
 }
@@ -103,16 +110,16 @@ canvas { width: 100%; height: 100%; }
 .sliderLines::-webkit-slider-thumb {
   -webkit-appearance: none; /* Override default look */
   appearance: none;
-  width: 15px; /* Set a specific slider handle width */
-  height: 15px; /* Slider handle height */
+  width: 12px; /* Set a specific slider handle width */
+  height: 12px; /* Slider handle height */
   border-radius: 50%; 
   background: rgb(255, 255, 255); /* Green background */
   cursor: pointer; /* Cursor on hover */
 }
 
 .sliderLines::-moz-range-thumb {
-  width: 15px; /* Set a specific slider handle width */
-  height: 15px; /* Slider handle height */
+  width: 12px; /* Set a specific slider handle width */
+  height: 12px; /* Slider handle height */
   border-radius: 50%; 
   background: rgb(255, 255, 255); /* Green background */
   cursor: pointer; /* Cursor on hover */
@@ -125,8 +132,10 @@ canvas { width: 100%; height: 100%; }
   border-radius: 5px; 
   background: #d3d3d3; /* Grey background */
   outline: none; /* Remove outline */
-  opacity: 0.0; /* Set transparency (for mouse-over effects on hover) */
-  margin-top: 15px;
+  opacity: 0.2; /* Set transparency (for mouse-over effects on hover) */
+  margin-top: 5px;
+  margin-bottom: 11px;
+  margin-left: 12px;
   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
   transition: opacity .2s;
 }
@@ -135,102 +144,20 @@ canvas { width: 100%; height: 100%; }
 .sliderLinesUnavailable::-webkit-slider-thumb {
   -webkit-appearance: none; /* Override default look */
   appearance: none;
-  width: 15px; /* Set a specific slider handle width */
-  height: 15px; /* Slider handle height */
+  width: 0px; /* Set a specific slider handle width */
+  height: 0px; /* Slider handle height */
   border-radius: 50%; 
   background: rgb(255, 255, 255); /* Green background */
   cursor: pointer; /* Cursor on hover */
 }
 
 .sliderLinesUnavailable::-moz-range-thumb {
-  width: 15px; /* Set a specific slider handle width */
-  height: 15px; /* Slider handle height */
+  width: 0px; /* Set a specific slider handle width */
+  height: 0px; /* Slider handle height */
   border-radius: 50%; 
   background: rgb(255, 255, 255); /* Green background */
   cursor: pointer; /* Cursor on hover */
 }
-
-
-
-
-/*---------------------------------- Slider -----------------------------*/
-.slidecontainer {
-  width: 100%; /* Width of the outside container */
-}
-
-/* The slider itself */
-.slider {
-  -webkit-appearance: none;  /* Override default CSS styles */
-  appearance: none;
-  /* width: 50%;  */
-  height: 3px; /* Specified height */
-  border-radius: 1px; 
-  background: #d3d3d3; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.4; /* Set transparency (for mouse-over effects on hover) */
-  margin-top: 25px;
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
-}
-
-/* Mouse-over effects */
-.slider:hover {
-  opacity: 1; /* Fully shown on mouse-over */
-}
-
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
-  appearance: none;
-  width: 15px; /* Set a specific slider handle width */
-  height: 15px; /* Slider handle height */
-  border-radius: 50%; 
-  background: rgb(255, 255, 255); /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
-
-.slider::-moz-range-thumb {
-  width: 15px; /* Set a specific slider handle width */
-  height: 15px; /* Slider handle height */
-  border-radius: 50%; 
-  background: rgb(255, 255, 255); /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
-
-/* The unavailable slider */
-.sliderUnavailable {
-  -webkit-appearance: none;  /* Override default CSS styles */
-  appearance: none;
-  /* width: 50%;  */
-  height: 3px; /* Specified height */
-  border-radius: 1px; 
-  background: #d3d3d3; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.2; /* Set transparency (for mouse-over effects on hover) */
-  margin-top: 25px;
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
-}
-
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.sliderUnavailable::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
-  appearance: none;
-  width: 10px; /* Set a specific slider handle width */
-  height: 10px; /* Slider handle height */
-  border-radius: 50%; 
-  background: rgb(255, 255, 255); /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
-
-.sliderUnavailable::-moz-range-thumb {
-  width: 10px; /* Set a specific slider handle width */
-  height: 10px; /* Slider handle height */
-  border-radius: 50%; 
-  background: rgb(255, 255, 255); /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
-
 
 
 
@@ -238,7 +165,7 @@ canvas { width: 100%; height: 100%; }
 
 #circularSlider .rs-handle  {
   background-color: #ffffff;
-  padding: 7px;
+  padding: 1px;
   border: 0px solid #ffffff;
 }
 
@@ -267,6 +194,77 @@ canvas { width: 100%; height: 100%; }
 
 .slider-margin {
   margin-top: 10px;
-  margin-bottom: 40px;
-  margin-left: 20px;
+  margin-bottom: 20px;
+  margin-left: 22px;
+}
+
+
+
+
+
+/*---------------------------------- Nano Scrollbar (https://jamesflorentino.github.io/nanoScrollerJS/) -----------------------------*/
+
+/** initial setup **/
+.nano {
+  position : relative;
+  width    : 100%;
+  height   : 100%;
+  overflow : hidden;
+}
+.nano > .nano-content {
+  position      : absolute;
+  overflow      : scroll;
+  overflow-x    : hidden;
+  top           : 0;
+  right         : 0;
+  bottom        : 0;
+  left          : 0;
+}
+.nano > .nano-content:focus {
+  outline: thin dotted;
+}
+.nano > .nano-content::-webkit-scrollbar {
+  display: none;
+}
+.has-scrollbar > .nano-content::-webkit-scrollbar {
+  display: block;
+}
+.nano > .nano-pane {
+  background : rgba(0, 0, 0, 0);
+  position   : fixed;
+  width      : 6px; /* Width of scroll bar */
+  left      : 0;
+  top        : 0;
+  bottom     : 0;
+  visibility : hidden\9; /* Target only IE7 and IE8 with this hack */
+  opacity    : .01; 
+  -webkit-transition    : .2s;
+  -moz-transition       : .2s;
+  -o-transition         : .2s;
+  transition            : .2s;
+  -moz-border-radius    : 5px;
+  -webkit-border-radius : 5px;
+  border-radius         : 5px;
+}
+.nano > .nano-pane > .nano-slider {
+  background: rgba(199, 199, 199, 0.5);
+  position              : relative;
+  margin                : 0 1px;
+  -moz-border-radius    : 3px; /* This is the radius of the tip of the slider bar */ 
+  -webkit-border-radius : 3px;
+  border-radius         : 3px;
+}
+.nano > .nano-pane > .nano-slider:hover {
+  background: rgba(255, 255, 255, 0.7);
+  position              : relative;
+  margin                : 0 1px;
+  -moz-border-radius    : 3px; /* This is the radius of the tip of the slider bar */ 
+  -webkit-border-radius : 3px;
+  border-radius         : 3px;
+}
+
+
+.nano:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
+  visibility : visible\9; /* Target only IE7 and IE8 with this hack */
+  opacity    : 0.99;
 }

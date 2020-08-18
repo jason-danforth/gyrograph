@@ -425,10 +425,10 @@ var tag_nib_motors_2 = "motor1_tube2_a, motor2_tube2_a, motor2_tube2_b, motor3_t
 //------------------------------------------Load Rhino-------------------------------------------------------------------------------------------------------------------------------------
 
 //Heroku app runs from app.py backend (in main project directory)
-//let fetchPromise = fetch('static/models/Drawing_Machine.3dm');
+let fetchPromise = fetch('static/models/Drawing_Machine.3dm');
 
 //Locally hosted app runs directly from index.html (in "templates" directory)
-let fetchPromise = fetch('../static/models/Drawing_Machine.3dm');
+// let fetchPromise = fetch('../static/models/Drawing_Machine.3dm');
 
 rhino3dm().then(async m => {
     let rhino = m;
@@ -568,6 +568,7 @@ rhino3dm().then(async m => {
 
     base();
     draw();
-    update_src();
+    update_src();    
+    activateScroll(); //Needs to be called last in order to load properly 
 
 });
