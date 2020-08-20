@@ -1,3 +1,5 @@
+"use strict";
+
 // import { LineMaterial } from '../static/js/LineMaterial.js';
 
 var scene, camera, renderer, controls;
@@ -10,7 +12,7 @@ var scene, camera, renderer, controls;
 
 
 rhino3dm().then(function(m) {
-    rhino = m; // global
+    var rhino = m; // global
   });
 
 
@@ -380,7 +382,7 @@ $("#circularSlider").roundSlider({
     startAngle: 180,
     endAngle: "+340",
     animation: false,
-    showTooltip: false,
+    showTooltip: true,
     editableTooltip: true,
     readOnly: false,
     disabled: false,
@@ -402,7 +404,7 @@ $("#circularSlider").roundSlider({
     borderColor: null,
     pathColor: '#686773',
     rangeColor: '#ffffff',
-    tooltipColor: null,
+    tooltipColor: '#ffffff',
 
     // events
     beforeCreate: null,
@@ -418,7 +420,10 @@ $("#circularSlider").roundSlider({
     // even the value was changed through programmatically also.
     valueChange: null,
     stop: null,
-    tooltipFormat: null
+    tooltipFormat: function (e) {
+        let prefix = "x ";
+        return prefix.concat(e.value);
+      }
 });
 
 $("#circularSlider").roundSlider("option", "value", 1.9);
@@ -509,7 +514,7 @@ function nib_creation() {
     //Need to create the nib objects outside of the main loop so that values like color and weight persist
 
     let nib_counter = 0;
-    for (i in nib_objects) {nib_counter += 1;}
+    for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_counter += 1;}
     
     nib_counter = nib_counter.toString();
     nib_objects[nib_counter] = {"sphere": "",
@@ -556,7 +561,7 @@ function reset_scene() {
     //Reset Nibs
     nib_item = 0;
     if (draw_bool == false) {
-        for (i in nib_objects) {nib_objects[i].points = [];}
+        for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_objects[i].points = [];}
     }
 
     //Redraw Machine
@@ -581,7 +586,7 @@ function draw() {
     }
 
     //Draw nibs + lines
-    for (i in nib_objects) {
+    for (let i=0; i<Object.keys(nib_objects).length; i++) {
 
         let nib_color;
         if (nib_objects[i].color) {
@@ -671,8 +676,8 @@ function update_src() {
     //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
     let tag_set = new Set();
     for (let i=0; i<target_tags.length; i++) {
-        individual_tags = target_tags[i].split(", ");
-        for (j=0; j<individual_tags.length; j++) {
+        let individual_tags = target_tags[i].split(", ");
+        for (let j=0; j<individual_tags.length; j++) {
             tag_set.add(individual_tags[j].split("_")[0]);
         }
     }
@@ -856,7 +861,7 @@ function undo() {
         //If removing a Nib then need to remove it from nib_objects too
         if (last_part == "Nib") {
             let nib_counter = -1;
-            for (i in nib_objects) {nib_counter += 1;}
+            for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_counter += 1;}
             delete nib_objects[nib_counter];
         }
         
@@ -920,9 +925,7 @@ function generate_selection_pairs(source_tags, target_tags) {
 
 
 function next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item) {    
-    if (part_list_input.length > count) {
-        block = part_list_input[count];
-        
+    if (part_list_input.length > count) {        
         if (part_list_input[count] == "Tube 1") {
             tube1(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
             // try {

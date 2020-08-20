@@ -20,7 +20,7 @@ potential variation in the drawing machines as possible.
 3. "Nibs" draw the lines!!! Place a Nib anywhere you'd like to create a new line, and
 when the user clicks "DRAW" the machine will run and the Nibs will trace out the drawing.*/
 
-
+"use strict";
 
 
 //------------------------------------------Declare Variables-------------------------------------------------------------------------------------------------------------------------------------
@@ -215,7 +215,7 @@ var nib_sphere;
 var nib_pt;
 var nib_tube1_axis_1;
 var nib_tube1_axis_2;
-var nib_tube1_guide1;
+var nib_tube1_guide_1;
 var nib_tube2_axis_1;
 var nib_tube2_axis_2;
 var nib_tube2_guide_1;
