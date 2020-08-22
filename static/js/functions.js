@@ -331,7 +331,7 @@ var colorWheel = new iro.ColorPicker("#colorWheel", {
 colorWheel.on('input:end', function(color){
     //'input' settings here: https://www.cssscript.com/sleek-html5-javascript-color-picker-iro-js/
     line_color = color.hexString;
-    nib_objects[nib_key].color = line_color;
+    if (nib_UI_bool) {nib_objects[nib_key].color = line_color;}
     reset_scene();
 })
 
@@ -358,78 +358,157 @@ function activateScroll() {
 }
 
 
+// These values represent the speed at which the tube 2/3 motors rotate relative to tube 1 motors
+// The values will be divided by 100, so 100 = 1x speed, 1.5 = 1.5x speed, etc. 
+// JQuery doesn't seem to like dealing with floats, so x100 to create integers
+let dotsValue = [100, 120, 125, 133, 150, 190, 200];
+
+$.fn.roundSlider.prototype.defaults.create = function() {
+  let dotsCount = dotsValue.length;
+
+  let o = this.options, tickInterval = 0.01;
+  let min = o.max, max = o.min;
+  for (let i = 0; i < dotsCount; i += 1) {
+    let value = dotsValue[i];
+    let angle = this._valueToAngle(value);
+    let numberTag = this._addSeperator(angle, "");
+    let number = numberTag.children().removeClass();
+    let dot = number.clone();
+
+    dot.addClass("rs-dots").attr("data-value", value).appendTo(numberTag);
+    // number.addClass("rs-number").html(value + "%").rsRotate(-angle);
+  }
+
+  this.control.find(".rs-dots").click((e) => {
+    let dotValue = $(e.currentTarget).attr("data-value");
+    this.setValue(dotValue);
+  });
+}
+// ####---- ------------------------------------- ----#### //
 
 
-// var sliderRotation = document.getElementById("rotationSlider");
-// sliderRotation.oninput = function() {
-//     rotation_angle = this.value * 0.0175; //Convert angle from degrees to radians
-//     current_angle = rotation_angle;
-//     angle_A = rotation_angle * angle_factor_A;
-//     angle_B = rotation_angle * angle_factor_B;
-    
-//     reset_scene(); 
-//   }
+// $("#slider1").roundSlider({
+//   sliderType: "default",
+//   showTooltip: false,
+//   radius: 140,
+//   width: 3,
+//   handleSize: 30,
+//   readOnly: true,
+
+//   min: 100,
+//   max: 0,
+//   startValue: 0,
+//   value: 50,
+
+//   startAngle: 205,
+//   endAngle: 335,
+
+//   svgMode: true,
+//   pathColor: "#000",
+//   borderWidth: 0
+// });
 
 // Circular slider from here: https://www.npmjs.com/package/round-slider
 $("#circularSlider").roundSlider({
-    min: 1.0,
-    max: 2.0,
-    step: 0.05,
-    value: null,
-    radius: 70,
-    width: 2,
-    handleSize: "+10",
-    startAngle: 180,
-    endAngle: "+340",
-    animation: false,
+    sliderType: "default",
     showTooltip: true,
     editableTooltip: true,
-    readOnly: false,
-    disabled: false,
-    keyboardAction: false,
-    mouseScrollAction: false,
-    sliderType: "min-range",
+    radius: 70,
+    width: 2,
+    handleSize: "+13",
+    readOnly: true,
+
+    min: 100,
+    max: 200,
+    startValue: 0,
+    value: 50,
+
+    startAngle: 180,
+    endAngle: "+340",
+    animation: true,
+
+    svgMode: true,
+    pathColor: "#fff",
+    borderWidth: 0,
     circleShape: "full",
     handleShape: "dot",
     lineCap: "round",
 
-    // the 'startValue' property decides at which point the slider should start.
-    // otherwise, by default the slider starts with min value. this is mainly used
-    // for min-range slider, where you can customize the min-range start position.
-    startValue: null,
+    tooltipFormat: function (e) {
+        let prefix = "x ";
+        return prefix.concat((e.value / 100).toFixed(1));
+      },
 
     // SVG related properties
     svgMode: true,
     borderWidth: 0,
     borderColor: null,
-    pathColor: '#686773',
+    pathColor: '#ffffff',
     rangeColor: '#ffffff',
-    tooltipColor: '#ffffff',
+    tooltipColor: '#ffffff'
 
-    // events
-    beforeCreate: null,
-    create: null,
-    start: null,
-    // 'beforeValueChange' will be triggered before 'valueChange', and it can be cancellable
-    beforeValueChange: null,
-    drag: null,
-    change: null,
-    // 'update' event is the combination of 'drag' and 'change'
-    update: null,
-    // 'valueChange' event is similar to 'update' event, in addition it will trigger
-    // even the value was changed through programmatically also.
-    valueChange: null,
-    stop: null,
-    tooltipFormat: function (e) {
-        let prefix = "x ";
-        return prefix.concat(e.value);
-      }
 });
 
-$("#circularSlider").roundSlider("option", "value", 1.9);
+// Circular slider from here: https://www.npmjs.com/package/round-slider
+// $("#circularSlider").roundSlider({
+//     min: 1.0,
+//     max: 2.0,
+//     step: 0.05,
+//     value: null,
+//     radius: 70,
+//     width: 2,
+//     handleSize: "+10",
+//     startAngle: 180,
+//     endAngle: "+340",
+//     animation: false,
+//     showTooltip: true,
+//     editableTooltip: true,
+//     readOnly: false,
+//     disabled: false,
+//     keyboardAction: false,
+//     mouseScrollAction: false,
+//     sliderType: "min-range",
+//     circleShape: "full",
+//     handleShape: "dot",
+//     lineCap: "round",
+
+//     // the 'startValue' property decides at which point the slider should start.
+//     // otherwise, by default the slider starts with min value. this is mainly used
+//     // for min-range slider, where you can customize the min-range start position.
+//     startValue: null,
+
+//     // SVG related properties
+//     svgMode: true,
+//     borderWidth: 0,
+//     borderColor: null,
+//     pathColor: '#686773',
+//     rangeColor: '#ffffff',
+//     tooltipColor: '#ffffff',
+
+//     // events
+//     beforeCreate: null,
+//     create: null,
+//     start: null,
+//     // 'beforeValueChange' will be triggered before 'valueChange', and it can be cancellable
+//     beforeValueChange: null,
+//     drag: null,
+//     change: null,
+//     // 'update' event is the combination of 'drag' and 'change'
+//     update: null,
+//     // 'valueChange' event is similar to 'update' event, in addition it will trigger
+//     // even the value was changed through programmatically also.
+//     valueChange: null,
+//     stop: null,
+//     tooltipFormat: function (e) {
+//         let prefix = "x ";
+//         return prefix.concat(e.value);
+//       }
+// });
+
+$("#circularSlider").roundSlider("option", "value", 150);
 $("#circularSlider").roundSlider();
 $("#circularSlider").on("valueChange", function (e) {
-    update_angle_factor_B(e.value);
+    update_angle_factor_B(e.value / 100);
 })
 
 function update_angle_factor_B(value) {
@@ -473,10 +552,8 @@ function pause() {
 
 
 function reset_animation() {
-    // document.getElementById("rotationSlider").className = "slider"; //enable slider
-    // document.getElementById("rotationSlider").disabled = false;
-
     $("#circularSlider").roundSlider("enable"); //enable slider
+    $("#circularSlider").roundSlider("option", "animation", "true");
     document.getElementById("circularSlider").className = "circularAvailable";
 
     update_src(); //enable all other buttons;
@@ -783,9 +860,6 @@ function update_src() {
 
 function freeze_src() {
     //Turn off all controls during play / pause / reset
-
-    // document.getElementById("rotationSlider").className = "sliderUnavailable"; //Disable slider
-    // document.getElementById("rotationSlider").disabled = true;
 
     //Disable circular slider
     $("#circularSlider").roundSlider("disable");
