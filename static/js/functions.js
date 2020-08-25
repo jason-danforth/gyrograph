@@ -336,7 +336,6 @@ colorWheel.on('input:end', function(color){
     reset_scene();
 })
 
-
 var sliderLineWeight = document.getElementById("lineWeightSlider");
 sliderLineWeight.oninput = function() {
     let line_weight = this.value //Set thickness of lines
@@ -351,7 +350,6 @@ sliderLineWeight.oninput = function() {
 
     reset_scene();
 }
-
 
 // Scroll Bar https://jamesflorentino.github.io/nanoScrollerJS/
 function activateScroll() {
@@ -389,7 +387,7 @@ $.fn.roundSlider.prototype.defaults.create = function() {
 
 
 // Circular slider from here: https://www.npmjs.com/package/round-slider
-// Code above is based on this js fiddle: https://jsfiddle.net/soundar24/Ln09a2uc/5/ 
+// Code above is based on this js fiddle: https://jsfiddle.net/soundar24/Ln09a2uc/5/    
 $("#circularSlider").roundSlider({
     sliderType: "default",
     showTooltip: true,
@@ -534,6 +532,45 @@ function previous() {
   }
 
 
+//I'll be honest, there's a LOT I don't understand about what's going on with sceneTraverse and garbage_collector
+//Just trying to solve the memory leak / crashing issue
+//Working off of this thread: https://discourse.threejs.org/t/dispose-things-correctly-in-three-js/6534/19
+//And this plnkr: https://plnkr.co/edit/pmeB0t3tEbOAaKdebhbr?preview 
+function sceneTraverse (obj, fn) {
+    if (!obj) return
+
+        fn(obj)
+
+    if (obj.children && obj.children.length > 0) {
+        obj.children.forEach(o => {
+            sceneTraverse(o, fn)
+        })
+    }
+}
+
+function garbage_collector(e) {
+    sceneTraverse(scene, o => {
+                
+        if (o.geometry) {
+            o.geometry.dispose();	
+        }
+
+        if (o.material) {
+            if (o.material.length) {
+                for (let i = 0; i < o.material.length; ++i) {
+                    o.material[i].dispose();							
+                }
+            }
+            else {
+                o.material.dispose();						
+            }
+        }
+    })
+
+    renderer && renderer.renderLists.dispose();
+    // renderer && renderer.dispose();
+}
+
 function reset_scene() {
     //Remove previously drawn objects from the scene
     for (let i=0; i<scene.children.length; i++) {
@@ -541,6 +578,9 @@ function reset_scene() {
             scene.remove(scene.children[i]);
             i = i-1;
         }
+    
+    //Call garbage_collector every X iterations
+    // if (play_count % 10 == 0) {garbage_collector();}
     } 
 
     //Clear lists
@@ -561,11 +601,11 @@ function reset_scene() {
     draw();
 }
 
+var meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 1000});
+var curve_material = new THREE.LineBasicMaterial({color: 0xffffff});
 
 function draw() {
-    let meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 1000});
     //meshMaterial.bumpMap = THREE.ImageUtils.loadTexture('/static/textures/grit.png');
-    
     for (let i=0; i<part_list_output.length; i++) {
         let geo = part_list_output[i];
         let threeMesh;
@@ -578,7 +618,6 @@ function draw() {
     }
 
     // Draw rotation curves
-    let curve_material = new THREE.LineBasicMaterial({color: 0xffffff});
     for (let i=0; i<rotation_curves.length; i++) {
         let curve = curveToLineSegments(rotation_curves[i], curve_material);
         scene.add(curve);
