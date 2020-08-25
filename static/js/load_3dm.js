@@ -20,7 +20,7 @@ potential variation in the drawing machines as possible.
 3. "Nibs" draw the lines!!! Place a Nib anywhere you'd like to create a new line, and
 when the user clicks "DRAW" the machine will run and the Nibs will trace out the drawing.*/
 
-
+"use strict";
 
 
 //------------------------------------------Declare Variables-------------------------------------------------------------------------------------------------------------------------------------
@@ -40,6 +40,7 @@ var nib_key; //str used as key in nib_objects
 var target_axes = [];
 var target_guides = [];
 var target_tags = [];
+var rotation_curves = []; //for cute little curves that show which way the motors will rotate the tubes
 
 var rotation_angle = 0;
 var current_angle = 0; //This is to capture the angle from the manual slider, so that it can be returned to with reset_animation()
@@ -74,6 +75,7 @@ var base_sphere;
 var base_tube;
 var base_axis;
 var base_guide;
+var base_rotationCurve;
 
 //Tube 1 is the simplest of the Tubes with only 2 possible placements:
 //2 axes (ends A and B) x 1 guide each. 
@@ -125,6 +127,7 @@ var motor1_tube2b_axis_1;
 var motor1_tube2b_axis_2;
 var motor1_tube2b_guide_1;
 var motor1_tube2b_guide_2;
+var motor1_rotationCurve;
 
 /*Motor 2 has 4 possible placements. Connection A and B both have motors that drive rotation, so
 they can be placed along a right-handed or left-handed axis, but don't care about 0, 9, 180, 270 
@@ -139,6 +142,8 @@ var motor2_tube2b_axis_1;
 var motor2_tube2b_axis_2;
 var motor2_tube2b_guide_1;
 var motor2_tube2b_guide_2;
+var motor2_rotationCurve_1;
+var motor2_rotationCurve_2;
 
 /*Motor 3 has 10 possible placements. Connection tube2a has the motor that drives rotation, so
 it can be placed along a right-handed or left-handed axis, but doesn't care about 0, 9, 180, 270 
@@ -160,6 +165,7 @@ var motor3_tube1_axis_1;
 var motor3_tube1_axis_2;
 var motor3_tube1_guide_1;
 var motor3_tube1_guide_2;
+var motor3_rotationCurve;
 
 /*Motor 4 has 10 possible placements. Connection tube1a has the motor that drives rotation, so
 it can be placed along a right-handed or left-handed axis, but doesn't care about 0, 9, 180, 270 
@@ -181,6 +187,7 @@ var motor4_tube2_axis_1;
 var motor4_tube2_axis_2;
 var motor4_tube2_guide_1;
 var motor4_tube2_guide_2;
+var motor4_rotationCurve;
 
 /*Motor 5 has 10 possible placements. Connection tube1a has the motor that drives rotation, so
 it can be placed along a right-handed or left-handed axis, but doesn't care about 0, 9, 180, 270 
@@ -202,6 +209,7 @@ var motor5_tube2_axis_1;
 var motor5_tube2_axis_2;
 var motor5_tube2_guide_1;
 var motor5_tube2_guide_2;
+var motor5_rotationCurve;
 
 /*Nibs trace out the lines that the drawing machine "draws". On one hand, they are fairly simple: there's the 
 mesh (or geo), a point whose location is recorded to create the drawn lines, and a plug that tapers down from
@@ -215,7 +223,7 @@ var nib_sphere;
 var nib_pt;
 var nib_tube1_axis_1;
 var nib_tube1_axis_2;
-var nib_tube1_guide1;
+var nib_tube1_guide_1;
 var nib_tube2_axis_1;
 var nib_tube2_axis_2;
 var nib_tube2_guide_1;
@@ -233,6 +241,7 @@ var guid_base_sphere = '97b05396-34d4-44d9-93c2-9e4f7d1dd25e';
 var guid_base_tube = '2e7684b7-6204-4f51-be33-730410920f35';
 var guid_base_axis = 'cc4d087d-b190-492d-a1dd-30fcea4b304c';
 var guid_base_guide = 'd12c3e0e-d53b-4787-a606-59ebcb415449';
+var guid_base_rotationCurve = 'b47f036c-c733-48d3-a4dd-9ea7b7227d9c';
 
 var guid_tube1_geo = '65235b50-881c-4a56-8321-6c36085c9808';
 var guid_tube1_a_axis_1 = '869fdf2e-0b29-4b8b-9e35-0184a4e5db98';
@@ -269,6 +278,7 @@ var guid_motor1_tube2b_axis_1 = '815db08a-f4f8-4ace-87b7-d0f7a51b26cd';
 var guid_motor1_tube2b_axis_2 = 'de923821-cf5d-42e6-b0d0-96184901bb91';
 var guid_motor1_tube2b_guide_1 = '70815750-23f6-4b7b-b146-7d87da127349';
 var guid_motor1_tube2b_guide_2 = '7afaa2c0-5b3c-49e7-a242-13b74d25e46e';
+var guid_motor1_rotationCurve = 'a6c06be3-c2eb-413e-8731-842e0f90de8b';
 
 var guid_motor2_geo = '6b3b4fb6-b0c5-476a-a0cb-925194c0b693';
 var guid_motor2_tube2a_axis_1 = '7ec16399-062b-43b5-8aba-b5c5b63a1904';
@@ -279,6 +289,8 @@ var guid_motor2_tube2b_axis_1 = 'f268259a-5b26-4ff4-9fb5-18ad33ecd96a';
 var guid_motor2_tube2b_axis_2 = 'd6f2659b-8348-4b7f-9dd3-d4e734dcada3';
 var guid_motor2_tube2b_guide_1 = 'd669698d-8bff-46d1-9998-5b98471e9694';
 var guid_motor2_tube2b_guide_2 = '8b1206a0-acc2-474a-b486-1c418c68c98b';
+var guid_motor2_rotationCurve_1 = '92524a22-2e67-4397-9a9f-30942d1ecf8c';
+var guid_motor2_rotationCurve_2 = '4597c19a-3ce3-4e1d-8cf7-b8e21ab59806';
 
 var guid_motor3_geo = '35b7e82e-babd-462f-93a6-471dcb2410dd';
 var guid_motor3_tube2a_axis_1 = '9827a61b-150e-4662-8949-0aeddbc5a0d7';
@@ -293,6 +305,7 @@ var guid_motor3_tube1_axis_1 = 'ce3966b2-1c01-4fd8-b733-9ba5f4a13ab9';
 var guid_motor3_tube1_axis_2 = '72b9e06d-00e1-46d0-807d-7bfb4509138d';
 var guid_motor3_tube1_guide_1 = '1440ce39-0a21-46b6-a5d1-7ede789b0056';
 var guid_motor3_tube1_guide_2 = '26fbf4ed-33b8-43b2-b606-1f6ad42edd7a';
+var guid_motor3_rotationCurve = '1febe383-4f8a-463a-a2bf-c84ffed7f07c';
 
 var guid_motor4_geo = '01e91a80-950c-4c33-b0ac-d137b270fb79';
 var guid_motor4_tube1a_axis_1 = '644e5856-31d5-485a-8685-abd3c3717e0d';
@@ -307,6 +320,7 @@ var guid_motor4_tube2_axis_1 = 'a378c7e2-6128-4031-80dc-6c09572fb4ca';
 var guid_motor4_tube2_axis_2 = '51259bad-98a0-4e43-88c3-9a6961b40a51';
 var guid_motor4_tube2_guide_1 = '921723d6-5607-43c8-9261-321964b0e0c8';
 var guid_motor4_tube2_guide_2 = '970f9036-7518-4943-b8c8-0350e36bcd57';
+var guid_motor4_rotationCurve = '8a4ff7ac-1dd7-4350-945e-3a38e1645e3b';
 
 var guid_motor5_geo = '7959e07c-073b-4ae3-9085-fd4eb1a64d4f';
 var guid_motor5_tube1a_axis_1 = '747a447d-ea08-45fe-b688-8b69e94cd1a8';
@@ -321,6 +335,7 @@ var guid_motor5_tube2_axis_1 = '5f406a7f-3a05-40b8-91ec-44cf04132cc5';
 var guid_motor5_tube2_axis_2 = '3e7e29e3-0dc7-406f-b0ae-b7ba078762df';
 var guid_motor5_tube2_guide_1 = 'bfa66d13-8af2-44af-b147-9cedf04d7efb';
 var guid_motor5_tube2_guide_2 = 'cd949e11-fa56-44df-bd9c-c75d50cdd37d';
+var guid_motor5_rotationCurve = '8ec51281-0969-4b7e-a5c2-37cbf59a7624';
 
 var guid_nib_geo = '01f86def-67fa-4e1f-aef5-a6bc0c314f17';
 var guid_nib_sphere = 'cf6df439-e2bf-4c14-9231-a5eaf071b7c4';
@@ -451,6 +466,7 @@ rhino3dm().then(async m => {
         else if (objects.get(i).attributes().id == guid_base_tube) {base_tube = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_base_axis) {base_axis = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_base_guide) {base_guide = objects.get(i).geometry();}
+        else if (objects.get(i).attributes().id == guid_base_rotationCurve) {base_rotationCurve = objects.get(i).geometry();}
         
         else if (objects.get(i).attributes().id == guid_tube1_geo) {tube1_geo = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_tube1_a_axis_1) {tube1_a_axis_1 = objects.get(i).geometry();}
@@ -487,6 +503,7 @@ rhino3dm().then(async m => {
         else if (objects.get(i).attributes().id == guid_motor1_tube2b_axis_2) {motor1_tube2b_axis_2 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor1_tube2b_guide_1) {motor1_tube2b_guide_1 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor1_tube2b_guide_2) {motor1_tube2b_guide_2 = objects.get(i).geometry();}
+        else if (objects.get(i).attributes().id == guid_motor1_rotationCurve) {motor1_rotationCurve = objects.get(i).geometry();}
         
         else if (objects.get(i).attributes().id == guid_motor2_geo) {motor2_geo = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor2_tube2a_axis_1) {motor2_tube2a_axis_1 = objects.get(i).geometry();}
@@ -497,7 +514,9 @@ rhino3dm().then(async m => {
         else if (objects.get(i).attributes().id == guid_motor2_tube2b_axis_2) {motor2_tube2b_axis_2 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor2_tube2b_guide_1) {motor2_tube2b_guide_1 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor2_tube2b_guide_2) {motor2_tube2b_guide_2 = objects.get(i).geometry();}
-        
+        else if (objects.get(i).attributes().id == guid_motor2_rotationCurve_1) {motor2_rotationCurve_1 = objects.get(i).geometry();}
+        else if (objects.get(i).attributes().id == guid_motor2_rotationCurve_2) {motor2_rotationCurve_2 = objects.get(i).geometry();}
+
         else if (objects.get(i).attributes().id == guid_motor3_geo) {motor3_geo = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor3_tube2a_axis_1) {motor3_tube2a_axis_1 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor3_tube2a_axis_2) {motor3_tube2a_axis_2 = objects.get(i).geometry();}
@@ -511,6 +530,7 @@ rhino3dm().then(async m => {
         else if (objects.get(i).attributes().id == guid_motor3_tube1_axis_2) {motor3_tube1_axis_2 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor3_tube1_guide_1) {motor3_tube1_guide_1 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor3_tube1_guide_2) {motor3_tube1_guide_2 = objects.get(i).geometry();}
+        else if (objects.get(i).attributes().id == guid_motor3_rotationCurve) {motor3_rotationCurve = objects.get(i).geometry();}
         
         else if (objects.get(i).attributes().id == guid_motor4_geo) {motor4_geo = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor4_tube1a_axis_1) {motor4_tube1a_axis_1 = objects.get(i).geometry();}
@@ -525,6 +545,7 @@ rhino3dm().then(async m => {
         else if (objects.get(i).attributes().id == guid_motor4_tube2_axis_2) {motor4_tube2_axis_2 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor4_tube2_guide_1) {motor4_tube2_guide_1 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor4_tube2_guide_2) {motor4_tube2_guide_2 = objects.get(i).geometry();}
+        else if (objects.get(i).attributes().id == guid_motor4_rotationCurve) {motor4_rotationCurve = objects.get(i).geometry();}
         
         else if (objects.get(i).attributes().id == guid_motor5_geo) {motor5_geo = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor5_tube1a_axis_1) {motor5_tube1a_axis_1 = objects.get(i).geometry();}
@@ -539,6 +560,7 @@ rhino3dm().then(async m => {
         else if (objects.get(i).attributes().id == guid_motor5_tube2_axis_2) {motor5_tube2_axis_2 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor5_tube2_guide_1) {motor5_tube2_guide_1 = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_motor5_tube2_guide_2) {motor5_tube2_guide_2 = objects.get(i).geometry();}
+        else if (objects.get(i).attributes().id == guid_motor5_rotationCurve) {motor5_rotationCurve = objects.get(i).geometry();}
         
         else if (objects.get(i).attributes().id == guid_nib_geo) {nib_geo = objects.get(i).geometry();}
         else if (objects.get(i).attributes().id == guid_nib_sphere) {nib_sphere = objects.get(i).geometry();}
