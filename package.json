@@ -1,0 +1,22 @@
+{
+  "name": "gyrograph",
+  "version": "1.0.0",
+  "description": "A drawing machine, by Jason Danforth",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo testing"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jason-danforth/gyrograph.git"
+  },
+  "author": "Jason Danforth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jason-danforth/gyrograph/issues"
+  },
+  "homepage": "https://github.com/jason-danforth/gyrograph#readme",
+  "devDependencies": {
+    "prettier": "^2.1.1"
+  }
+}
