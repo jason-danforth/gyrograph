@@ -1,12 +1,9 @@
 "use strict";
 
-// import { LineMaterial } from '../static/js/LineMaterial.js';
-
 var scene, camera, renderer, controls;
 
 // Need this to call RhinoCommon functions
 // wait for the rhino3dm web assembly to load asynchronously
-
 //This not originally commented out
 //let rhino = null;
 
@@ -55,10 +52,6 @@ function init() {
     directionalLight2.castShadow = true; //tell the light to cast shadows
     scene.add(directionalLight2);
 
-    //Helper to view directionalLight
-    //const cameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-    //scene.add(cameraHelper);
-
     //var ambientLight = new THREE.AmbientLight(0xbebad6);
     var ambientLight = new THREE.AmbientLight(0x8985a6);
     scene.add(ambientLight);
@@ -78,10 +71,6 @@ function init() {
 }
 
 var animate = function () {
-    // requestAnimationFrame( animate );
-    // controls.update();
-    // renderer.render( scene, camera );
-
     // Limit framerate to boost performance
     // setTimeout( function() {
     //     requestAnimationFrame( animate );
@@ -139,12 +128,6 @@ function curveToLineSegments(curve, material) {
 
 
 function axonView() {
-    // //Simple controls (no animated transition)
-    // controls.target.set( 0, 0, 275 ); //Readjust after panning
-    // camera.position.set(-2000,2000,2000);
-    // camera.updateProjectionMatrix();
-
-    //With Tweens
     let duration = 500;
 
     new TWEEN.Tween( camera.position ).to( {
@@ -179,10 +162,8 @@ function topView() {
         z: 275}, duration )
         .easing( TWEEN.Easing.Quadratic.InOut )
         .start();
-
-
     
-    /*The unsolved problem explored in all the code below is the camera rotates so 
+    /*The unsolved problem is the camera rotates so 
     suddenly when changing to top view. This behavior can be seen if you change the
     duration to something huge like 10000 and are already in top view but with a 
     different rotation (in which case the rotation happens right away) or are in front 
@@ -190,102 +171,6 @@ function topView() {
     the rotation is still smooth, but it is MUCH faster than the change in position.
     The rotation happens solely because of the position tween, and note that what appears
     to be a 45 degree angle, is actually aligned with the x and y axes (the model is rotated)*/ 
-    
-    
-    
-    // // interpolate quaternions with the current tween value
-    // //let initQ = new THREE.Quaternion().copy(camera.quaternion);
-    // let initQ = new THREE.Quaternion();
-    // initQ.copy(camera.quaternion);
-
-    // // let initQ = camera.quaternion.clone();
-    // // let endQ = new THREE.Quaternion(0.18734214884075126, 0.4522839565354606, 0.8056007778384423, 0.3336907680389976);
-    // let curQ = new THREE.Quaternion();
-    // let endQ = new THREE.Quaternion();
-    // let euler = new THREE.Euler( 0, 0, 2.5, 'XYZ' );
-    // endQ.setFromEuler(euler);        
-
-
-    // let time = {t: 0};
-    // //This doesn't actually do anything... All the rotation is happening bc of the position tween
-    // new TWEEN.Tween( time ).to( {t: 1}, duration )
-    //     .easing(TWEEN.Easing.Quadratic.InOut)
-    //     .onUpdate(() => {
-    //         THREE.Quaternion.slerp(initQ, endQ, curQ, time.t);
-    //         camera.quaternion = curQ;
-    //     })
-    //     .start();
-
-
-
-
-
-    
-    // // interpolate quaternions with the current tween value
-    // let initQ = new THREE.Quaternion().copy(camera.quaternion); //may not even need this
-    // let curQ = new THREE.Quaternion();
-    // let endQ = new THREE.Quaternion();
-    // let euler = new THREE.Euler( 0, 0, 2.5, 'XYZ' );
-    // endQ.setFromEuler(euler);
-
-    // THREE.Quaternion.slerp(initQ, endQ, curQ, 0.9);
-
-    // let vec3 = new THREE.Vector3();
-
-    // // apply new quaternion to camera position
-    // vec3.x = camera.position.x;
-    // vec3.y = camera.position.y;
-    // vec3.z = camera.position.z;
-    // vec3.applyQuaternion(curQ)
-    // camera.position.copy(vec3)
-
-    // // apply new quaternion to camera up
-    // vec3 = camera.up.clone();
-    // vec3.applyQuaternion(curQ);
-    // camera.up.copy(vec3);
-
-    // const currentCamPosition = {x: camera.postion.x, y: camera.position.y, z: camera.position.z};
-    // const storedMarkerPosition = new THREE.Vector3(0, 0, 4000);
-    // const newCameraTarget = new THREE.Vector3(0, 0, 275);
-    // const markerPosition = new THREE.Vector3(...Object.values(newCameraTarget));
-    // const startRotation = new THREE.Euler().copy(camera.rotation);
-
-    // camera.lookAt(storedMarkerPosition);
-    // const endRotation = new THREE.Euler().copy(camera.rotation);
-
-    // camera.rotation.copy(startRotation);
-    
-    // new TWEEN.Tween(camera.rotation)
-    //     .to(
-    //     {
-    //         x: endRotation.x,
-    //         y: endRotation.y,
-    //         z: endRotation.z,
-    //     }, 500)
-    //     .easing(TWEEN.Easing.Quadratic.InOut)
-    //     .onComplete(() => {
-    //         new TWEEN.Tween(camera.position)
-    //             .to({
-    //                 x: marker.cameraPositionX,
-    //                 y: camera.position.y,
-    //                 z: marker.cameraPositionZ,
-    //             })
-    //             .easing(TWEEN.Easing.Quadratic.InOut)
-    //             .onUpdate(() => {
-    //                 camera.lookAt(storedMarkerPosition);
-    //             })
-    //             .onComplete(() => {
-    //                 camera.lookAt(storedMarkerPosition);
-    //                 radius = Math.hypot(...Object.values(markerPosition));
-    //                 phi = Math.acos(markerPosition.y / radius);
-    //                 theta = Math.atan2(markerPosition.z, markerPosition.x);
-    //                 lon = THREE.Math.radToDeg(theta);
-    //                 lat = 90 - THREE.Math.radToDeg(phi);
-    //     })
-    //     .start();
-    // })
-    // .start();
-
 }
 
 
@@ -335,14 +220,21 @@ var colorWheel = new iro.ColorPicker("#colorWheel", {
 colorWheel.on('input:end', function(color){
     //'input' settings here: https://www.cssscript.com/sleek-html5-javascript-color-picker-iro-js/
     line_color = color.hexString;
-    if (nib_UI_bool) {nib_objects[nib_key].color = line_color;}
-    clear_scene();
+    
+    //Find selection index, remove nib and recreate with updated line_color
+    let num_parts = Object.keys(parts).length;
+    let last_num = num_parts - 1;
+    let last_index = last_num.toString();
+    let last_selection_index = parts[last_index]['selection_index'];
+    undo();
+    nib_creation();
+    add_part('Nib', last_selection_index);
+    draw();
 })
 
 var sliderLineWeight = document.getElementById("lineWeightSlider");
 sliderLineWeight.oninput = function() {
-    let line_weight = this.value //Set thickness of lines
-    nib_objects[nib_key].weight = line_weight;
+    line_weight = this.value //Set thickness of lines
 
     let slider_thickness = line_weight.concat('px'); //Convet to "pixels"
     let slider_margin = (parseInt(14) - line_weight).toString().concat('px'); //.sliderLines.margin_bottom + 3 in style.css
@@ -350,8 +242,15 @@ sliderLineWeight.oninput = function() {
     document.getElementById("lineWeightSlider").style.height = slider_thickness; //Update CSS property
     document.getElementById("lineWeightSlider").style.marginBottom = slider_margin; //Update CSS property
 
-
-    clear_scene();
+    //Find selection index, remove nib and recreate with updated line_weight
+    let num_parts = Object.keys(parts).length;
+    let last_num = num_parts - 1;
+    let last_index = last_num.toString();
+    let last_selection_index = parts[last_index]['selection_index'];
+    undo();
+    nib_creation();
+    add_part('Nib', last_selection_index);
+    draw();
 }
 
 // Scroll Bar https://jamesflorentino.github.io/nanoScrollerJS/
@@ -484,7 +383,6 @@ function stop() {
     draw_bool = false;
     play_bool = false;
     play_count = 0;
-    // draw();
 }
 
 
@@ -492,9 +390,22 @@ function stop() {
 
 //------------------------------------------Helper Functions-------------------------------------------------------------------------------------------------------------------------------------
 
+function nib_UI() {
+    //Controls whether or not the Nib UI panel is visible
+    if (nib_UI_bool) {
+        document.getElementById("colorWheel").className = "wheelAvailable"; //enable color wheel
+        document.getElementById("lineWeightSlider").className = "sliderLines"; //enable line weight slider
+    }
+
+    else {
+        document.getElementById("colorWheel").className = "wheelUnavailable"; //disable color wheel
+        document.getElementById("lineWeightSlider").className = "sliderLinesUnavailable"; //disable line weight slider
+    }
+}
+
+
 function nib_creation() {    
     //Need to create the nib objects outside of the main loop so that values like color and weight persist
-
     let nib_counter = 0;
     for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_counter += 1;}
     
@@ -517,9 +428,17 @@ function undo() {
     
     //If removing a Nib then need to remove it from nib_objects too
     if (last_part_name == "Nib") {
-        let nib_counter = -1;
-        for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_counter += 1;}
-        delete nib_objects[nib_counter];
+        let last_nib = Object.keys(nib_objects).length - 1;
+        delete nib_objects[last_nib];
+        nib_item -= 1;
+
+        //disable nib_UI unless last part is STILL a nib (i.e. two nibs in a row)
+        let new_last_name = parts[(last_num -1).toString()].name;
+        if (new_last_name == "Nib") {}
+        else {
+            nib_UI_bool = false;
+            nib_UI();
+        } 
     }
 
     delete parts[last_index];
@@ -544,14 +463,9 @@ function next() {
     let last_part_name = parts[last_index]['name'];
     let last_selection_index = parts[last_index]['selection_index'];
     let new_selection_index = last_selection_index + 1;
-    
-    //If removing a Nib then need to remove it from nib_objects too
-    if (last_part_name == "Nib") {
-        let nib_counter = -1;
-        for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_counter += 1;}
-        delete nib_objects[nib_counter];
-    }
 
+    if (last_part_name == 'Nib') {nib_item -= 1};
+    
     delete parts[last_index];
     count -= 1;
 
@@ -568,14 +482,6 @@ function next() {
 
 
 function previous() {
-    // let lastIndex = selection_list.length - 1;
-    
-    // if (selection_list[lastIndex] != 0) {selection_list[lastIndex] = selection_list[lastIndex] - 1;}
-    // else {selection_list[lastIndex] = pair_list.length - 1;}
-    
-
-
-
     //Update selection index for most recently added part, remove it, and add it back
     let num_parts = Object.keys(parts).length;
 
@@ -588,13 +494,8 @@ function previous() {
     if (last_selection_index != 0) {new_selection_index = last_selection_index - 1;}
     else {new_selection_index = pair_list.length - 1;} //Pair list will be defined by the last part function run
 
-    //If removing a Nib then need to remove it from nib_objects too
-    if (last_part_name == "Nib") {
-        let nib_counter = -1;
-        for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_counter += 1;}
-        delete nib_objects[nib_counter];
-    }
-
+    if (last_part_name == 'Nib') {nib_item -= 1};
+    
     delete parts[last_index];
     count -= 1;
 
@@ -610,45 +511,6 @@ function previous() {
   }
 
 
-//I'll be honest, there's a LOT I don't understand about what's going on with sceneTraverse and garbage_collector
-//Just trying to solve the memory leak / crashing issue
-//Working off of this thread: https://discourse.threejs.org/t/dispose-things-correctly-in-three-js/6534/19
-//And this plnkr: https://plnkr.co/edit/pmeB0t3tEbOAaKdebhbr?preview 
-// function sceneTraverse (obj, fn) {
-//     if (!obj) return
-
-//         fn(obj)
-
-//     if (obj.children && obj.children.length > 0) {
-//         obj.children.forEach(o => {
-//             sceneTraverse(o, fn)
-//         })
-//     }
-// }
-
-// function garbage_collector(e) {
-//     sceneTraverse(scene, o => {
-                
-//         if (o.geometry) {
-//             o.geometry.dispose();	
-//         }
-
-//         if (o.material) {
-//             if (o.material.length) {
-//                 for (let i = 0; i < o.material.length; ++i) {
-//                     o.material[i].dispose();							
-//                 }
-//             }
-//             else {
-//                 o.material.dispose();						
-//             }
-//         }
-//     })
-
-//     renderer && renderer.renderLists.dispose();
-//     // renderer && renderer.dispose();
-// }
-
 function clear_scene() {
     //Remove previously drawn objects from the scene
     for (let i=0; i<scene.children.length; i++) {
@@ -659,8 +521,8 @@ function clear_scene() {
     } 
     
     //Clear Nibs
-    nib_item = 0;
-    if (draw_bool == false) {
+    if (draw_bool) {nib_item = 0;} 
+    else {
         for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_objects[i].points = [];}
     }
 }
@@ -711,50 +573,52 @@ function draw() {
         }
         else {nib_color = line_color;}
 
+        let nib_index = i.toString();
         let nibMaterial = new THREE.MeshBasicMaterial({color: nib_color});
-        let geo = nib_objects[i].sphere;
+        let geo = nib_objects[nib_index]['sphere'];
+        
         let threeMesh = meshToThreejs(geo, nibMaterial);
         scene.add(threeMesh);
 
         let points = nib_objects[i].points;
 
-        if (points.length > 0) {
-            // //Simple line (no ability to control thickness)
-            // let curve_material = new THREE.LineBasicMaterial({color: 0xff00aa});
-            // let new_points = [];
-            // for (let i=0; i<points.length; i++) {
-            //     let THREEpt = new THREE.Vector3(points[i].location[0], points[i].location[1], points[i].location[2]);
-            //     new_points.push(THREEpt);
-            // }
-            // let curve_points = new THREE.BufferGeometry().setFromPoints(new_points);                
-            // curve_geometry = new THREE.Line( curve_points, curve_material );
-            // scene.add(curve_geometry);
+        // if (points.length > 0) {
+        //     // //Simple line (no ability to control thickness)
+        //     // let curve_material = new THREE.LineBasicMaterial({color: 0xff00aa});
+        //     // let new_points = [];
+        //     // for (let i=0; i<points.length; i++) {
+        //     //     let THREEpt = new THREE.Vector3(points[i].location[0], points[i].location[1], points[i].location[2]);
+        //     //     new_points.push(THREEpt);
+        //     // }
+        //     // let curve_points = new THREE.BufferGeometry().setFromPoints(new_points);                
+        //     // curve_geometry = new THREE.Line( curve_points, curve_material );
+        //     // scene.add(curve_geometry);
 
 
-            //Lines with variable thickness
-            //tutorial: https://dustinpfister.github.io/2018/11/07/threejs-line-fat-width/
-            geo = new THREE.LineGeometry();
-            let positions = [];
-            let colors = []
-            let color = new THREE.Color(nib_color);
+        //     //Lines with variable thickness
+        //     //tutorial: https://dustinpfister.github.io/2018/11/07/threejs-line-fat-width/
+        //     geo = new THREE.LineGeometry();
+        //     let positions = [];
+        //     let colors = []
+        //     let color = new THREE.Color(nib_color);
 
-            for (let i=0; i<points.length; i++) {
-                positions.push(points[i].location[0], points[i].location[1], points[i].location[2]);
-                colors.push(color.r, color.g, color.b);
-            }
-            geo.setPositions(positions);
-            geo.setColors(colors);
+        //     for (let i=0; i<points.length; i++) {
+        //         positions.push(points[i].location[0], points[i].location[1], points[i].location[2]);
+        //         colors.push(color.r, color.g, color.b);
+        //     }
+        //     geo.setPositions(positions);
+        //     geo.setColors(colors);
 
-            var matLine = new THREE.LineMaterial({
-                linewidth: nib_objects[i].weight, // in pixels
-                vertexColors: THREE.VertexColors
-            });
+        //     var matLine = new THREE.LineMaterial({
+        //         linewidth: nib_objects[i].weight, // in pixels
+        //         vertexColors: THREE.VertexColors
+        //     });
         
-            matLine.resolution.set(window_width, window_height);
+        //     matLine.resolution.set(window_width, window_height);
             
-            let line = new THREE.Line2(geo, matLine);
-            scene.add(line);
-        }
+        //     let line = new THREE.Line2(geo, matLine);
+        //     scene.add(line);
+        // }
     }
 }
 
@@ -886,7 +750,7 @@ function update_src() {
         element.onclick = "";
     }
 
-    if (tag_set.has("nib") && selection_list.length > 0) {
+    if (tag_set.has("nib") && Object.keys(parts).length > 1) {
         let element = document.getElementById("nib");
         element.className = "iconAvailable"; //Change to CSS class with hover 
         element.setAttribute( "onClick", "nib_creation(); add_part('Nib', 0)" );
@@ -1198,7 +1062,7 @@ function tube1(selection_index) {
     4. Repeat step 2 to define potential_target pairs (also taken from Rhino geometry, but typically fewer options than the source placements)
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
-    
+
     //Step 1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
     let parts_count = count.toString();
 
@@ -1217,6 +1081,10 @@ function tube1(selection_index) {
         b_guide_1 = parts[parts_count]['source_guides'][1];
     }
     else {
+        //Hide Nib UI if enabled
+        nib_UI_bool = false;
+        nib_UI();
+
         //Add object to parts
         parts[parts_count] = {'name': 'Tube 1'};
         parts[parts_count]['selection_index'] = selection_index;
@@ -1355,6 +1223,10 @@ function tube2(selection_index) {
         b_guide_1 = parts[parts_count]['source_guides'][2];
     }
     else {
+        //Hide Nib UI if enabled
+        nib_UI_bool = false;
+        nib_UI();
+
         //Add object to parts
         parts[parts_count] = {'name': 'Tube 2'};
         parts[parts_count]['selection_index'] = selection_index;
@@ -1477,7 +1349,6 @@ function tube2(selection_index) {
 }
 
 
-
 function tube3(selection_index) {
     /*There are 6 main steps to placing a part:
     1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
@@ -1517,6 +1388,10 @@ function tube3(selection_index) {
         b_guide_4 = parts[parts_count]['source_guides'][7];
     }
     else {
+        //Hide Nib UI if enabled
+        nib_UI_bool = false;
+        nib_UI();
+
         //Add object to parts
         parts[parts_count] = {'name': 'Tube 3'};
         parts[parts_count]['selection_index'] = selection_index;
@@ -1695,6 +1570,10 @@ function motor1(selection_index) {
     }
 
     else {
+        //Hide Nib UI if enabled
+        nib_UI_bool = false;
+        nib_UI();
+
         //Add object to parts
         parts[parts_count] = {'name': 'Motor 1'};
         parts[parts_count]['selection_index'] = selection_index;
@@ -1864,6 +1743,10 @@ function motor2(selection_index) {
     }
 
     else {
+        //Hide Nib UI if enabled
+        nib_UI_bool = false;
+        nib_UI();
+
         //Add object to parts
         parts[parts_count] = {'name': 'Motor 2'};
         parts[parts_count]['selection_index'] = selection_index;
@@ -2054,6 +1937,10 @@ function motor3(selection_index) {
     }
 
     else {
+        //Hide Nib UI if enabled
+        nib_UI_bool = false;
+        nib_UI();
+
         //Add object to parts
         parts[parts_count] = {'name': 'Motor 3'};
         parts[parts_count]['selection_index'] = selection_index;
@@ -2237,6 +2124,10 @@ function motor4(selection_index) {
     }
 
     else {
+        //Hide Nib UI if enabled
+        nib_UI_bool = false;
+        nib_UI();
+
         //Add object to parts
         parts[parts_count] = {'name': 'Motor 4'};
         parts[parts_count]['selection_index'] = selection_index;
@@ -2414,6 +2305,10 @@ function motor5(selection_index) {
     }
 
     else {
+        //Hide Nib UI if enabled
+        nib_UI_bool = false;
+        nib_UI();
+
         //Add object to parts
         parts[parts_count] = {'name': 'Motor 5'};
         parts[parts_count]['selection_index'] = selection_index;
@@ -2438,7 +2333,6 @@ function motor5(selection_index) {
         potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate(), c_guide_1.duplicate()];
     }
     
-
 
     
     /*Step 2. Create source_tag/axis/guide pairs
@@ -2532,7 +2426,7 @@ function motor5(selection_index) {
 }
 
 
-function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
+function nib(selection_index) {
     /*There are 6 main steps to placing a part:
     1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
     2. Create source_tag/axis/guide pairs
@@ -2541,43 +2435,85 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     5. Transform (orient and rotate) mesh and all potential_target geo
     6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)*/
     
-    //Enable Nib UI
-    nib_UI_bool = true;
-    nib_UI();
-
-    try {
-        if (typeof selection_list[count] == 'number') {
-            selection_index = selection_list[count];
-        }
-        else {selection_index = 0;}
-    }
-    catch(err) {
-        selection_index = 0;
-    }
-    
     /*Step 1. Define source geometry (these are duplicates of the globals defined by Rhino GUIDs)
     Motor 1 has 6 possible placements: the side with the motor has 1 guide and can be placed left-handed 
     or right-handed the side without the motor can be left or right-handed with either of 2 guides. These 
     placements are all detailed below in Step 2*/
+
+    let parts_count = count.toString();
+
+    let geo;
+    let sphere;
+    let point;
+    let tube1_axis_1;
+    let tube1_axis_2;
+    let tube1_guide_1;
+    let tube2_axis_1;
+    let tube2_axis_2;
+    let tube2_guide_1;
+    let motors1_axis_1;
+    let motors1_axis_2;
+    let motors2_axis_1;
+    let motors2_axis_2;
+    let motors1_guide_1;
+    let motors2_guide_1;
+    let potential_source_tags = []; //Nibs don't create any new placemnet opportunities
+    let potential_target_tags = [];
+    let potential_axes = [];
+    let potential_guides = [];
     
-    let geo = nib_geo.duplicate();
-    let sphere = nib_sphere.duplicate();
-    let point = nib_pt.duplicate();
-    let tube1_axis_1 = nib_tube1_axis_1.duplicate();
-    let tube1_axis_2 = nib_tube1_axis_2.duplicate();
-    let tube1_guide_1 = nib_tube1_guide_1.duplicate();
-    let tube2_axis_1 = nib_tube2_axis_1.duplicate();
-    let tube2_axis_2 = nib_tube2_axis_2.duplicate();
-    let tube2_guide_1 = nib_tube2_guide_1.duplicate();
-    let motors1_axis_1 = nib_motors1_axis_1.duplicate();
-    let motors1_axis_2 = nib_motors1_axis_2.duplicate();
-    let motors2_axis_1 = nib_motors2_axis_1.duplicate();
-    let motors2_axis_2 = nib_motors2_axis_2.duplicate();
-    let motors1_guide_1 = nib_motors1_guide_1.duplicate();
-    let motors2_guide_1 = nib_motors2_guide_1.duplicate();
-    
+
+
+    if (play_bool) {
+        //Reuse geometry
+        geo = parts[parts_count]['geo'][0];
+        sphere = parts[parts_count]['sphere'];
+        point = parts[parts_count]['point'];
+        tube1_axis_1 = parts[parts_count]['source_axes'][0];
+        tube1_axis_2 = parts[parts_count]['source_axes'][1];
+        tube1_guide_1 = parts[parts_count]['source_guides'][0];
+        tube2_axis_1 = parts[parts_count]['source_axes'][2];
+        tube2_axis_2 = parts[parts_count]['source_axes'][3];
+        tube2_guide_1 = parts[parts_count]['source_guides'][1];
+        motors1_axis_1 = parts[parts_count]['source_axes'][4];
+        motors1_axis_2 = parts[parts_count]['source_axes'][5];
+        motors2_axis_1 = parts[parts_count]['source_axes'][6];
+        motors2_axis_2 = parts[parts_count]['source_axes'][7];
+        motors1_guide_1 = parts[parts_count]['source_guides'][2];
+        motors2_guide_1 = parts[parts_count]['source_guides'][3];
+    }
+
+    else {
+        //Hide Nib UI if enabled
+        nib_UI_bool = true;
+        nib_UI();
+        
+        //Add object to parts
+        parts[parts_count] = {'name': 'Nib'};
+        parts[parts_count]['selection_index'] = selection_index;
+
+        //Define source geometry
+        geo = nib_geo.duplicate();
+        sphere = nib_sphere.duplicate();
+        point = nib_pt.duplicate();
+        tube1_axis_1 = nib_tube1_axis_1.duplicate();
+        tube1_axis_2 = nib_tube1_axis_2.duplicate();
+        tube1_guide_1 = nib_tube1_guide_1.duplicate();
+        tube2_axis_1 = nib_tube2_axis_1.duplicate();
+        tube2_axis_2 = nib_tube2_axis_2.duplicate();
+        tube2_guide_1 = nib_tube2_guide_1.duplicate();
+        motors1_axis_1 = nib_motors1_axis_1.duplicate();
+        motors1_axis_2 = nib_motors1_axis_2.duplicate();
+        motors1_guide_1 = nib_motors1_guide_1.duplicate();
+        motors2_axis_1 = nib_motors2_axis_1.duplicate();
+        motors2_axis_2 = nib_motors2_axis_2.duplicate();
+        motors2_guide_1 = nib_motors2_guide_1.duplicate();
+    }
+
     nib_key = nib_item.toString();
     sphere.scale(nib_objects[nib_key]["weight"] / 3);
+
+
 
     /*Step 2. Create source_tag/axis/guide pairs
     The source_tags will be compared to available target_tags, and the selection_index will be used to choose from the available pairings
@@ -2589,57 +2525,66 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     
     let source_tags = ['nib_tube1_a', 'nib_tube1_b', 'nib_tube2_a', 'nib_tube2_b', 'nib_motors_1', 'nib_motors_1', 'nib_motors_2', 'nib_motors_2'];
     let source_axes = [tube1_axis_1, tube1_axis_2, tube2_axis_1, tube2_axis_2, motors1_axis_1, motors1_axis_2, motors2_axis_1, motors2_axis_2];
-    let source_guides = [tube1_guide_1, tube1_guide_1, tube2_guide_1, tube2_guide_1, motors1_guide_1, motors1_guide_1, motors2_guide_1, motors2_guide_1];
+    let source_guides = [tube1_guide_1, tube1_guide_1.duplicate(), tube2_guide_1, tube2_guide_1.duplicate(), motors1_guide_1, motors1_guide_1.duplicate(), motors2_guide_1, motors2_guide_1.duplicate()];
     
-    /*Step 3. Run generate_selection_pairs() to select source_ and target_axis/guides
-    Once we know the source aixs and guide, we can ignore the remaining source geo b/c it's irrlevant
-    We drop the other source geo and only transform the axes/guides that will form future targets (see next step)*/
-    
-    pair_list = generate_selection_pairs(source_tags, target_tags);
+    let previous_count = (count - 1).toString()
+    let target_tags = [...parts[previous_count]['target_tags']]; //shallow copy
+    let target_axes = [...parts[previous_count]['target_axes']];
+    let target_guides = [...parts[previous_count]['target_guides']];
 
+
+
+    //Step 3. Run generate_selection_pairs() to select source_ and target_axis/guides
+    pair_list = generate_selection_pairs(source_tags, target_tags);
     let source_target_pair = pair_list[selection_index % pair_list.length];
     let source_tag_selection = source_tags[source_target_pair[0]]; //a special name for a special tag (see final step)
-    let source_axis = source_axes[source_target_pair[0]];
-    let source_guide = source_guides[source_target_pair[0]];
+    let source_axis = source_axes[source_target_pair[0]].duplicate();
+    let source_guide = source_guides[source_target_pair[0]].duplicate();
     let target_tag = target_tags[source_target_pair[1]];
-    target_tags.splice(source_target_pair[1], 1);
+    target_tags.splice(source_target_pair[1], 1); //Remove this one bc the associated position will be occupied by the part and it can't be used again
     let target_axis = target_axes[source_target_pair[1]];
-    target_axes.splice(source_target_pair[1], 1);
+    target_axes.splice(source_target_pair[1], 1); //Remove this one bc the associated position will be occupied by the part and it can't be used again
     let target_guide = target_guides[source_target_pair[1]];
-    target_guides.splice(source_target_pair[1], 1);
+    target_guides.splice(source_target_pair[1], 1); //Remove this one bc the associated position will be occupied by the part and it can't be used again
     
-    /*Step 4. Enpty because Nibs don't add any new targets*/
-    let potential_source_tags = [];
-    let potential_target_tags = [];
-    let potential_axes = [];
-    let potential_guides = [];
+
     
-    /*Step 5. Transform 
+    /*Step 4. Transform 
     This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
     It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.*/
 
     let pt_to_orient = [point];
-    let returned_point = orient3d(pt_to_orient, source_axis.duplicate(), source_guide.duplicate(), potential_axes, potential_guides, target_axis, target_guide); 
-    point = returned_point[0][0];
+    orient3d(pt_to_orient, source_axis.duplicate(), source_guide.duplicate(), target_axis, target_guide, source_axes, source_guides, potential_axes, potential_guides);
 
     let sphere_to_orient = [sphere];
-    let returned_sphere = orient3d(sphere_to_orient, source_axis.duplicate(), source_guide.duplicate(), potential_axes, potential_guides, target_axis, target_guide); 
-    sphere = returned_sphere[0][0];
+    orient3d(sphere_to_orient, source_axis.duplicate(), source_guide.duplicate(), target_axis, target_guide, source_axes, source_guides, potential_axes, potential_guides);
 
     let geo_to_orient = [geo];
-    let returned_objects = orient3d(geo_to_orient, source_axis.duplicate(), source_guide.duplicate(), potential_axes, potential_guides, target_axis, target_guide);
-    geo = returned_objects[0][0];
-    potential_axes = returned_objects[1];
-    potential_guides = returned_objects[2];
+    orient3d(geo_to_orient, source_axis, source_guide, target_axis, target_guide, source_axes, source_guides, potential_axes, potential_guides);
 
-    /*Step 6. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)
+
+
+    /*Step 5. Drop potential_target geo corresponding to selection (it's already been used) and modify master lists (parts/tags/axes/guides)
     Nibs don't add any new targets, so there's no need to iterate over the potential_source_tags for tags/axes/guides as with other parts.
     However, if Nib is placed in a Tube 2/3 inner position, then we have to remove the corresponding Tube 2/3 outer tag so that a Tube 1 
     can't be placed over it (but a Motor still could)*/
     
-    part_list_output.push(geo);
+    parts[parts_count]['selection_index'] = selection_index;
+    parts[parts_count]['geo'] = [geo];
+    parts[parts_count]['sphere'] = sphere;
+    parts[parts_count]['point'] = point;
+    parts[parts_count]['source_axes'] = source_axes;
+    parts[parts_count]['source_guides'] = [source_guides[0], source_guides[2], source_guides[4], source_guides[6]];
 
-    //Step 7: confirm target is Tube 2/3
+    parts[parts_count]['target_tags'] = target_tags;
+    parts[parts_count]['target_axes'] = target_axes;
+    parts[parts_count]['target_guides'] = target_guides;
+    
+    count += 1;
+
+
+
+    //Step 6: confirm target is Tube 2/3
     if (target_tag == "nib_tube2_a" || target_tag == "nib_tube2_b") {
     //Step 7B: confirm which outer tag is referenced (could be tube2_a, tube2_b, tube3_a, or tube3_b)
         if (target_tags[source_target_pair[1] - 1] == tag_tube2_a_outer || target_tags[source_target_pair[1] - 1] == tag_tube2_b_outer || target_tags[source_target_pair[1] - 1] == tag_tube3_a_outer || target_tags[source_target_pair[1] - 1] == tag_tube3_b_outer) {
@@ -2672,8 +2617,4 @@ function nib(parts, target_axes, target_guides, target_tags, count, nib_item) {
     }
 
     nib_item += 1;
-    
-    // Create next block
-    count += 1;
-    next_part(part_list_output, target_axes, target_guides, target_tags, count, nib_item);
 }
