@@ -28,8 +28,9 @@ when the user clicks "DRAW" the machine will run and the Nibs will trace out the
 //There are a LOT of variables because we're referencing a LOT of specific geometry in the Rhino doc
 
 // General Inputs
-var part_list_input = []; //Array of part names (i.e. ["Tube 3", "Motor 1"...]) used to trigger associated functions
-var part_list_output = []; //Array of geometry to add/render to scene
+var parts = {}; //JSON to track parts
+// var part_list_input = []; //Array of part names (i.e. ["Tube 3", "Motor 1"...]) used to trigger associated functions
+// var part_list_output = []; //Array of geometry to add/render to scene
 var pair_list //Array of potential source/target pairs. Global b/c needs to be accessed by previousButton() in functions.js
 var selection_list = [];
 var selection_index = 0;
@@ -37,23 +38,26 @@ var count = 0;
 var nib_objects = {}; //JSON to track each nib (color, line weight, and points)
 var nib_item = 0; //int to track each nib sequentially
 var nib_key; //str used as key in nib_objects
-var target_axes = [];
-var target_guides = [];
-var target_tags = [];
+// var target_axes = [];
+// var target_guides = [];
+// var target_tags = [];
 var rotation_curves = []; //for cute little curves that show which way the motors will rotate the tubes
 
 var rotation_angle = 0;
 var current_angle = 0; //This is to capture the angle from the manual slider, so that it can be returned to with reset_animation()
-var rotation_increment = 1.5;
+var rotation_increment = 2;
+
+var meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 1000});
+var curve_material = new THREE.LineBasicMaterial({color: 0xffffff});
 
 /*Motors are intended to rotate at different speeds. The default settings are that motors with larger (i.e. Tube 1)
 connections will rotate at roughly half the speed of smaller (i.e. Tubes 2 and 3) connections.*/
 var angle_factor_A = 1.0;
-var angle_factor_B = 1.9;
+var angle_factor_B = 1.5;
 var angle_A = 0;
 var angle_B = 0;
 
-var play_bool = true; 
+var play_bool = false; 
 var draw_bool = false;
 var play_count = 0;
 var line_weight = 3;
@@ -440,10 +444,10 @@ var tag_nib_motors_2 = "motor1_tube2_a, motor2_tube2_a, motor2_tube2_b, motor3_t
 //------------------------------------------Load Rhino-------------------------------------------------------------------------------------------------------------------------------------
 
 //Heroku app runs from app.py backend (in main project directory)
-let fetchPromise = fetch('static/models/Drawing_Machine.3dm');
+// let fetchPromise = fetch('static/models/Drawing_Machine.3dm');
 
 //Locally hosted app runs directly from index.html (in "templates" directory)
-// let fetchPromise = fetch('../static/models/Drawing_Machine.3dm');
+let fetchPromise = fetch('../static/models/Drawing_Machine.3dm');
 
 rhino3dm().then(async m => {
     let rhino = m;
@@ -588,9 +592,6 @@ rhino3dm().then(async m => {
 
     //------------------------------------------Build Machine-------------------------------------------------------------------------------------------------------------------------------------
 
-    base();
-    draw();
-    update_src();    
+    add_part('Base', 0);
     activateScroll(); //Needs to be called last in order to load properly 
-
 });
