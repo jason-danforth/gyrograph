@@ -371,18 +371,16 @@ function stop() {
     $("#circularSlider").roundSlider("enable"); //enable slider
     document.getElementById("circularSlider").classList.remove("circularUnavailable");
     document.getElementById("circularSlider").classList.add("circularAvailable");
-
     update_src(); //enable all other buttons;
-    
-    // rotation_angle = current_angle;
-    // angle_A = rotation_angle * angle_factor_A;
-    // angle_B = rotation_angle * angle_factor_B;
-
     renderer.setAnimationLoop(null); //Stops animation loop
+
+    //Remove lines
+    for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_objects[i].points = [];}
 
     draw_bool = false;
     play_bool = false;
     play_count = 0;
+    draw();
 }
 
 
@@ -406,11 +404,8 @@ function nib_UI() {
 
 function nib_creation() {    
     //Need to create the nib objects outside of the main loop so that values like color and weight persist
-    let nib_counter = 0;
-    for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_counter += 1;}
-    
-    nib_counter = nib_counter.toString();
-    nib_objects[nib_counter] = {"sphere": "",
+    let nib_index = (Object.keys(nib_objects).length).toString();
+    nib_objects[nib_index] = {"sphere": "",
                             "color": line_color,
                             "weight": line_weight,
                             "points": []
@@ -495,7 +490,7 @@ function previous() {
     else {new_selection_index = pair_list.length - 1;} //Pair list will be defined by the last part function run
 
     if (last_part_name == 'Nib') {nib_item -= 1};
-    
+
     delete parts[last_index];
     count -= 1;
 
@@ -519,12 +514,6 @@ function clear_scene() {
             i = i-1;
         }    
     } 
-    
-    //Clear Nibs
-    if (draw_bool) {nib_item = 0;} 
-    else {
-        for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_objects[i].points = [];}
-    }
 }
 
 
@@ -541,12 +530,16 @@ function draw() {
     i.e. every degree of rotation. If not in play mode, then update_src to allow user to add the next part. */
     
     if (play_bool) {
+        //Reset Nib
+        nib_item = 0;
+
         //Update position of each part in the machine by itearting over parts{} and calling add_part(part.name, part.selection_index)
         for (const [key, value] of Object.entries(parts)) {            
             selection_index = parts[key]['selection_index'];
             add_part(parts[key]['name'], selection_index);
         }
     }
+
     else {
         update_src();
     }
@@ -556,7 +549,7 @@ function draw() {
     // Add new geometry to threejs scene
     for (const [key, value] of Object.entries(parts)) {
         parts[key]['geo'].forEach(addToScene);
-      }
+    }
 
     // Draw rotation curves
     // for (let i=0; i<rotation_curves.length; i++) {
@@ -567,58 +560,59 @@ function draw() {
 
     //Draw nibs + lines
     for (let i=0; i<Object.keys(nib_objects).length; i++) {
+        let nib_index = i.toString();
         let nib_color;
-        if (nib_objects[i].color) {
-            nib_color = nib_objects[i].color;
+
+        if (nib_objects[nib_index]['color']) {
+            nib_color = nib_objects[nib_index]['color'];
         }
         else {nib_color = line_color;}
 
-        let nib_index = i.toString();
         let nibMaterial = new THREE.MeshBasicMaterial({color: nib_color});
         let geo = nib_objects[nib_index]['sphere'];
         
         let threeMesh = meshToThreejs(geo, nibMaterial);
         scene.add(threeMesh);
 
-        let points = nib_objects[i].points;
+        let points = nib_objects[nib_index]['points'];
 
-        // if (points.length > 0) {
-        //     // //Simple line (no ability to control thickness)
-        //     // let curve_material = new THREE.LineBasicMaterial({color: 0xff00aa});
-        //     // let new_points = [];
-        //     // for (let i=0; i<points.length; i++) {
-        //     //     let THREEpt = new THREE.Vector3(points[i].location[0], points[i].location[1], points[i].location[2]);
-        //     //     new_points.push(THREEpt);
-        //     // }
-        //     // let curve_points = new THREE.BufferGeometry().setFromPoints(new_points);                
-        //     // curve_geometry = new THREE.Line( curve_points, curve_material );
-        //     // scene.add(curve_geometry);
+        if (points.length > 0) {
+            // //Simple line (no ability to control thickness)
+            // let curve_material = new THREE.LineBasicMaterial({color: 0xff00aa});
+            // let new_points = [];
+            // for (let i=0; i<points.length; i++) {
+            //     let THREEpt = new THREE.Vector3(points[i].location[0], points[i].location[1], points[i].location[2]);
+            //     new_points.push(THREEpt);
+            // }
+            // let curve_points = new THREE.BufferGeometry().setFromPoints(new_points);                
+            // curve_geometry = new THREE.Line( curve_points, curve_material );
+            // scene.add(curve_geometry);
 
 
-        //     //Lines with variable thickness
-        //     //tutorial: https://dustinpfister.github.io/2018/11/07/threejs-line-fat-width/
-        //     geo = new THREE.LineGeometry();
-        //     let positions = [];
-        //     let colors = []
-        //     let color = new THREE.Color(nib_color);
+            //Lines with variable thickness
+            //tutorial: https://dustinpfister.github.io/2018/11/07/threejs-line-fat-width/
+            geo = new THREE.LineGeometry();
+            let positions = [];
+            let colors = []
+            let color = new THREE.Color(nib_color);
 
-        //     for (let i=0; i<points.length; i++) {
-        //         positions.push(points[i].location[0], points[i].location[1], points[i].location[2]);
-        //         colors.push(color.r, color.g, color.b);
-        //     }
-        //     geo.setPositions(positions);
-        //     geo.setColors(colors);
+            for (let i=0; i<points.length; i++) {
+                positions.push(points[i].location[0], points[i].location[1], points[i].location[2]);
+                colors.push(color.r, color.g, color.b);
+            }
+            geo.setPositions(positions);
+            geo.setColors(colors);
 
-        //     var matLine = new THREE.LineMaterial({
-        //         linewidth: nib_objects[i].weight, // in pixels
-        //         vertexColors: THREE.VertexColors
-        //     });
+            var matLine = new THREE.LineMaterial({
+                linewidth: nib_objects[i].weight, // in pixels
+                vertexColors: THREE.VertexColors
+            });
         
-        //     matLine.resolution.set(window_width, window_height);
+            matLine.resolution.set(window_width, window_height);
             
-        //     let line = new THREE.Line2(geo, matLine);
-        //     scene.add(line);
-        // }
+            let line = new THREE.Line2(geo, matLine);
+            scene.add(line);
+        }
     }
 }
 
@@ -2461,7 +2455,8 @@ function nib(selection_index) {
     let potential_target_tags = [];
     let potential_axes = [];
     let potential_guides = [];
-    
+
+    nib_key = nib_item.toString();
 
 
     if (play_bool) {
@@ -2484,7 +2479,7 @@ function nib(selection_index) {
     }
 
     else {
-        //Hide Nib UI if enabled
+        //Show Nib UI if enabled
         nib_UI_bool = true;
         nib_UI();
         
@@ -2508,10 +2503,9 @@ function nib(selection_index) {
         motors2_axis_1 = nib_motors2_axis_1.duplicate();
         motors2_axis_2 = nib_motors2_axis_2.duplicate();
         motors2_guide_1 = nib_motors2_guide_1.duplicate();
-    }
 
-    nib_key = nib_item.toString();
-    sphere.scale(nib_objects[nib_key]["weight"] / 3);
+        sphere.scale(nib_objects[nib_key]["weight"] / 3);
+    }
 
 
 
@@ -2553,13 +2547,7 @@ function nib(selection_index) {
     This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
     It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.*/
 
-    let pt_to_orient = [point];
-    orient3d(pt_to_orient, source_axis.duplicate(), source_guide.duplicate(), target_axis, target_guide, source_axes, source_guides, potential_axes, potential_guides);
-
-    let sphere_to_orient = [sphere];
-    orient3d(sphere_to_orient, source_axis.duplicate(), source_guide.duplicate(), target_axis, target_guide, source_axes, source_guides, potential_axes, potential_guides);
-
-    let geo_to_orient = [geo];
+    let geo_to_orient = [geo, sphere, point];
     orient3d(geo_to_orient, source_axis, source_guide, target_axis, target_guide, source_axes, source_guides, potential_axes, potential_guides);
 
 
@@ -2604,7 +2592,7 @@ function nib(selection_index) {
     else if (draw_bool && play_count == 0) {
         //Create "points" value when Play button is pressed
         nib_objects[nib_key]["sphere"] = sphere;
-        nib_objects[nib_key]["points"] = [point];    
+        nib_objects[nib_key]["points"] = [point.duplicate()];    
     }
 
     else if (draw_bool && play_count > 0  && current_angle < 3701) {
@@ -2613,7 +2601,7 @@ function nib(selection_index) {
         the lines being drawn are guaranteed to be complete, and there's no need to continue adding points 
         (the machine will still be allowed to rotate)*/
         nib_objects[nib_key]["sphere"] = sphere;
-        nib_objects[nib_key]["points"].push(point);
+        nib_objects[nib_key]["points"].push(point.duplicate());
     }
 
     nib_item += 1;
