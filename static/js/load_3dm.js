@@ -449,8 +449,10 @@ var tag_nib_motors_2 = "motor1_tube2_a, motor2_tube2_a, motor2_tube2_b, motor3_t
 //Locally hosted app runs directly from index.html (in "templates" directory)
 let fetchPromise = fetch('../static/models/Drawing_Machine.3dm');
 
+let rhino;
+
 rhino3dm().then(async m => {
-    let rhino = m;
+    rhino = m;
 
     let res = await fetchPromise;
     let buffer = await res.arrayBuffer();
@@ -462,7 +464,6 @@ rhino3dm().then(async m => {
     init(); //Create scene
     
     let objects = doc.objects(); //Creates a File3dmObjectTable object
-
 
     //Scrub through all objects in the Rhino Doc
     for (let i = 0; i < objects.count; i++) {

@@ -9,9 +9,9 @@ var scene, camera, renderer, controls;
 
 
 rhino3dm().then(function(m) {
-    var rhino = m; // global
+    rhino = m; // global
   });
-
+  
 
 function init() {
     scene = new THREE.Scene();
@@ -125,6 +125,45 @@ function curveToLineSegments(curve, material) {
     return new THREE.Line(geometry, material);
 }
 
+
+function refine_pts(init_pts) {
+    /*The lines created from the drawing machines are polylines, and for machines wil long arms,
+    the points are far enough away that the straight segments of the lines are visible. This function
+    creates intermediate points by converting the initial point list into a nurbs curve and adding 
+    points between the initial points, and then returning that full list*/
+
+    //Convert init_pts to PointList3d
+    let init_pts_capacity = init_pts.length - 1;
+    let init_pts_array = new rhino.Point3dList(init_pts_capacity);
+    for (let i = 0; i < init_pts.length - 1; i++) {
+        init_pts_array.add(init_pts[i].location[0], init_pts[i].location[1], init_pts[i].location[2]);
+    }
+
+    //Create initial curve
+    let init_crv = rhino.NurbsCurve.create(false, 3, init_pts_array);
+    let domain_end = init_crv.domain[1]
+
+    //Initalize new list
+    // let new_capacity = (init_pts.length * 2) - 1;
+    // let new_pts = new rhino.Point3dList(new_capacity);
+    let new_pts = [];
+    let new_pt_1;
+    let new_pt_2;
+
+    for (let i = 0; i < (domain_end ); i++) {
+        //Create points at each param and half way between
+        new_pt_1 = new rhino.Point(init_crv.pointAt(i));
+        new_pt_2 = new rhino.Point(init_crv.pointAt(i + 0.5));
+        new_pts.push(new_pt_1);
+        new_pts.push(new_pt_2);
+    }
+
+    new_pts.push(new rhino.Point(init_crv.pointAt(domain_end - 0.25))); //Include point just shy of end of domain for extra smoothness at nib
+    new_pts.push(new rhino.Point(init_crv.pointAt(domain_end))); //Include end point
+    new_pts.push(init_pts[init_pts.length - 1]); //Include last point created by machine in case init_crv doesn't match
+
+    return new_pts;
+}
 
 
 function axonView() {
@@ -345,9 +384,8 @@ function play() {
     draw_bool = true;
 
     renderer.setAnimationLoop( function () {        
-        if (play_bool) {
+        if (play_bool) {            
             count = 0; //reset on each loop for iterating over parts{}
-            
             rotation_angle = rotation_increment * 0.0174533; //Convert angle from degrees to radians
             angle_A = rotation_angle * angle_factor_A;
             angle_B = rotation_angle * angle_factor_B;         
@@ -557,7 +595,6 @@ function draw() {
     //     scene.add(curve);
     // }
 
-
     //Draw nibs + lines
     for (let i=0; i<Object.keys(nib_objects).length; i++) {
         let nib_index = i.toString();
@@ -587,6 +624,13 @@ function draw() {
             // let curve_points = new THREE.BufferGeometry().setFromPoints(new_points);                
             // curve_geometry = new THREE.Line( curve_points, curve_material );
             // scene.add(curve_geometry);
+
+
+            if (points.length > 4) {
+                //Need at least 5 points to create a degree 3 Nurbs Curve
+                points = refine_pts(points);
+            }
+
 
 
             //Lines with variable thickness
