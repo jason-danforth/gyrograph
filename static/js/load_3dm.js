@@ -45,9 +45,9 @@ var rotation_curves = []; //for cute little curves that show which way the motor
 
 var rotation_angle = 0;
 var current_angle = 0; //This is to capture the angle from the manual slider, so that it can be returned to with reset_animation()
-var rotation_increment = 2;
+var rotation_increment = 3;
 
-var meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 1000});
+var meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 500});
 var curve_material = new THREE.LineBasicMaterial({color: 0xffffff});
 
 /*Motors are intended to rotate at different speeds. The default settings are that motors with larger (i.e. Tube 1)
@@ -58,7 +58,6 @@ var angle_A = 0;
 var angle_B = 0;
 
 var play_bool = false; 
-var draw_bool = false;
 var play_count = 0;
 var line_weight = 3;
 var line_color = 0xff0077;
@@ -595,4 +594,5 @@ rhino3dm().then(async m => {
 
     add_part('Base', 0);
     activateScroll(); //Needs to be called last in order to load properly 
+    run();
 });
