@@ -133,37 +133,42 @@ function refine_pts(init_pts) {
     points between the initial points, and then returning that full list*/
 
     //Convert init_pts to PointList3d
-    let init_pts_capacity = init_pts.length - 1;
+    let init_pts_capacity = init_pts.length;
     let init_pts_array = new rhino.Point3dList(init_pts_capacity);
-    for (let i = 0; i < init_pts.length - 1; i++) {
+    for (let i = 0; i < init_pts.length; i++) {
         init_pts_array.add(init_pts[i].location[0], init_pts[i].location[1], init_pts[i].location[2]);
     }
 
     //Create initial curve
-    let init_crv = rhino.NurbsCurve.create(false, 3, init_pts_array);
+    let init_crv;
+    if (init_pts.length <= 4) {
+        init_crv = rhino.NurbsCurve.create(false, 1, init_pts_array);
+    }
+    else {
+        init_crv = rhino.NurbsCurve.create(false, 3, init_pts_array);
+    }
     let domain_end = init_crv.domain[1]
 
     //Initalize new list
-    // let new_capacity = (init_pts.length * 2) - 1;
-    // let new_pts = new rhino.Point3dList(new_capacity);
     let new_pts = [];
     let new_pt_1;
     let new_pt_2;
+    let new_pt_3;
+    let new_pt_4;
 
     for (let i = 0; i < (domain_end ); i++) {
-        //Create points at each param and half way between
+        //Create points at intermediate params
         new_pt_1 = new rhino.Point(init_crv.pointAt(i));
         new_pt_2 = new rhino.Point(init_crv.pointAt(i + 0.25));
-        new_pt_2 = new rhino.Point(init_crv.pointAt(i + 0.5));
-        new_pt_2 = new rhino.Point(init_crv.pointAt(i + 0.75));
+        new_pt_3 = new rhino.Point(init_crv.pointAt(i + 0.5));
+        new_pt_4 = new rhino.Point(init_crv.pointAt(i + 0.75));
         new_pts.push(new_pt_1);
         new_pts.push(new_pt_2);
+        new_pts.push(new_pt_3);
+        new_pts.push(new_pt_4);
     }
 
-    // new_pts.push(new rhino.Point(init_crv.pointAt(domain_end - 0.25))); //Include point just shy of end of domain for extra smoothness at nib
     new_pts.push(new rhino.Point(init_crv.pointAt(domain_end))); //Include end point
-    new_pts.push(init_pts[init_pts.length - 1]); //Include last point created by machine in case init_crv doesn't match
-
     return new_pts;
 }
 
@@ -641,7 +646,7 @@ function draw() {
         let threeMesh = meshToThreejs(geo, nibMaterial);
         scene.add(threeMesh);
 
-        let points = nib_objects[nib_index]['points'];
+        let points = [...nib_objects[nib_index]['points']];
 
         if (points.length > 0) {
             // //Simple line (no ability to control thickness)
@@ -655,13 +660,7 @@ function draw() {
             // curve_geometry = new THREE.Line( curve_points, curve_material );
             // scene.add(curve_geometry);
 
-
-            if (points.length > 4) {
-                //Need at least 5 points to create a degree 3 Nurbs Curve
-                points = refine_pts(points);
-            }
-
-
+            if (points.length > 2) { points = refine_pts(points); }
 
             //Lines with variable thickness
             //tutorial: https://dustinpfister.github.io/2018/11/07/threejs-line-fat-width/
