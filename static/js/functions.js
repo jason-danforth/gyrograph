@@ -260,37 +260,42 @@ var colorWheel = new iro.ColorPicker("#colorWheel", {
 
 colorWheel.on('input:end', function(color){
     //'input' settings here: https://www.cssscript.com/sleek-html5-javascript-color-picker-iro-js/
+    //update color for last nib and redraw scene
     line_color = color.hexString;
-    
-    //Find selection index, remove nib and recreate with updated line_color
-    let num_parts = Object.keys(parts).length;
-    let last_num = num_parts - 1;
-    let last_index = last_num.toString();
-    let last_selection_index = parts[last_index]['selection_index'];
-    undo();
-    nib_creation();
-    add_part('Nib', last_selection_index);
+    let num_nibs = Object.keys(nib_objects).length;
+    let last_nib = num_nibs - 1;
+    let last_index = last_nib.toString();
+    nib_objects[last_index]['color'] = line_color;
     draw();
 })
 
 var sliderLineWeight = document.getElementById("lineWeightSlider");
 sliderLineWeight.oninput = function() {
+    /* Updating line weights for nibs is more complicated than updating colors, bc the sphere needs to be scaled
+    and the only way to do that is to undo() and then add_part(nib) with new line weight. However, undo() will
+    destory the lines if in Play mode (but paused), so we have to store those points and add them back to nib_objects */
+    
     line_weight = this.value //Set thickness of lines
-
     let slider_thickness = line_weight.concat('px'); //Convet to "pixels"
     let slider_margin = (parseInt(14) - line_weight).toString().concat('px'); //.sliderLines.margin_bottom + 3 in style.css
-
     document.getElementById("lineWeightSlider").style.height = slider_thickness; //Update CSS property
     document.getElementById("lineWeightSlider").style.marginBottom = slider_margin; //Update CSS property
 
     //Find selection index, remove nib and recreate with updated line_weight
+    let num_nibs = Object.keys(nib_objects).length;
+    let last_nib = num_nibs - 1;
+    let last_nib_index = last_nib.toString();
+    let nib_points = nib_objects[last_nib_index]['points'];
+
     let num_parts = Object.keys(parts).length;
-    let last_num = num_parts - 1;
-    let last_index = last_num.toString();
-    let last_selection_index = parts[last_index]['selection_index'];
+    let last_part = num_parts - 1;
+    let last_part_index = last_part.toString();
+    let last_selection_index = parts[last_part_index]['selection_index'];
+    
     undo();
     nib_creation();
     add_part('Nib', last_selection_index);
+    nib_objects[last_nib_index]['points'] = nib_points;
     draw();
 }
 
@@ -494,15 +499,18 @@ function undo() {
         let last_nib = Object.keys(nib_objects).length - 1;
         delete nib_objects[last_nib];
         nib_item -= 1;
-
-        //disable nib_UI unless last part is STILL a nib (i.e. two nibs in a row)
-        let new_last_name = parts[(last_num -1).toString()].name;
-        if (new_last_name == "Nib") {}
-        else {
-            nib_UI_bool = false;
-            nib_UI();
-        } 
     }
+
+    //If new last part is nib then enable nib_UI, otherwise disable
+    let new_last_name = parts[(last_num -1).toString()].name;
+    if (new_last_name == "Nib") {
+        nib_UI_bool = true;
+        nib_UI();            
+    }
+    else {
+        nib_UI_bool = false;
+        nib_UI();
+    } 
 
     delete parts[last_index];
     count -= 1;
@@ -596,11 +604,9 @@ function addToScene(geo) {
 function draw() {    
     /* If machine is in play mode (play_bool = true) then update the positions everytime draw() is called,
     i.e. every degree of rotation. If not in play mode, then update_src to allow user to add the next part. */
-    
     if (play_bool) {
         //Reset Nib
         nib_item = 0;
-
         //Update position of each part in the machine by itearting over parts{} and calling add_part(part.name, part.selection_index)
         for (const [key, value] of Object.entries(parts)) {            
             selection_index = parts[key]['selection_index'];
@@ -608,13 +614,8 @@ function draw() {
         }
     }
 
-    else {
-        update_src();
-    }
-
-    clear_scene(); // Clear previous geometry from threejs scene
-    
     // Add new geometry to threejs scene
+    clear_scene(); // Clear previous geometry from threejs scene
     for (const [key, value] of Object.entries(parts)) {
         parts[key]['geo'].forEach(addToScene);
         if (parts[key]['rot_crv']) {
@@ -636,8 +637,7 @@ function draw() {
         else {nib_color = line_color;}
 
         let nibMaterial = new THREE.MeshBasicMaterial({color: nib_color});
-        let geo = nib_objects[nib_index]['sphere'];
-        
+        let geo = nib_objects[nib_index]['sphere'];        
         let threeMesh = meshToThreejs(geo, nibMaterial);
         scene.add(threeMesh);
 
@@ -705,7 +705,7 @@ function update_src() {
     if (Object.keys(parts).length > 1) {
         let element_undo = document.getElementById("undo");
         element_undo.className = "iconAvailable"; //Change to CSS class with hover 
-        element_undo.setAttribute( "onClick", "undo()" );
+        element_undo.setAttribute( "onClick", "undo(), update_src()" );
 
         let element_previous = document.getElementById("previous");
         element_previous.className = "iconAvailable"; //Change to CSS class with hover 
@@ -714,10 +714,6 @@ function update_src() {
         let element_next = document.getElementById("next");
         element_next.className = "iconAvailable"; //Change to CSS class with hover 
         element_next.setAttribute( "onClick", "next()" );
-    
-        // let element_play = document.getElementById("play");
-        // element_play.className = "iconAvailable"; //Change to CSS class with hover 
-        // element_play.setAttribute( "onClick", "play()" );
     }
 
     //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
@@ -735,7 +731,7 @@ function update_src() {
     if (tag_set.has("tube1")) {
         let element = document.getElementById("tube1");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Tube 1', 0)" );
+        element.setAttribute( "onClick", "add_part('Tube 1', 0), update_src()" );
     }
     else {
         let element = document.getElementById("tube1");
@@ -747,11 +743,11 @@ function update_src() {
     if (tag_set.has("tube2")) {
         let element1 = document.getElementById("tube2");
         element1.className = "iconAvailable"; //Change to CSS class with hover 
-        element1.setAttribute( "onClick", "add_part('Tube 2', 0)" );
+        element1.setAttribute( "onClick", "add_part('Tube 2', 0), update_src()" );
 
         let element2 = document.getElementById("tube3");
         element2.className = "iconAvailable"; //Change to CSS class with hover 
-        element2.setAttribute( "onClick", "add_part('Tube 3', 0)" );
+        element2.setAttribute( "onClick", "add_part('Tube 3', 0), update_src()" );
     }
     else {
         let element1 = document.getElementById("tube2");
@@ -766,7 +762,7 @@ function update_src() {
     if (tag_set.has("motor1")) {
         let element = document.getElementById("motor1");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 1', 0)" );
+        element.setAttribute( "onClick", "add_part('Motor 1', 0), update_src()" );
     }
     else {
         let element = document.getElementById("motor1");
@@ -777,7 +773,7 @@ function update_src() {
     if (tag_set.has("motor2")) {
         let element = document.getElementById("motor2");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 2', 0)" );
+        element.setAttribute( "onClick", "add_part('Motor 2', 0), update_src()" );
     }
     else {
         let element = document.getElementById("motor2");
@@ -788,7 +784,7 @@ function update_src() {
     if (tag_set.has("motor3")) {
         let element = document.getElementById("motor3");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 3', 0)" );
+        element.setAttribute( "onClick", "add_part('Motor 3', 0), update_src()" );
     }
     else {
         let element = document.getElementById("motor3");
@@ -799,7 +795,7 @@ function update_src() {
     if (tag_set.has("motor4")) {
         let element = document.getElementById("motor4");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 4', 0)" );
+        element.setAttribute( "onClick", "add_part('Motor 4', 0), update_src()" );
     }
     else {
         let element = document.getElementById("motor4");
@@ -810,7 +806,7 @@ function update_src() {
     if (tag_set.has("motor5")) {
         let element = document.getElementById("motor5");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 5', 0)" );
+        element.setAttribute( "onClick", "add_part('Motor 5', 0), update_src()" );
     }
     else {
         let element = document.getElementById("motor5");
@@ -821,7 +817,7 @@ function update_src() {
     if (tag_set.has("nib") && Object.keys(parts).length > 1) {
         let element = document.getElementById("nib");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "nib_creation(); add_part('Nib', 0)" );
+        element.setAttribute( "onClick", "nib_creation(); add_part('Nib', 0), update_src()" );
     }
     else {
         let element = document.getElementById("nib");

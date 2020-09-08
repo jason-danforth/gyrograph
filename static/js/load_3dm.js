@@ -593,6 +593,7 @@ rhino3dm().then(async m => {
     //------------------------------------------Build Machine-------------------------------------------------------------------------------------------------------------------------------------
 
     add_part('Base', 0);
+    update_src();
     activateScroll(); //Needs to be called last in order to load properly 
     run();
 });
