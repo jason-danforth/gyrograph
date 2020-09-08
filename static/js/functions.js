@@ -153,12 +153,14 @@ function refine_pts(init_pts) {
     for (let i = 0; i < (domain_end ); i++) {
         //Create points at each param and half way between
         new_pt_1 = new rhino.Point(init_crv.pointAt(i));
+        new_pt_2 = new rhino.Point(init_crv.pointAt(i + 0.25));
         new_pt_2 = new rhino.Point(init_crv.pointAt(i + 0.5));
+        new_pt_2 = new rhino.Point(init_crv.pointAt(i + 0.75));
         new_pts.push(new_pt_1);
         new_pts.push(new_pt_2);
     }
 
-    new_pts.push(new rhino.Point(init_crv.pointAt(domain_end - 0.25))); //Include point just shy of end of domain for extra smoothness at nib
+    // new_pts.push(new rhino.Point(init_crv.pointAt(domain_end - 0.25))); //Include point just shy of end of domain for extra smoothness at nib
     new_pts.push(new rhino.Point(init_crv.pointAt(domain_end))); //Include end point
     new_pts.push(init_pts[init_pts.length - 1]); //Include last point created by machine in case init_crv doesn't match
 
@@ -302,7 +304,7 @@ function activateScroll() {
 // The values will be divided by 100, so 100 = 1x speed, 1.5 = 1.5x speed, etc. 
 // JQuery doesn't seem to like dealing with floats, so x100 to create integers
 
-var dotsValue = [100, 120, 125, 133, 150, 190, 200];
+var dotsValue = [100, 120, 125, 133, 150, 180, 195, 200];
 
 $.fn.roundSlider.prototype.defaults.create = function() {
   let dotsCount = dotsValue.length;
@@ -340,12 +342,12 @@ $("#circularSlider").roundSlider({
     min: 100,
     max: 200,
     startValue: 0,
-    value: 150,
+    value: 200,
     startAngle: 180,
     endAngle: "+340",
     tooltipFormat: function (e) {
         let prefix = "x ";
-        return prefix.concat((e.value / 100).toFixed(1));
+        return prefix.concat((e.value / 100).toFixed(2));
       },
     // events
     valueChange: function (e) {
@@ -1046,7 +1048,7 @@ function orient3d(geo_to_orient, source_axis, source_guide, target_axis, target_
     
     let cross_sum = cross_product[0] + cross_product[1] + cross_product[2];
 
-    if (angle_2.toFixed(5) == 3.14159 && Math.abs(cross_sum.toFixed(6)) == 0) {
+    if (angle_2.toFixed(10) == 3.14159 && Math.abs(cross_sum.toFixed(10)) == 0) {
         cross_product = [source_axis.pointAt(1)[0] - source_axis.pointAt(0)[0], source_axis.pointAt(1)[1] - source_axis.pointAt(0)[1], source_axis.pointAt(1)[2] - source_axis.pointAt(0)[2]];
     }
 
@@ -1878,7 +1880,6 @@ function motor2(selection_index) {
     target_guides.splice(source_target_pair[1], 1); //Remove this one bc the associated position will be occupied by the part and it can't be used again
 
 
-    
     /*Step 4. Transform 
     This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
     It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.

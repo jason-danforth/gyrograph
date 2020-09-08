@@ -53,7 +53,7 @@ var curve_material = new THREE.LineBasicMaterial({color: 0xffffff});
 /*Motors are intended to rotate at different speeds. The default settings are that motors with larger (i.e. Tube 1)
 connections will rotate at roughly half the speed of smaller (i.e. Tubes 2 and 3) connections.*/
 var angle_factor_A = 1.0;
-var angle_factor_B = 1.5;
+var angle_factor_B = 2.0;
 var angle_A = 0;
 var angle_B = 0;
 
