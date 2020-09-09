@@ -9,9 +9,9 @@ var scene, camera, renderer, controls;
 
 
 rhino3dm().then(function(m) {
-    var rhino = m; // global
+    rhino = m; // global
   });
-
+  
 
 function init() {
     scene = new THREE.Scene();
@@ -126,6 +126,52 @@ function curveToLineSegments(curve, material) {
 }
 
 
+function refine_pts(init_pts) {
+    /*The lines created from the drawing machines are polylines, and for machines wil long arms,
+    the points are far enough away that the straight segments of the lines are visible. This function
+    creates intermediate points by converting the initial point list into a nurbs curve and adding 
+    points between the initial points, and then returning that full list*/
+
+    //Convert init_pts to PointList3d
+    let init_pts_capacity = init_pts.length;
+    let init_pts_array = new rhino.Point3dList(init_pts_capacity);
+    for (let i = 0; i < init_pts.length; i++) {
+        init_pts_array.add(init_pts[i].location[0], init_pts[i].location[1], init_pts[i].location[2]);
+    }
+
+    //Create initial curve
+    let init_crv;
+    if (init_pts.length <= 4) {
+        init_crv = rhino.NurbsCurve.create(false, 1, init_pts_array);
+    }
+    else {
+        init_crv = rhino.NurbsCurve.create(false, 3, init_pts_array);
+    }
+    let domain_end = init_crv.domain[1]
+
+    //Initalize new list
+    let new_pts = [];
+    let new_pt_1;
+    let new_pt_2;
+    let new_pt_3;
+    let new_pt_4;
+
+    for (let i = 0; i < (domain_end ); i++) {
+        //Create points at intermediate params
+        new_pt_1 = new rhino.Point(init_crv.pointAt(i));
+        new_pt_2 = new rhino.Point(init_crv.pointAt(i + 0.25));
+        new_pt_3 = new rhino.Point(init_crv.pointAt(i + 0.5));
+        new_pt_4 = new rhino.Point(init_crv.pointAt(i + 0.75));
+        new_pts.push(new_pt_1);
+        new_pts.push(new_pt_2);
+        new_pts.push(new_pt_3);
+        new_pts.push(new_pt_4);
+    }
+
+    new_pts.push(new rhino.Point(init_crv.pointAt(domain_end))); //Include end point
+    return new_pts;
+}
+
 
 function axonView() {
     let duration = 500;
@@ -219,37 +265,42 @@ var colorWheel = new iro.ColorPicker("#colorWheel", {
 
 colorWheel.on('input:end', function(color){
     //'input' settings here: https://www.cssscript.com/sleek-html5-javascript-color-picker-iro-js/
+    //update color for last nib and redraw scene
     line_color = color.hexString;
-    
-    //Find selection index, remove nib and recreate with updated line_color
-    let num_parts = Object.keys(parts).length;
-    let last_num = num_parts - 1;
-    let last_index = last_num.toString();
-    let last_selection_index = parts[last_index]['selection_index'];
-    undo();
-    nib_creation();
-    add_part('Nib', last_selection_index);
+    let num_nibs = Object.keys(nib_objects).length;
+    let last_nib = num_nibs - 1;
+    let last_index = last_nib.toString();
+    nib_objects[last_index]['color'] = line_color;
     draw();
 })
 
 var sliderLineWeight = document.getElementById("lineWeightSlider");
 sliderLineWeight.oninput = function() {
+    /* Updating line weights for nibs is more complicated than updating colors, bc the sphere needs to be scaled
+    and the only way to do that is to undo() and then add_part(nib) with new line weight. However, undo() will
+    destory the lines if in Play mode (but paused), so we have to store those points and add them back to nib_objects */
+    
     line_weight = this.value //Set thickness of lines
-
     let slider_thickness = line_weight.concat('px'); //Convet to "pixels"
     let slider_margin = (parseInt(14) - line_weight).toString().concat('px'); //.sliderLines.margin_bottom + 3 in style.css
-
     document.getElementById("lineWeightSlider").style.height = slider_thickness; //Update CSS property
     document.getElementById("lineWeightSlider").style.marginBottom = slider_margin; //Update CSS property
 
     //Find selection index, remove nib and recreate with updated line_weight
+    let num_nibs = Object.keys(nib_objects).length;
+    let last_nib = num_nibs - 1;
+    let last_nib_index = last_nib.toString();
+    let nib_points = nib_objects[last_nib_index]['points'];
+
     let num_parts = Object.keys(parts).length;
-    let last_num = num_parts - 1;
-    let last_index = last_num.toString();
-    let last_selection_index = parts[last_index]['selection_index'];
+    let last_part = num_parts - 1;
+    let last_part_index = last_part.toString();
+    let last_selection_index = parts[last_part_index]['selection_index'];
+    
     undo();
     nib_creation();
     add_part('Nib', last_selection_index);
+    nib_objects[last_nib_index]['points'] = nib_points;
     draw();
 }
 
@@ -263,7 +314,7 @@ function activateScroll() {
 // The values will be divided by 100, so 100 = 1x speed, 1.5 = 1.5x speed, etc. 
 // JQuery doesn't seem to like dealing with floats, so x100 to create integers
 
-var dotsValue = [100, 120, 125, 133, 150, 190, 200];
+var dotsValue = [100, 120, 125, 133, 150, 180, 195, 200];
 
 $.fn.roundSlider.prototype.defaults.create = function() {
   let dotsCount = dotsValue.length;
@@ -301,12 +352,12 @@ $("#circularSlider").roundSlider({
     min: 100,
     max: 200,
     startValue: 0,
-    value: 150,
+    value: 200,
     startAngle: 180,
     endAngle: "+340",
     tooltipFormat: function (e) {
         let prefix = "x ";
-        return prefix.concat((e.value / 100).toFixed(1));
+        return prefix.concat((e.value / 100).toFixed(2));
       },
     // events
     valueChange: function (e) {
@@ -327,8 +378,6 @@ $("#circularSlider").roundSlider({
 
 function update_angle_factor_B(value) {
     angle_factor_B = value;
-    // angle_B = rotation_angle * angle_factor_B;         
-    // clear_scene(); 
 }
 
 
@@ -338,32 +387,63 @@ function update_angle_factor_B(value) {
 //------------------------------------------Animate-------------------------------------------------------------------------------------------------------------------------------------
 
 
-function play() {
-    freeze_src(); //Disable all buttons other than play/pause/reset
-
-    play_bool = true;
-    draw_bool = true;
-
-    renderer.setAnimationLoop( function () {        
-        if (play_bool) {
+function run() {
+    //Animation loop is always running
+    //In in Play mode, geometry updates and rotates, and lines are drawn
+    //If not in Play mode, rotation arrows rotate around motors
+    renderer.setAnimationLoop( function () {       
+        if (play_bool) {            
             count = 0; //reset on each loop for iterating over parts{}
-            
             rotation_angle = rotation_increment * 0.0174533; //Convert angle from degrees to radians
             angle_A = rotation_angle * angle_factor_A;
             angle_B = rotation_angle * angle_factor_B;         
-
             draw(); 
             renderer.render( scene, camera );
-
             play_count += 1;
+        }
+        else {
+            //Remove rotation curves from scene
+            for (let i=0; i<scene.children.length; i++) {
+                if (scene.children[i].type == 'Line') {
+                    scene.remove(scene.children[i]);
+                    i = i-1;
+                }    
+            } 
+            //Update rotation curves and add to scene
+            let rot_crv_angle
+            for (const [key, value] of Object.entries(parts)) {
+                if (parts[key]['name'] == 'Motor 1' || parts[key]['name'] == 'Motor 2' || parts[key]['name'] == 'Motor 3') {
+                    rot_crv_angle = 0.0174533 * (angle_factor_B ** 2);
+                }
+                else {
+                    rot_crv_angle = 0.0174533 * angle_factor_A;
+                }
+
+                if (parts[key]['rot_crv']) {
+                    for (let i=0; i<parts[key]['rot_crv'].length; i++) {
+                        let rot_crv = parts[key]['rot_crv'][i];
+                        let rot_axis = parts[key]['rot_axes'][i];
+                        let rot_vec =  [rot_axis.pointAt(1)[0] - rot_axis.pointAt(0)[0], rot_axis.pointAt(1)[1] - rot_axis.pointAt(0)[1], rot_axis.pointAt(1)[2] - rot_axis.pointAt(0)[2]];
+                        rot_crv.rotate(rot_crv_angle, rot_vec, rot_axis.pointAt(0));
+
+                        let curve = curveToLineSegments(rot_crv, curve_material);
+                        scene.add(curve);           
+                    } 
+                }
+            }
         }
     })
 }
 
 
+function play() {
+    freeze_src(); //Disable all buttons other than play/pause/reset
+    play_bool = true;
+}
+
+
 function pause() {
     play_bool = false;
-    renderer.setAnimationLoop(null); //Stops animation loop    
 }
 
 
@@ -372,12 +452,10 @@ function stop() {
     document.getElementById("circularSlider").classList.remove("circularUnavailable");
     document.getElementById("circularSlider").classList.add("circularAvailable");
     update_src(); //enable all other buttons;
-    renderer.setAnimationLoop(null); //Stops animation loop
 
     //Remove lines
     for (let i=0; i<Object.keys(nib_objects).length; i++) {nib_objects[i].points = [];}
 
-    draw_bool = false;
     play_bool = false;
     play_count = 0;
     draw();
@@ -426,15 +504,18 @@ function undo() {
         let last_nib = Object.keys(nib_objects).length - 1;
         delete nib_objects[last_nib];
         nib_item -= 1;
-
-        //disable nib_UI unless last part is STILL a nib (i.e. two nibs in a row)
-        let new_last_name = parts[(last_num -1).toString()].name;
-        if (new_last_name == "Nib") {}
-        else {
-            nib_UI_bool = false;
-            nib_UI();
-        } 
     }
+
+    //If new last part is nib then enable nib_UI, otherwise disable
+    let new_last_name = parts[(last_num -1).toString()].name;
+    if (new_last_name == "Nib") {
+        nib_UI_bool = true;
+        nib_UI();            
+    }
+    else {
+        nib_UI_bool = false;
+        nib_UI();
+    } 
 
     delete parts[last_index];
     count -= 1;
@@ -528,11 +609,9 @@ function addToScene(geo) {
 function draw() {    
     /* If machine is in play mode (play_bool = true) then update the positions everytime draw() is called,
     i.e. every degree of rotation. If not in play mode, then update_src to allow user to add the next part. */
-    
     if (play_bool) {
         //Reset Nib
         nib_item = 0;
-
         //Update position of each part in the machine by itearting over parts{} and calling add_part(part.name, part.selection_index)
         for (const [key, value] of Object.entries(parts)) {            
             selection_index = parts[key]['selection_index'];
@@ -540,23 +619,17 @@ function draw() {
         }
     }
 
-    else {
-        update_src();
-    }
-
-    clear_scene(); // Clear previous geometry from threejs scene
-    
     // Add new geometry to threejs scene
+    clear_scene(); // Clear previous geometry from threejs scene
     for (const [key, value] of Object.entries(parts)) {
         parts[key]['geo'].forEach(addToScene);
+        if (parts[key]['rot_crv']) {
+            for (let i=0; i<parts[key]['rot_crv'].length; i++) {
+                let curve = curveToLineSegments(parts[key]['rot_crv'][i], curve_material);
+                scene.add(curve);           
+            } 
+        }
     }
-
-    // Draw rotation curves
-    // for (let i=0; i<rotation_curves.length; i++) {
-    //     let curve = curveToLineSegments(rotation_curves[i], curve_material);
-    //     scene.add(curve);
-    // }
-
 
     //Draw nibs + lines
     for (let i=0; i<Object.keys(nib_objects).length; i++) {
@@ -569,12 +642,11 @@ function draw() {
         else {nib_color = line_color;}
 
         let nibMaterial = new THREE.MeshBasicMaterial({color: nib_color});
-        let geo = nib_objects[nib_index]['sphere'];
-        
+        let geo = nib_objects[nib_index]['sphere'];        
         let threeMesh = meshToThreejs(geo, nibMaterial);
         scene.add(threeMesh);
 
-        let points = nib_objects[nib_index]['points'];
+        let points = [...nib_objects[nib_index]['points']];
 
         if (points.length > 0) {
             // //Simple line (no ability to control thickness)
@@ -588,6 +660,7 @@ function draw() {
             // curve_geometry = new THREE.Line( curve_points, curve_material );
             // scene.add(curve_geometry);
 
+            if (points.length > 2) { points = refine_pts(points); }
 
             //Lines with variable thickness
             //tutorial: https://dustinpfister.github.io/2018/11/07/threejs-line-fat-width/
@@ -631,7 +704,7 @@ function update_src() {
     if (Object.keys(parts).length > 1) {
         let element_undo = document.getElementById("undo");
         element_undo.className = "iconAvailable"; //Change to CSS class with hover 
-        element_undo.setAttribute( "onClick", "undo()" );
+        element_undo.setAttribute( "onClick", "undo(), update_src()" );
 
         let element_previous = document.getElementById("previous");
         element_previous.className = "iconAvailable"; //Change to CSS class with hover 
@@ -640,10 +713,6 @@ function update_src() {
         let element_next = document.getElementById("next");
         element_next.className = "iconAvailable"; //Change to CSS class with hover 
         element_next.setAttribute( "onClick", "next()" );
-    
-        let element_play = document.getElementById("play");
-        element_play.className = "iconAvailable"; //Change to CSS class with hover 
-        element_play.setAttribute( "onClick", "play()" );
     }
 
     //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
@@ -661,7 +730,7 @@ function update_src() {
     if (tag_set.has("tube1")) {
         let element = document.getElementById("tube1");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Tube 1', 0)" );
+        element.setAttribute( "onClick", "add_part('Tube 1', 0), update_src()" );
     }
     else {
         let element = document.getElementById("tube1");
@@ -673,11 +742,11 @@ function update_src() {
     if (tag_set.has("tube2")) {
         let element1 = document.getElementById("tube2");
         element1.className = "iconAvailable"; //Change to CSS class with hover 
-        element1.setAttribute( "onClick", "add_part('Tube 2', 0)" );
+        element1.setAttribute( "onClick", "add_part('Tube 2', 0), update_src()" );
 
         let element2 = document.getElementById("tube3");
         element2.className = "iconAvailable"; //Change to CSS class with hover 
-        element2.setAttribute( "onClick", "add_part('Tube 3', 0)" );
+        element2.setAttribute( "onClick", "add_part('Tube 3', 0), update_src()" );
     }
     else {
         let element1 = document.getElementById("tube2");
@@ -692,7 +761,7 @@ function update_src() {
     if (tag_set.has("motor1")) {
         let element = document.getElementById("motor1");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 1', 0)" );
+        element.setAttribute( "onClick", "add_part('Motor 1', 0), update_src()" );
     }
     else {
         let element = document.getElementById("motor1");
@@ -703,7 +772,7 @@ function update_src() {
     if (tag_set.has("motor2")) {
         let element = document.getElementById("motor2");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 2', 0)" );
+        element.setAttribute( "onClick", "add_part('Motor 2', 0), update_src()" );
     }
     else {
         let element = document.getElementById("motor2");
@@ -714,7 +783,7 @@ function update_src() {
     if (tag_set.has("motor3")) {
         let element = document.getElementById("motor3");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 3', 0)" );
+        element.setAttribute( "onClick", "add_part('Motor 3', 0), update_src()" );
     }
     else {
         let element = document.getElementById("motor3");
@@ -725,7 +794,7 @@ function update_src() {
     if (tag_set.has("motor4")) {
         let element = document.getElementById("motor4");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 4', 0)" );
+        element.setAttribute( "onClick", "add_part('Motor 4', 0), update_src()" );
     }
     else {
         let element = document.getElementById("motor4");
@@ -736,7 +805,7 @@ function update_src() {
     if (tag_set.has("motor5")) {
         let element = document.getElementById("motor5");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 5', 0)" );
+        element.setAttribute( "onClick", "add_part('Motor 5', 0), update_src()" );
     }
     else {
         let element = document.getElementById("motor5");
@@ -747,7 +816,7 @@ function update_src() {
     if (tag_set.has("nib") && Object.keys(parts).length > 1) {
         let element = document.getElementById("nib");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "nib_creation(); add_part('Nib', 0)" );
+        element.setAttribute( "onClick", "nib_creation(); add_part('Nib', 0), update_src()" );
     }
     else {
         let element = document.getElementById("nib");
@@ -974,7 +1043,7 @@ function orient3d(geo_to_orient, source_axis, source_guide, target_axis, target_
     
     let cross_sum = cross_product[0] + cross_product[1] + cross_product[2];
 
-    if (angle_2.toFixed(5) == 3.14159 && Math.abs(cross_sum.toFixed(6)) == 0) {
+    if (angle_2.toFixed(10) == 3.14159 && Math.abs(cross_sum.toFixed(10)) == 0) {
         cross_product = [source_axis.pointAt(1)[0] - source_axis.pointAt(0)[0], source_axis.pointAt(1)[1] - source_axis.pointAt(0)[1], source_axis.pointAt(1)[2] - source_axis.pointAt(0)[2]];
     }
 
@@ -1003,6 +1072,7 @@ function base(selection_index) {
     let tube;
     let axis;
     let guide;
+    let rot_crv;
     
     if (play_bool) {
         //Reuse geometry
@@ -1010,6 +1080,7 @@ function base(selection_index) {
         tube = parts['0']['geo'][1];
         axis = parts['0']['source_axes'][0];
         guide = parts['0']['source_guides'][0];
+        rot_crv = parts['0']['rot_crv'][0];
     }
     else {
         //Add object to parts
@@ -1020,22 +1091,23 @@ function base(selection_index) {
         tube = base_tube.duplicate();
         axis = base_axis.duplicate();
         guide = base_guide.duplicate();
-        // let rot_curve = base_rotationCurve.duplicate();
+        rot_crv = base_rotationCurve.duplicate();
     }
 
     //Transform
-    let pt1 = axis.pointAt(0);
+    let pt1 = axis.pointAt(1);
     let pt2 = axis.pointAt(0.5);
     let axis_vector = [pt1[0] - pt2[0], pt1[1] - pt2[1], pt1[2] - pt2[2]];
     
     tube.rotate(angle_A, axis_vector, pt1);
     axis.rotate(angle_A, axis_vector, pt1);
     guide.rotate(angle_A, axis_vector, pt1);
-    // rot_curve.rotate(rotation_angle, axis_vector, pt1);
+    rot_crv.rotate(rotation_angle, axis_vector, pt1);
     
     parts['0']['selection_index'] = 0;
     parts['0']['geo'] = [sphere, tube];
-    // rotation_curves.push(rot_curve);
+    parts['0']['rot_crv'] = [rot_crv];
+    parts['0']['rot_axes'] = [axis];
 
     parts['0']['source_axes'] = [axis];
     parts['0']['source_guides'] = [guide];
@@ -1089,8 +1161,6 @@ function tube1(selection_index) {
         a_guide_1 = tube1_a_guide_1.duplicate();
         b_axis_1 = tube1_b_axis_1.duplicate();
         b_guide_1 = tube1_b_guide_1.duplicate();
-        
-        // let rot_curve = base_rotationCurve.duplicate();
     }
     
 
@@ -1233,8 +1303,6 @@ function tube2(selection_index) {
         a_guide_1 = tube2_a_guide_1.duplicate();
         b_guide_1 = tube2_b_guide_1.duplicate();
         mid_guide_1 = tube2_mid_guide_1.duplicate();
-
-        // let rot_curve = base_rotationCurve.duplicate();
     }
 
 
@@ -1402,7 +1470,6 @@ function tube3(selection_index) {
         b_guide_2 = tube3_b_guide_2.duplicate();
         b_guide_3 = tube3_b_guide_3.duplicate();
         b_guide_4 = tube3_b_guide_4.duplicate();
-        // let rot_curve = base_rotationCurve.duplicate();
     }
     
     /*Step 2. Create source_tag/axis/guide pairs
@@ -1536,7 +1603,7 @@ function motor1(selection_index) {
     let b_axis_2;
     let b_guide_1;
     let b_guide_2;
-    let rot_curve;
+    let rot_crv;
     let potential_axes;
     let potential_guides;
     let potential_source_tags = ['motor1_tube2_a', 'motor1_tube2_b'];
@@ -1553,6 +1620,7 @@ function motor1(selection_index) {
         b_axis_2 = parts[parts_count]['source_axes'][3];
         b_guide_1 = parts[parts_count]['source_guides'][2];
         b_guide_2 = parts[parts_count]['source_guides'][3];
+        rot_crv = parts[parts_count]['rot_crv'][0];
 
         /* Define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
         All of this geometry will be transformed according to the selected source/target geometry. This is because it needs to track
@@ -1582,7 +1650,7 @@ function motor1(selection_index) {
         b_axis_2 = motor1_tube2b_axis_2.duplicate();
         b_guide_1 = motor1_tube2b_guide_1.duplicate();
         b_guide_2 = motor1_tube2b_guide_2.duplicate();
-        // rot_curve = motor1_rotationCurve.duplicate();
+        rot_crv = motor1_rotationCurve.duplicate();
 
         potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate()];
         potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate()];
@@ -1636,6 +1704,7 @@ function motor1(selection_index) {
 
     if (source_tag_selection == "motor1_tube2_a") {
         geo.rotate(angle_B, new_axis_vector, new_axis.pointAt(0));
+        rot_crv.rotate(angle_B, new_axis_vector, new_axis.pointAt(0));
         // rot_curve.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
         potential_axes[1].rotate(angle_B, new_axis_vector, new_axis.pointAt(0)); //First axis doesn't rotate b/c everything is rotating around it
         for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle_B, new_axis_vector, new_axis.pointAt(0));}
@@ -1644,12 +1713,11 @@ function motor1(selection_index) {
     //Otherwise, the guide associated with the "motor" connection (and only this guide) wiil rotate in place
     else {
         potential_guides[0].rotate(angle_B, new_axis_vector, new_axis.pointAt(0));
+        rot_crv.rotate(angle_B, new_axis_vector, new_axis.pointAt(0));
     }
     
     //Step 4B: Add Motor to target geometry
-    // let geo_to_orient = [geo, rot_curve];
-    let geo_to_orient = [geo];
-    // let geo_to_orient = [geo, rot_curve];
+    let geo_to_orient = [geo, rot_crv];
     orient3d(geo_to_orient, source_axis, source_guide, target_axis, target_guide, source_axes, source_guides, potential_axes, potential_guides);
 
 
@@ -1666,6 +1734,8 @@ function motor1(selection_index) {
     parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3]];
     parts[parts_count]['potential_axes'] = potential_axes;
     parts[parts_count]['potential_guides'] = potential_guides;
+    parts[parts_count]['rot_crv'] = [rot_crv];
+    parts[parts_count]['rot_axes'] = [a_axis_1];
 
     for (let i=0; i<potential_source_tags.length; i++) {
         if (potential_source_tags[i] == source_tag_selection) {}
@@ -1708,8 +1778,10 @@ function motor2(selection_index) {
     let b_axis_2;
     let b_guide_1;
     let b_guide_2;
-    let rot_curve_1;
-    let rot_curve_2;
+    let rot_crv_1;
+    let rot_crv_2;
+    let rot_axis_1;
+    let rot_axis_2;
     let potential_axes;
     let potential_guides;
     let potential_source_tags = ['motor2_tube2_a', 'motor2_tube2_b'];
@@ -1726,6 +1798,10 @@ function motor2(selection_index) {
         b_axis_2 = parts[parts_count]['source_axes'][3];
         b_guide_1 = parts[parts_count]['source_guides'][2];
         b_guide_2 = parts[parts_count]['source_guides'][3];
+        rot_crv_1 = parts[parts_count]['rot_crv'][0];
+        rot_crv_2 = parts[parts_count]['rot_crv'][1];
+        rot_axis_1 = parts[parts_count]['rot_axes'][0];
+        rot_axis_2 = parts[parts_count]['rot_axes'][1];
 
         /* Define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
         All of this geometry will be transformed according to the selected source/target geometry. This is because it needs to track
@@ -1755,8 +1831,11 @@ function motor2(selection_index) {
         b_axis_2 = motor2_tube2b_axis_2.duplicate();
         b_guide_1 = motor2_tube2b_guide_1.duplicate();
         b_guide_2 = motor2_tube2b_guide_2.duplicate();
-        // let rot_curve_1 = motor2_rotationCurve_1.duplicate();
-        // let rot_curve_2 = motor2_rotationCurve_2.duplicate();
+        rot_crv_1 = motor2_rotationCurve_1.duplicate();
+        rot_crv_2 = motor2_rotationCurve_2.duplicate();
+        rot_axis_1 = b_axis_1.duplicate();
+        rot_axis_2 = a_axis_1.duplicate();
+
         potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate()];
         potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate()];
     }
@@ -1796,7 +1875,6 @@ function motor2(selection_index) {
     target_guides.splice(source_target_pair[1], 1); //Remove this one bc the associated position will be occupied by the part and it can't be used again
 
 
-    
     /*Step 4. Transform 
     This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
     It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.
@@ -1806,36 +1884,38 @@ function motor2(selection_index) {
     will rotate with it. But we do NOT transform the source_guide, as we need to preserve a point of reference
     i.e. the change in position relative to the starting point in the local coordinates of the source geo*/
 
+    let axis_vector_1 = [potential_axes[0].pointAt(1)[0] - potential_axes[0].pointAt(0)[0], potential_axes[0].pointAt(1)[1] - potential_axes[0].pointAt(0)[1], potential_axes[0].pointAt(1)[2] - potential_axes[0].pointAt(0)[2]];
+    let axis_vector_2 = [potential_axes[1].pointAt(1)[0] - potential_axes[1].pointAt(0)[0], potential_axes[1].pointAt(1)[1] - potential_axes[1].pointAt(0)[1], potential_axes[1].pointAt(1)[2] - potential_axes[1].pointAt(0)[2]];
+
     if (source_tag_selection == "motor2_tube2_a") {
         //Rotate around first axis
-        let axis_vector = [potential_axes[0].pointAt(1)[0] - potential_axes[0].pointAt(0)[0], potential_axes[0].pointAt(1)[1] - potential_axes[0].pointAt(0)[1], potential_axes[0].pointAt(1)[2] - potential_axes[0].pointAt(0)[2]];
-        geo.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
-        // rot_curve_1.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
-        // rot_curve_2.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
-        potential_axes[1].rotate(angle_B, axis_vector, a_axis_1.pointAt(0)); //First axis doesn't rotate b/c everything is rotating around it
-        potential_guides[0].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
-        potential_guides[1].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
+        geo.rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0));
+        rot_crv_1.rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0));
+        rot_crv_2.rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0));
+        rot_axis_1.rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0));
+        rot_axis_2.rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0));
+        potential_axes[1].rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0)); //First axis doesn't rotate b/c everything is rotating around it
+        potential_guides[0].rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0));
+        potential_guides[1].rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0));
         //Rotate around second axis
-        let axis_vector_2 = [potential_axes[1].pointAt(1)[0] - potential_axes[1].pointAt(0)[0], potential_axes[1].pointAt(1)[1] - potential_axes[1].pointAt(0)[1], potential_axes[1].pointAt(1)[2] - potential_axes[1].pointAt(0)[2]];
         potential_guides[1].rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
     }
     else {
         //Rotate around first axis
-        let axis_vector = [potential_axes[1].pointAt(1)[0] - potential_axes[1].pointAt(0)[0], potential_axes[1].pointAt(1)[1] - potential_axes[1].pointAt(0)[1], potential_axes[1].pointAt(1)[2] - potential_axes[1].pointAt(0)[2]];
-        geo.rotate(angle_B, axis_vector, b_axis_1.pointAt(0));
-        // rot_curve_1.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
-        // rot_curve_2.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
-        potential_axes[0].rotate(angle_B, axis_vector, b_axis_1.pointAt(0)); //Second axis doesn't rotate b/c everything is rotating around it
-        potential_guides[0].rotate(angle_B, axis_vector, b_axis_1.pointAt(0));
-        potential_guides[1].rotate(angle_B, axis_vector, b_axis_1.pointAt(0));
+        geo.rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
+        rot_crv_1.rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
+        rot_crv_2.rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
+        rot_axis_1.rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
+        rot_axis_2.rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
+        potential_axes[0].rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0)); //Second axis doesn't rotate b/c everything is rotating around it
+        potential_guides[0].rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
+        potential_guides[1].rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
         //Rotate around second axis
-        let axis_vector_2 = [potential_axes[0].pointAt(1)[0] - potential_axes[0].pointAt(0)[0], potential_axes[0].pointAt(1)[1] - potential_axes[0].pointAt(0)[1], potential_axes[0].pointAt(1)[2] - potential_axes[0].pointAt(0)[2]];
-        potential_guides[0].rotate(angle_B, axis_vector_2, a_axis_1.pointAt(0));
+        potential_guides[0].rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0));
     }
 
     //Step 4B: Add Motor to target geometry
-    // let geo_to_orient = [geo, rot_curve_1, rot_curve_2];
-    let geo_to_orient = [geo];
+    let geo_to_orient = [geo, rot_crv_1, rot_crv_2, rot_axis_1, rot_axis_2];
     orient3d(geo_to_orient, source_axis, source_guide, target_axis, target_guide, source_axes, source_guides, potential_axes, potential_guides);
 
     
@@ -1852,6 +1932,8 @@ function motor2(selection_index) {
     parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3]];
     parts[parts_count]['potential_axes'] = potential_axes;
     parts[parts_count]['potential_guides'] = potential_guides;
+    parts[parts_count]['rot_crv'] = [rot_crv_1, rot_crv_2];
+    parts[parts_count]['rot_axes'] = [rot_axis_1, rot_axis_2];
 
     for (let i=0; i<potential_source_tags.length; i++) {
         if (potential_source_tags[i] == source_tag_selection) {}
@@ -1899,7 +1981,7 @@ function motor3(selection_index) {
     let c_axis_2;
     let c_guide_1;
     let c_guide_2;
-    let rot_curve;
+    let rot_crv;
     let potential_axes;
     let potential_guides;
     let potential_source_tags = ['motor3_tube2_a', 'motor3_tube2_b', 'motor3_tube1'];
@@ -1920,6 +2002,7 @@ function motor3(selection_index) {
         c_axis_2 = parts[parts_count]['source_axes'][5];
         c_guide_1 = parts[parts_count]['source_guides'][4];
         c_guide_2 = parts[parts_count]['source_guides'][5];
+        rot_crv = parts[parts_count]['rot_crv'][0];
 
         /* Define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
         All of this geometry will be transformed according to the selected source/target geometry. This is because it needs to track
@@ -1953,7 +2036,7 @@ function motor3(selection_index) {
         c_axis_2 = motor3_tube1_axis_2.duplicate();
         c_guide_1 = motor3_tube1_guide_1.duplicate();
         c_guide_2 = motor3_tube1_guide_2.duplicate();
-        // rot_curve = motor3_rotationCurve.duplicate();
+        rot_crv = motor3_rotationCurve.duplicate();
 
         potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate(), c_axis_1.duplicate()];
         potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate(), c_guide_1.duplicate()];
@@ -2009,7 +2092,7 @@ function motor3(selection_index) {
     
     if (source_tag_selection == "motor3_tube2_a") {
         geo.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
-        // rot_curve.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
+        rot_crv.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
         for (let i=0; i<potential_axes.length; i++) {potential_axes[i].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));} //First axis doesn't rotate b/c everything is rotating around it
         for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));}
     }
@@ -2017,11 +2100,11 @@ function motor3(selection_index) {
     //Otherwise, the guide associated with the "motor" connection (and only this guide) wiil rotate in place
     else {
         potential_guides[0].rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
+        rot_crv.rotate(angle_B, axis_vector, a_axis_1.pointAt(0));
     }
 
     //Step 4B: Add Motor to target geometry
-    // let geo_to_orient = [geo, rot_curve];
-    let geo_to_orient = [geo];
+    let geo_to_orient = [geo, rot_crv];
     orient3d(geo_to_orient, source_axis, source_guide, target_axis, target_guide, source_axes, source_guides, potential_axes, potential_guides);
     
     
@@ -2039,6 +2122,9 @@ function motor3(selection_index) {
     parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3], source_guides[6], source_guides[7]];
     parts[parts_count]['potential_axes'] = potential_axes;
     parts[parts_count]['potential_guides'] = potential_guides;
+    parts[parts_count]['rot_crv'] = [rot_crv];
+    parts[parts_count]['rot_axes'] = [a_axis_1];
+
 
     for (let i=0; i<potential_source_tags.length; i++) {
         if (potential_source_tags[i] == source_tag_selection) {}
@@ -2086,7 +2172,7 @@ function motor4(selection_index) {
     let c_axis_2;
     let c_guide_1;
     let c_guide_2;
-    let rot_curve;
+    let rot_crv;
     let potential_axes;
     let potential_guides;
     let potential_source_tags = ['motor4_tube1_a', 'motor4_tube1_b', 'motor4_tube2'];
@@ -2107,6 +2193,7 @@ function motor4(selection_index) {
         c_axis_2 = parts[parts_count]['source_axes'][5];
         c_guide_1 = parts[parts_count]['source_guides'][4];
         c_guide_2 = parts[parts_count]['source_guides'][5];
+        rot_crv = parts[parts_count]['rot_crv'][0];
 
         /* Define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
         All of this geometry will be transformed according to the selected source/target geometry. This is because it needs to track
@@ -2140,7 +2227,7 @@ function motor4(selection_index) {
         c_axis_2 = motor4_tube2_axis_2.duplicate();
         c_guide_1 = motor4_tube2_guide_1.duplicate();
         c_guide_2 = motor4_tube2_guide_2.duplicate();
-        // rot_curve = motor4_rotationCurve.duplicate();
+        rot_crv = motor4_rotationCurve.duplicate();
 
         potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate(), c_axis_1.duplicate()];
         potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate(), c_guide_1.duplicate()];
@@ -2193,16 +2280,18 @@ function motor4(selection_index) {
         
     if (source_tag_selection == "motor4_tube1_a") {
         geo.rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
-        // rot_curve.rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
+        rot_crv.rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
         for (let i=0; i<potential_axes.length; i++){potential_axes[i].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));} //First axis doesn't rotate b/c everything is rotating around it
         for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));}
     }
     //Otherwise, the guide associated with the "motor" connection (and only this guide) wiil rotate in place
-    else {potential_guides[0].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));}
+    else {
+        potential_guides[0].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
+        rot_crv.rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
+    }
     
     //Step 4B: Add Motor to target geometry
-    // let geo_to_orient = [geo, rot_curve];
-    let geo_to_orient = [geo]; 
+    let geo_to_orient = [geo, rot_crv];
     orient3d(geo_to_orient, source_axis, source_guide, target_axis, target_guide, source_axes, source_guides, potential_axes, potential_guides);
     
     
@@ -2220,6 +2309,8 @@ function motor4(selection_index) {
     parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3], source_guides[6], source_guides[7]];
     parts[parts_count]['potential_axes'] = potential_axes;
     parts[parts_count]['potential_guides'] = potential_guides;
+    parts[parts_count]['rot_crv'] = [rot_crv];
+    parts[parts_count]['rot_axes'] = [a_axis_1];
 
     for (let i=0; i<potential_source_tags.length; i++) {
         if (potential_source_tags[i] == source_tag_selection) {}
@@ -2267,7 +2358,7 @@ function motor5(selection_index) {
     let c_axis_2;
     let c_guide_1;
     let c_guide_2;
-    let rot_curve;
+    let rot_crv;
     let potential_axes;
     let potential_guides;
     let potential_source_tags = ['motor5_tube1_a', 'motor5_tube1_b', 'motor5_tube2'];
@@ -2288,6 +2379,7 @@ function motor5(selection_index) {
         c_axis_2 = parts[parts_count]['source_axes'][5];
         c_guide_1 = parts[parts_count]['source_guides'][4];
         c_guide_2 = parts[parts_count]['source_guides'][5];
+        rot_crv = parts[parts_count]['rot_crv'][0];
 
         /* Define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
         All of this geometry will be transformed according to the selected source/target geometry. This is because it needs to track
@@ -2321,7 +2413,7 @@ function motor5(selection_index) {
         c_axis_2 = motor5_tube2_axis_2.duplicate();
         c_guide_1 = motor5_tube2_guide_1.duplicate();
         c_guide_2 = motor5_tube2_guide_2.duplicate();
-        // rot_curve = motor5_rotationCurve.duplicate();
+        rot_crv = motor5_rotationCurve.duplicate();
 
         potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate(), c_axis_1.duplicate()];
         potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate(), c_guide_1.duplicate()];
@@ -2375,16 +2467,18 @@ function motor5(selection_index) {
 
     if (source_tag_selection == "motor5_tube1_a") {
         geo.rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
-        // rot_curve.rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
+        rot_crv.rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
         for (let i=0; i<potential_axes.length; i++) {potential_axes[i].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));} //First axis doesn't rotate b/c everything is rotating around it
         for (let i=0; i<potential_guides.length; i++) {potential_guides[i].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));} 
     }
     //Otherwise, the guide associated with the "motor" connection (and only this guide) wiil rotate in place
-    else {potential_guides[0].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));}
+    else {
+        potential_guides[0].rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
+        rot_crv.rotate(angle_A, axis_vector, a_axis_1.pointAt(0));
+    }
     
     //Step 4B: Add Motor to target geometry
-    // let geo_to_orient = [geo, rot_curve];
-    let geo_to_orient = [geo];
+    let geo_to_orient = [geo, rot_crv];
     orient3d(geo_to_orient, source_axis, source_guide, target_axis, target_guide, source_axes, source_guides, potential_axes, potential_guides);
     
 
@@ -2402,6 +2496,8 @@ function motor5(selection_index) {
     parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3], source_guides[6], source_guides[7]];
     parts[parts_count]['potential_axes'] = potential_axes;
     parts[parts_count]['potential_guides'] = potential_guides;
+    parts[parts_count]['rot_crv'] = [rot_crv];
+    parts[parts_count]['rot_axes'] = [a_axis_1];
 
     for (let i=0; i<potential_source_tags.length; i++) {
         if (potential_source_tags[i] == source_tag_selection) {}
@@ -2584,18 +2680,18 @@ function nib(selection_index) {
     //Step 8: update nib object
     let current_angle = rotation_angle / 0.0175
 
-    if (draw_bool == false) {
+    if (play_bool == false) {
         //Update sphere
         nib_objects[nib_key]["sphere"] = sphere;
     }
 
-    else if (draw_bool && play_count == 0) {
+    else if (play_bool && play_count == 0) {
         //Create "points" value when Play button is pressed
         nib_objects[nib_key]["sphere"] = sphere;
         nib_objects[nib_key]["points"] = [point.duplicate()];    
     }
 
-    else if (draw_bool && play_count > 0  && current_angle < 3701) {
+    else if (play_bool && play_count > 0  && current_angle < 3701) {
         //Add additional points and Play continues
         /*If machine has made 10 full rotations (3600 degrees + 100 potential degrees from slider = 3700), 
         the lines being drawn are guaranteed to be complete, and there's no need to continue adding points 

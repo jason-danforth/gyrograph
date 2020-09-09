@@ -47,18 +47,17 @@ var rotation_angle = 0;
 var current_angle = 0; //This is to capture the angle from the manual slider, so that it can be returned to with reset_animation()
 var rotation_increment = 2;
 
-var meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 1000});
+var meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 500});
 var curve_material = new THREE.LineBasicMaterial({color: 0xffffff});
 
 /*Motors are intended to rotate at different speeds. The default settings are that motors with larger (i.e. Tube 1)
 connections will rotate at roughly half the speed of smaller (i.e. Tubes 2 and 3) connections.*/
 var angle_factor_A = 1.0;
-var angle_factor_B = 1.5;
+var angle_factor_B = 2.0;
 var angle_A = 0;
 var angle_B = 0;
 
 var play_bool = false; 
-var draw_bool = false;
 var play_count = 0;
 var line_weight = 3;
 var line_color = 0xff0077;
@@ -449,8 +448,10 @@ var tag_nib_motors_2 = "motor1_tube2_a, motor2_tube2_a, motor2_tube2_b, motor3_t
 //Locally hosted app runs directly from index.html (in "templates" directory)
 let fetchPromise = fetch('../static/models/Drawing_Machine.3dm');
 
+let rhino;
+
 rhino3dm().then(async m => {
-    let rhino = m;
+    rhino = m;
 
     let res = await fetchPromise;
     let buffer = await res.arrayBuffer();
@@ -462,7 +463,6 @@ rhino3dm().then(async m => {
     init(); //Create scene
     
     let objects = doc.objects(); //Creates a File3dmObjectTable object
-
 
     //Scrub through all objects in the Rhino Doc
     for (let i = 0; i < objects.count; i++) {
@@ -593,5 +593,7 @@ rhino3dm().then(async m => {
     //------------------------------------------Build Machine-------------------------------------------------------------------------------------------------------------------------------------
 
     add_part('Base', 0);
+    update_src();
     activateScroll(); //Needs to be called last in order to load properly 
+    run();
 });
