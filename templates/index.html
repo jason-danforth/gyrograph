@@ -13,13 +13,32 @@
 
     <!-- Bootstrap and AJAX (need these versions for Modal popup to work) -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
 
 
 <body>
+    <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- <div class="modal-header" style='border: none;'>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title" id="myModalLabel">Hi!</h3>
+                </div> -->
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title" id="myModalLabel">Hi Friend</h3>
+                    <br>
+                    <p>Welcome to Gyrograph. This project is <i>technically</i> for my nephew Chicco (he's turning 9 this month, omg...), but 
+                        he said you can use it too. If you like it, you can see more of my work at <a href="https://jdanforth.com/" target="_blank">jdanforth.com</a> 
+                        or say hi (or happy birthday to Chicco) on Twitter <a href="https://twitter.com/Json_danforth" target="_blank">@json_danforth</a>. Enjoy!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="overlay">
         <div id="about" class="nano">   
             <div class="nano-content"> 
@@ -49,14 +68,13 @@
                         <img class="iconUnavailable" id="motor5" src="/static/images/icons_motor5.png" onclick=" ">
                         <img class="iconUnavailable" id="nib" src="/static/images/icons_nib.png" onclick=" ">
                     </div>
-                    <br>
                     <div class="row">
                         <img class="iconUnavailable" src="/static/images/margin.png">
-                        <img class="iconUnavailable" src="/static/images/icons_spacer.png">
                         <img class="iconUnavailable" id="previous" src="/static/images/icons_previous.png" onclick=" ">
                         <img class="iconUnavailable" id="next" src="/static/images/icons_next.png" onclick=" ">
                         <img class="iconUnavailable" id="undo" src="/static/images/icons_undo.png" onclick=" ">            
                     </div>
+                    <br>
                     <div class="row">
                         <!-- Line-weight slider -->
                         <div class="slidecontainer">

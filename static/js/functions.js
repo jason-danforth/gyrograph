@@ -7,6 +7,10 @@ var scene, camera, renderer, controls;
 //This not originally commented out
 //let rhino = null;
 
+var options = {
+    'backdrop' : 'true'
+}
+$('#basicModal').modal(options);
 
 rhino3dm().then(function(m) {
     rhino = m; // global
@@ -245,7 +249,7 @@ function frontView() {
 //------------------------------------------Controls-------------------------------------------------------------------------------------------------------------------------------------
 
 var colorWheel = new iro.ColorPicker("#colorWheel", {
-    color: '#ff0077', //this value should match line_color
+    color: '#ffff00', //this value should match line_color
     layout: [
         { 
           component: iro.ui.Wheel,
@@ -1613,13 +1617,13 @@ function motor1(selection_index) {
         //Reuse geometry
         geo = parts[parts_count]['geo'][0];
         a_axis_1 = parts[parts_count]['source_axes'][0];
-        a_axis_2 = parts[parts_count]['source_axes'][1];
+        // a_axis_2 = parts[parts_count]['source_axes'][1];
         a_guide_1 = parts[parts_count]['source_guides'][0];
-        a_guide_2 = parts[parts_count]['source_guides'][1];
-        b_axis_1 = parts[parts_count]['source_axes'][2];
-        b_axis_2 = parts[parts_count]['source_axes'][3];
-        b_guide_1 = parts[parts_count]['source_guides'][2];
-        b_guide_2 = parts[parts_count]['source_guides'][3];
+        // a_guide_2 = parts[parts_count]['source_guides'][1];
+        // b_axis_1 = parts[parts_count]['source_axes'][2];
+        b_axis_2 = parts[parts_count]['source_axes'][1];
+        b_guide_1 = parts[parts_count]['source_guides'][1];
+        // b_guide_2 = parts[parts_count]['source_guides'][3];
         rot_crv = parts[parts_count]['rot_crv'][0];
 
         /* Define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
@@ -1665,9 +1669,13 @@ function motor1(selection_index) {
     target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
     This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
     
-    let source_tags = ['motor1_tube2_a', 'motor1_tube2_a', 'motor1_tube2_b', 'motor1_tube2_b', 'motor1_tube2_b', 'motor1_tube2_b'];
-    let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2, b_axis_1.duplicate(), b_axis_2.duplicate()];
-    let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2, b_guide_2.duplicate(), b_guide_1.duplicate()];
+    // let source_tags = ['motor1_tube2_a', 'motor1_tube2_a', 'motor1_tube2_b', 'motor1_tube2_b', 'motor1_tube2_b', 'motor1_tube2_b'];
+    // let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2, b_axis_1.duplicate(), b_axis_2.duplicate()];
+    // let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2, b_guide_2.duplicate(), b_guide_1.duplicate()];
+
+    let source_tags = ['motor1_tube2_a', 'motor1_tube2_b'];
+    let source_axes = [a_axis_1, b_axis_2];
+    let source_guides = [a_guide_1, b_guide_1];
 
     let previous_count = (count - 1).toString()
     let target_tags = [...parts[previous_count]['target_tags']]; //shallow copy
@@ -1730,8 +1738,10 @@ function motor1(selection_index) {
     
     parts[parts_count]['selection_index'] = selection_index;
     parts[parts_count]['geo'] = [geo];
-    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1], source_axes[2], source_axes[3]];
-    parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3]];
+    // parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1], source_axes[2], source_axes[3]];
+    // parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3]];
+    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1]];
+    parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1]];
     parts[parts_count]['potential_axes'] = potential_axes;
     parts[parts_count]['potential_guides'] = potential_guides;
     parts[parts_count]['rot_crv'] = [rot_crv];
@@ -1794,10 +1804,10 @@ function motor2(selection_index) {
         a_axis_2 = parts[parts_count]['source_axes'][1];
         a_guide_1 = parts[parts_count]['source_guides'][0];
         a_guide_2 = parts[parts_count]['source_guides'][1];
-        b_axis_1 = parts[parts_count]['source_axes'][2];
-        b_axis_2 = parts[parts_count]['source_axes'][3];
-        b_guide_1 = parts[parts_count]['source_guides'][2];
-        b_guide_2 = parts[parts_count]['source_guides'][3];
+        // b_axis_1 = parts[parts_count]['source_axes'][2];
+        // b_axis_2 = parts[parts_count]['source_axes'][3];
+        // b_guide_1 = parts[parts_count]['source_guides'][2];
+        // b_guide_2 = parts[parts_count]['source_guides'][3];
         rot_crv_1 = parts[parts_count]['rot_crv'][0];
         rot_crv_2 = parts[parts_count]['rot_crv'][1];
         rot_axis_1 = parts[parts_count]['rot_axes'][0];
@@ -1850,9 +1860,13 @@ function motor2(selection_index) {
     target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
     This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
     
-    let source_tags = ['motor2_tube2_a', 'motor2_tube2_a', 'motor2_tube2_b', 'motor2_tube2_b'];
-    let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2];
-    let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2];
+    // let source_tags = ['motor2_tube2_a', 'motor2_tube2_a', 'motor2_tube2_b', 'motor2_tube2_b'];
+    // let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2];
+    // let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2];
+
+    let source_tags = ['motor2_tube2_a', 'motor2_tube2_a'];
+    let source_axes = [a_axis_1, a_axis_2];
+    let source_guides = [a_guide_1, a_guide_2];
 
     let previous_count = (count - 1).toString()
     let target_tags = [...parts[previous_count]['target_tags']]; //shallow copy
@@ -1898,18 +1912,18 @@ function motor2(selection_index) {
         potential_guides[0].rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0));
         potential_guides[1].rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0));
         //Rotate around second axis
-        potential_guides[1].rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
+        potential_guides[1].rotate(angle_B, axis_vector_2, potential_axes[1].pointAt(0));
     }
     else {
         //Rotate around first axis
-        geo.rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
-        rot_crv_1.rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
-        rot_crv_2.rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
-        rot_axis_1.rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
-        rot_axis_2.rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
-        potential_axes[0].rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0)); //Second axis doesn't rotate b/c everything is rotating around it
-        potential_guides[0].rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
-        potential_guides[1].rotate(angle_B, axis_vector_2, b_axis_1.pointAt(0));
+        geo.rotate(angle_B, axis_vector_2, potential_axes[1].pointAt(0));
+        rot_crv_1.rotate(angle_B, axis_vector_2, potential_axes[1].pointAt(0));
+        rot_crv_2.rotate(angle_B, axis_vector_2, potential_axes[1].pointAt(0));
+        rot_axis_1.rotate(angle_B, axis_vector_2, potential_axes[1].pointAt(0));
+        rot_axis_2.rotate(angle_B, axis_vector_2, potential_axes[1].pointAt(0));
+        potential_axes[0].rotate(angle_B, axis_vector_2, potential_axes[1].pointAt(0)); //Second axis doesn't rotate b/c everything is rotating around it
+        potential_guides[0].rotate(angle_B, axis_vector_2, potential_axes[1].pointAt(0));
+        potential_guides[1].rotate(angle_B, axis_vector_2, potential_axes[1].pointAt(0));
         //Rotate around second axis
         potential_guides[0].rotate(angle_B, axis_vector_1, a_axis_1.pointAt(0));
     }
@@ -1928,8 +1942,8 @@ function motor2(selection_index) {
     
     parts[parts_count]['selection_index'] = selection_index;
     parts[parts_count]['geo'] = [geo];
-    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1], source_axes[2], source_axes[3]];
-    parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3]];
+    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1]];
+    parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1]];
     parts[parts_count]['potential_axes'] = potential_axes;
     parts[parts_count]['potential_guides'] = potential_guides;
     parts[parts_count]['rot_crv'] = [rot_crv_1, rot_crv_2];
