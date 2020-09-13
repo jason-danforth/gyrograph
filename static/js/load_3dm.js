@@ -415,7 +415,7 @@ var tag_motor1_tube2_b = "tube2_a_outer, tube2_b_outer, tube2_mid_outer, tube3_a
 var tag_motor2_tube2_a = "tube2_a_outer, tube2_b_outer, tube2_mid_outer, tube3_a_outer, tube3_b_outer";
 var tag_motor2_tube2_b = "tube2_a_outer, tube2_b_outer, tube2_mid_outer, tube3_a_outer, tube3_b_outer";
 
-var tag_motor3_tube1 = "tube1_a_outer, tube1_b_outer";
+var tag_motor3_tube1 = "tube1_mid_outer";
 var tag_motor3_tube2_a = "tube2_a_outer, tube2_b_outer, tube2_mid_outer, tube3_a_outer, tube3_b_outer";
 var tag_motor3_tube2_b = "tube2_a_outer, tube2_b_outer, tube2_mid_outer, tube3_a_outer, tube3_b_outer";
 
