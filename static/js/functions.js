@@ -528,6 +528,14 @@ function undo() {
         let element_undo = document.getElementById("undo");
         element_undo.className = "iconUnavailable";
         element_undo.setAttribute( "onClick", " " );
+
+        let element_previous = document.getElementById("previous");
+        element_previous.className = "iconUnavailable";
+        element_previous.setAttribute( "onClick", " " );
+
+        let element_next = document.getElementById("next");
+        element_next.className = "iconUnavailable";
+        element_next.setAttribute( "onClick", " " );
     }
 
     draw();
@@ -695,28 +703,42 @@ function draw() {
 
 
 function update_src() {
+    let element_play = document.getElementById("play");
+    element_play.onclick = function() {
+        play();
+    };
+
     //Make pause and reset buttons Unavailable
     let element_pause = document.getElementById("pause");
     element_pause.className = "iconUnavailable";
-    element_pause.setAttribute( "onClick", " " );
+    element_pause.onclick = "";
 
     let element_reset = document.getElementById("reset");
     element_reset.className = "iconUnavailable";
-    element_reset.setAttribute( "onClick", " " );
+    element_reset.onclick = "";
 
     //Make undo, previous, and next buttons available
     if (Object.keys(parts).length > 1) {
         let element_undo = document.getElementById("undo");
         element_undo.className = "iconAvailable"; //Change to CSS class with hover 
-        element_undo.setAttribute( "onClick", "undo(), update_src()" );
+        element_undo.onclick = function() {
+            undo();
+            update_src();
+        }
 
         let element_previous = document.getElementById("previous");
         element_previous.className = "iconAvailable"; //Change to CSS class with hover 
-        element_previous.setAttribute( "onClick", "previous()" );
+        element_previous.onclick = function() {
+            previous();
+            update_src();
+        }
     
         let element_next = document.getElementById("next");
         element_next.className = "iconAvailable"; //Change to CSS class with hover 
-        element_next.setAttribute( "onClick", "next()" );
+        element_next.onclick = function() {
+            next();
+            update_src();
+        }
     }
 
     //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
@@ -734,23 +756,32 @@ function update_src() {
     if (tag_set.has("tube1")) {
         let element = document.getElementById("tube1");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Tube 1', 0), update_src()" );
+        element.onclick = function() {
+            add_part('Tube 1', 0);
+            update_src();
+        }
     }
     else {
         let element = document.getElementById("tube1");
         element.className = "iconUnavailable";
-        element.onclick = " ";
+        element.onclick = "";
     }
 
     //The "tube2" tag is used for Tube 2 and Tube 3 since they share all the same placements
     if (tag_set.has("tube2")) {
         let element1 = document.getElementById("tube2");
         element1.className = "iconAvailable"; //Change to CSS class with hover 
-        element1.setAttribute( "onClick", "add_part('Tube 2', 0), update_src()" );
+        element1.onclick = function() {
+            add_part('Tube 2', 0);
+            update_src();
+        }
 
         let element2 = document.getElementById("tube3");
         element2.className = "iconAvailable"; //Change to CSS class with hover 
-        element2.setAttribute( "onClick", "add_part('Tube 3', 0), update_src()" );
+        element2.onclick = function() {
+            add_part('Tube 3', 0);
+            update_src();
+        }
     }
     else {
         let element1 = document.getElementById("tube2");
@@ -765,7 +796,10 @@ function update_src() {
     if (tag_set.has("motor1")) {
         let element = document.getElementById("motor1");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 1', 0), update_src()" );
+        element.onclick = function() {
+            add_part('Motor 1', 0);
+            update_src();
+        }
     }
     else {
         let element = document.getElementById("motor1");
@@ -776,7 +810,10 @@ function update_src() {
     if (tag_set.has("motor2")) {
         let element = document.getElementById("motor2");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 2', 0), update_src()" );
+        element.onclick = function() {
+            add_part('Motor 2', 0);
+            update_src();
+        }
     }
     else {
         let element = document.getElementById("motor2");
@@ -787,7 +824,10 @@ function update_src() {
     if (tag_set.has("motor3")) {
         let element = document.getElementById("motor3");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 3', 0), update_src()" );
+        element.onclick = function() {
+            add_part('Motor 3', 0);
+            update_src();
+        }
     }
     else {
         let element = document.getElementById("motor3");
@@ -798,7 +838,10 @@ function update_src() {
     if (tag_set.has("motor4")) {
         let element = document.getElementById("motor4");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 4', 0), update_src()" );
+        element.onclick = function() {
+            add_part('Motor 4', 0);
+            update_src();
+        }
     }
     else {
         let element = document.getElementById("motor4");
@@ -809,7 +852,10 @@ function update_src() {
     if (tag_set.has("motor5")) {
         let element = document.getElementById("motor5");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "add_part('Motor 5', 0), update_src()" );
+        element.onclick = function() {
+            add_part('Motor 5', 0);
+            update_src();
+        }
     }
     else {
         let element = document.getElementById("motor5");
@@ -820,7 +866,11 @@ function update_src() {
     if (tag_set.has("nib") && Object.keys(parts).length > 1) {
         let element = document.getElementById("nib");
         element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.setAttribute( "onClick", "nib_creation(); add_part('Nib', 0), update_src()" );
+        element.onclick = function() {
+            nib_creation(); 
+            add_part('Nib', 0);
+            update_src();
+        }
     }
     else {
         let element = document.getElementById("nib");
@@ -841,61 +891,64 @@ function freeze_src() {
     //Make pause and reset buttons available
     let element_pause = document.getElementById("pause");
     element_pause.className = "iconAvailable";
-    element_pause.setAttribute( "onClick", "pause()" );
+    element_pause.onclick = function() {
+        pause();
+    }
 
     let element_reset = document.getElementById("reset");
     element_reset.className = "iconAvailable";
-    element_reset.setAttribute( "onClick", "stop()" );
-
+    element_reset.onclick = function() {
+        stop();
+    }
 
     //Make undo, previous, and next buttons unavailable
     let element_undo = document.getElementById("undo");
     element_undo.className = "iconUnavailable";
-    element_undo.setAttribute( "onClick", " " );
+    element_undo.onclick = "";
 
     let element_previous = document.getElementById("previous");
     element_previous.className = "iconUnavailable";
-    element_previous.setAttribute( "onClick", " " );
+    element_previous.onclick = "";
 
     let element_next = document.getElementById("next");
     element_next.className = "iconUnavailable";
-    element_next.setAttribute( "onClick", " " );
+    element_next.onclick = "";
 
     let element_tube1 = document.getElementById("tube1");
     element_tube1.className = "iconUnavailable";
-    element_tube1.setAttribute( "onClick", " " );
+    element_tube1.onclick = "";
     
     let element_tube2 = document.getElementById("tube2");
     element_tube2.className = "iconUnavailable";
-    element_tube2.setAttribute( "onClick", " " );
+    element_tube2.onclick = "";
 
     let element_tube3 = document.getElementById("tube3");
     element_tube3.className = "iconUnavailable";
-    element_tube3.setAttribute( "onClick", " " );
+    element_tube3.onclick = "";
     
     let element_motor1 = document.getElementById("motor1");
     element_motor1.className = "iconUnavailable";
-    element_motor1.setAttribute( "onClick", " " );
+    element_motor1.onclick = "";
 
     let element_motor2 = document.getElementById("motor2");
     element_motor2.className = "iconUnavailable";
-    element_motor2.setAttribute( "onClick", " " );
+    element_motor2.onclick = "";
 
     let element_motor3 = document.getElementById("motor3");
     element_motor3.className = "iconUnavailable";
-    element_motor3.setAttribute( "onClick", " " );
+    element_motor3.onclick = "";
 
     let element_motor4 = document.getElementById("motor4");
     element_motor4.className = "iconUnavailable";
-    element_motor4.setAttribute( "onClick", " " );
+    element_motor4.onclick = "";
 
     let element_motor5 = document.getElementById("motor5");
     element_motor5.className = "iconUnavailable";
-    element_motor5.setAttribute( "onClick", " " );
+    element_motor5.onclick = "";
 
     let element_nib = document.getElementById("nib");
     element_nib.className = "iconUnavailable";
-    element_nib.setAttribute( "onClick", " " );
+    element_nib.onclick = "";
 }
 
 
@@ -1059,8 +1112,8 @@ function orient3d(geo_to_orient, source_axis, source_guide, target_axis, target_
     
     
     //No point in returning source_axis and source_guide b/c they aren't needed anymore
-    let return_objects = [geo_to_orient, source_axes, source_guides, potential_axes, potential_guides];
-    return return_objects;
+    // let return_objects = [geo_to_orient, source_axes, source_guides, potential_axes, potential_guides];
+    // return return_objects;
 }
 
 
@@ -1118,7 +1171,7 @@ function base(selection_index) {
 
     parts['0']['target_axes'] = [axis, axis.duplicate()];
     parts['0']['target_guides'] = [guide, guide.duplicate()];
-    parts['0']['target_tags'] = [tag_tube1_a_outer, tag_tube1_a_inner];
+    parts['0']['target_tags'] = [tag_tube1_mid_outer, tag_tube1_a_inner];
 
     count += 1;
 }
@@ -1141,6 +1194,8 @@ function tube1(selection_index) {
     let a_guide_1;
     let b_axis_1;
     let b_guide_1;
+    let mid_axis_1;
+    let mid_guide_1;
 
     if (play_bool) {
         //Reuse geometry
@@ -1149,6 +1204,8 @@ function tube1(selection_index) {
         a_guide_1 = parts[parts_count]['source_guides'][0];
         b_axis_1 = parts[parts_count]['source_axes'][1];
         b_guide_1 = parts[parts_count]['source_guides'][1];
+        mid_axis_1 = parts[parts_count]['source_axes'][2];
+        mid_guide_1 = parts[parts_count]['source_guides'][2];
     }
     else {
         //Hide Nib UI if enabled
@@ -1165,6 +1222,8 @@ function tube1(selection_index) {
         a_guide_1 = tube1_a_guide_1.duplicate();
         b_axis_1 = tube1_b_axis_1.duplicate();
         b_guide_1 = tube1_b_guide_1.duplicate();
+        mid_axis_1 = tube1_mid_axis_1.duplicate();
+        mid_guide_1 = tube1_mid_guide_1.duplicate();
     }
     
 
@@ -1179,9 +1238,9 @@ function tube1(selection_index) {
     Note: Tube 1 can be positioned according to inner (like plugging onto the end of a smaller Tube 2/3) or outer placements (like slotting into a motor). 
     The Inner and Outer placements share axes/guides but have different tags.*/
     
-    let source_tags = ['tube1_a_outer', 'tube1_a_inner', 'tube1_b_outer', 'tube1_b_inner'];
-    let source_axes = [a_axis_1, a_axis_1.duplicate(), b_axis_1, b_axis_1.duplicate()];
-    let source_guides = [a_guide_1, a_guide_1.duplicate(), b_guide_1, b_guide_1.duplicate()];
+    let source_tags = ['tube1_a_inner', 'tube1_b_inner', 'tube1_mid_outer'];
+    let source_axes = [a_axis_1, b_axis_1, mid_axis_1];
+    let source_guides = [a_guide_1, b_guide_1, mid_guide_1];
 
     let previous_count = (count - 1).toString()
     let target_tags = [...parts[previous_count]['target_tags']]; //shallow copy
@@ -1218,10 +1277,10 @@ function tube1(selection_index) {
     Note that the .Duplicate() method is necessary to avoid Transforms on the same geometry
     We need potential_source_tags and potential_target_tags for the final step.*/ 
     
-    let potential_source_tags = ['tube1_a_outer', 'tube1_a_inner', 'tube1_b_outer', 'tube1_b_inner'];
-    let potential_target_tags = [tag_tube1_a_outer, tag_tube1_a_inner, tag_tube1_b_outer, tag_tube1_b_inner];
-    let potential_axes = [a_axis_1.duplicate(), a_axis_1.duplicate(), b_axis_1.duplicate(), b_axis_1.duplicate()];
-    let potential_guides = [a_guide_1.duplicate(), a_guide_1.duplicate(), b_guide_1.duplicate(), b_guide_1.duplicate()];
+    let potential_source_tags = ['tube1_a_inner', 'tube1_b_inner', 'tube1_mid_outer'];
+    let potential_target_tags = [tag_tube1_a_inner, tag_tube1_b_inner, tag_tube1_mid_outer];
+    let potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate(), mid_axis_1.duplicate()];
+    let potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate(), mid_guide_1.duplicate()];
     
     
 
@@ -1240,8 +1299,8 @@ function tube1(selection_index) {
     
     parts[parts_count]['selection_index'] = selection_index;
     parts[parts_count]['geo'] = [geo];
-    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[2]];
-    parts[parts_count]['source_guides'] = [source_guides[0], source_guides[2]];
+    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1], source_axes[2]];
+    parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2]];
     
     for (let i=0; i<potential_source_tags.length; i++) {
         if (potential_source_tags[i] == source_tag_selection) {}
@@ -1430,28 +1489,28 @@ function tube3(selection_index) {
     let geo;
     let a_axis_1;
     let a_guide_1;
-    let a_guide_2;
+    // let a_guide_2;
     let a_guide_3;
-    let a_guide_4;
+    // let a_guide_4;
     let b_axis_1;
     let b_guide_1;
-    let b_guide_2;
+    // let b_guide_2;
     let b_guide_3;
-    let b_guide_4;
+    // let b_guide_4;
 
     if (play_bool) {
         //Reuse geometry
         geo = parts[parts_count]['geo'][0];
         a_axis_1 = parts[parts_count]['source_axes'][0];
         a_guide_1 = parts[parts_count]['source_guides'][0];
-        a_guide_2 = parts[parts_count]['source_guides'][1];
-        a_guide_3 = parts[parts_count]['source_guides'][2];
-        a_guide_4 = parts[parts_count]['source_guides'][3];
-        b_axis_1 = parts[parts_count]['source_axes'][4];
-        b_guide_1 = parts[parts_count]['source_guides'][4];
-        b_guide_2 = parts[parts_count]['source_guides'][5];
-        b_guide_3 = parts[parts_count]['source_guides'][6];
-        b_guide_4 = parts[parts_count]['source_guides'][7];
+        // a_guide_2 = parts[parts_count]['source_guides'][1];
+        a_guide_3 = parts[parts_count]['source_guides'][1];
+        // a_guide_4 = parts[parts_count]['source_guides'][3];
+        b_axis_1 = parts[parts_count]['source_axes'][1];
+        b_guide_1 = parts[parts_count]['source_guides'][2];
+        // b_guide_2 = parts[parts_count]['source_guides'][5];
+        b_guide_3 = parts[parts_count]['source_guides'][3];
+        // b_guide_4 = parts[parts_count]['source_guides'][7];
     }
     else {
         //Hide Nib UI if enabled
@@ -1466,14 +1525,14 @@ function tube3(selection_index) {
         geo = tube3_geo.duplicate();
         a_axis_1 = tube3_a_axis_1.duplicate();
         a_guide_1 = tube3_a_guide_1.duplicate();
-        a_guide_2 = tube3_a_guide_2.duplicate();
+        // a_guide_2 = tube3_a_guide_2.duplicate();
         a_guide_3 = tube3_a_guide_3.duplicate();
-        a_guide_4 = tube3_a_guide_4.duplicate();
+        // a_guide_4 = tube3_a_guide_4.duplicate();
         b_axis_1 = tube3_b_axis_1.duplicate();
         b_guide_1 = tube3_b_guide_1.duplicate();
-        b_guide_2 = tube3_b_guide_2.duplicate();
+        // b_guide_2 = tube3_b_guide_2.duplicate();
         b_guide_3 = tube3_b_guide_3.duplicate();
-        b_guide_4 = tube3_b_guide_4.duplicate();
+        // b_guide_4 = tube3_b_guide_4.duplicate();
     }
     
     /*Step 2. Create source_tag/axis/guide pairs
@@ -1483,9 +1542,9 @@ function tube3(selection_index) {
     Note: there are two different kinds of tags: source_tags describe the geometry of the part to be placed ("tube2_a_outer", "motor2_tube2_a"),
     target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
     This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
-    let source_tags = ['tube3_a_outer', 'tube3_a_outer', 'tube3_a_outer', 'tube3_a_outer', 'tube3_b_outer', 'tube3_b_outer', 'tube3_b_outer', 'tube3_b_outer'];
-    let source_axes = [a_axis_1, a_axis_1.duplicate(), a_axis_1.duplicate(), a_axis_1.duplicate(), b_axis_1, b_axis_1.duplicate(), b_axis_1.duplicate(), b_axis_1.duplicate()];
-    let source_guides = [a_guide_1, a_guide_2, a_guide_3, a_guide_4, b_guide_1, b_guide_2, b_guide_3, b_guide_4];
+    let source_tags = ['tube3_a_outer', 'tube3_a_outer', 'tube3_b_outer', 'tube3_b_outer'];
+    let source_axes = [a_axis_1, a_axis_1.duplicate(), b_axis_1, b_axis_1.duplicate()];
+    let source_guides = [a_guide_1, a_guide_3, b_guide_1, b_guide_3];
 
     let previous_count = (count - 1).toString()
     let target_tags = [...parts[previous_count]['target_tags']]; //shallow copy
@@ -1563,7 +1622,7 @@ function tube3(selection_index) {
     
     parts[parts_count]['selection_index'] = selection_index;
     parts[parts_count]['geo'] = [geo];
-    parts[parts_count]['source_axes'] = source_axes;
+    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[2]];
     parts[parts_count]['source_guides'] = source_guides;
     
     for (let i=0; i<potential_source_tags.length; i++) {
@@ -1617,12 +1676,12 @@ function motor1(selection_index) {
         //Reuse geometry
         geo = parts[parts_count]['geo'][0];
         a_axis_1 = parts[parts_count]['source_axes'][0];
-        // a_axis_2 = parts[parts_count]['source_axes'][1];
+        a_axis_2 = parts[parts_count]['source_axes'][1];
         a_guide_1 = parts[parts_count]['source_guides'][0];
         // a_guide_2 = parts[parts_count]['source_guides'][1];
         // b_axis_1 = parts[parts_count]['source_axes'][2];
-        b_axis_2 = parts[parts_count]['source_axes'][1];
-        b_guide_1 = parts[parts_count]['source_guides'][1];
+        // b_axis_2 = parts[parts_count]['source_axes'][1];
+        // b_guide_1 = parts[parts_count]['source_guides'][1];
         // b_guide_2 = parts[parts_count]['source_guides'][3];
         rot_crv = parts[parts_count]['rot_crv'][0];
 
@@ -1673,9 +1732,13 @@ function motor1(selection_index) {
     // let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2, b_axis_1.duplicate(), b_axis_2.duplicate()];
     // let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2, b_guide_2.duplicate(), b_guide_1.duplicate()];
 
-    let source_tags = ['motor1_tube2_a', 'motor1_tube2_b'];
-    let source_axes = [a_axis_1, b_axis_2];
-    let source_guides = [a_guide_1, b_guide_1];
+    // let source_tags = ['motor1_tube2_a', 'motor1_tube2_b'];
+    // let source_axes = [a_axis_1, b_axis_2];
+    // let source_guides = [a_guide_1, b_guide_1];
+
+    let source_tags = ['motor1_tube2_a', 'motor1_tube2_a'];
+    let source_axes = [a_axis_1, a_axis_2];
+    let source_guides = [a_guide_1, a_guide_1.duplicate()];
 
     let previous_count = (count - 1).toString()
     let target_tags = [...parts[previous_count]['target_tags']]; //shallow copy
@@ -2066,9 +2129,9 @@ function motor3(selection_index) {
     target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
     This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
     
-    let source_tags = ['motor3_tube2_a', 'motor3_tube2_a', 'motor3_tube2_b', 'motor3_tube2_b', 'motor3_tube2_b', 'motor3_tube2_b', 'motor3_tube1', 'motor3_tube1', 'motor3_tube1', 'motor3_tube1'];
-    let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2, b_axis_1.duplicate(), b_axis_2.duplicate(), c_axis_1, c_axis_2, c_axis_1.duplicate(), c_axis_2.duplicate()];
-    let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2, b_guide_2.duplicate(), b_guide_1.duplicate(), c_guide_1, c_guide_2, c_guide_2.duplicate(), c_guide_1.duplicate()];
+    let source_tags = ['motor3_tube2_a', 'motor3_tube2_a', 'motor3_tube2_b', 'motor3_tube2_b', 'motor3_tube1', 'motor3_tube1'];
+    let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2, c_axis_1, c_axis_2];
+    let source_guides = [a_guide_2, a_guide_1, b_guide_1, b_guide_2, c_guide_1, c_guide_2];
     
     let previous_count = (count - 1).toString()
     let target_tags = [...parts[previous_count]['target_tags']]; //shallow copy
@@ -2090,8 +2153,8 @@ function motor3(selection_index) {
     let target_guide = target_guides[source_target_pair[1]];
     target_guides.splice(source_target_pair[1], 1); //Remove this one bc the associated position will be occupied by the part and it can't be used again
     
-    
-    
+
+
     /*Step 4. Transform 
     This is a relatively simple step for Tubes and Nibs, b/c geometry just needs to be oriented and moved to the target geo.
     It's slightly more complicated for Motors, because the additional rotation of the "motor" needs to be accounted for.
@@ -2132,8 +2195,10 @@ function motor3(selection_index) {
     
     parts[parts_count]['selection_index'] = selection_index;
     parts[parts_count]['geo'] = [geo];
-    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1], source_axes[2], source_axes[3], source_axes[6], source_axes[7]];
-    parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3], source_guides[6], source_guides[7]];
+    // parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1], source_axes[2], source_axes[3], source_axes[6], source_axes[7]];
+    // parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3], source_guides[6], source_guides[7]];
+    parts[parts_count]['source_axes'] = source_axes;
+    parts[parts_count]['source_guides'] = [source_guides[1], source_guides[0], source_guides[2],source_guides[3], source_guides[4], source_guides[5]];
     parts[parts_count]['potential_axes'] = potential_axes;
     parts[parts_count]['potential_guides'] = potential_guides;
     parts[parts_count]['rot_crv'] = [rot_crv];
@@ -2178,10 +2243,10 @@ function motor4(selection_index) {
     let a_axis_2;
     let a_guide_1;
     let a_guide_2;
-    let b_axis_1;
-    let b_axis_2;
-    let b_guide_1;
-    let b_guide_2;
+    // let b_axis_1;
+    // let b_axis_2;
+    // let b_guide_1;
+    // let b_guide_2;
     let c_axis_1;
     let c_axis_2;
     let c_guide_1;
@@ -2189,8 +2254,8 @@ function motor4(selection_index) {
     let rot_crv;
     let potential_axes;
     let potential_guides;
-    let potential_source_tags = ['motor4_tube1_a', 'motor4_tube1_b', 'motor4_tube2'];
-    let potential_target_tags = [tag_motor4_tube1_a, tag_motor4_tube1_b, tag_motor4_tube2];
+    let potential_source_tags = ['motor4_tube1_a', 'motor4_tube2'];
+    let potential_target_tags = [tag_motor4_tube1_a, tag_motor4_tube2];
     
     if (play_bool) {
         //Reuse geometry
@@ -2199,14 +2264,14 @@ function motor4(selection_index) {
         a_axis_2 = parts[parts_count]['source_axes'][1];
         a_guide_1 = parts[parts_count]['source_guides'][0];
         a_guide_2 = parts[parts_count]['source_guides'][1];
-        b_axis_1 = parts[parts_count]['source_axes'][2];
-        b_axis_2 = parts[parts_count]['source_axes'][3];
-        b_guide_1 = parts[parts_count]['source_guides'][2];
-        b_guide_2 = parts[parts_count]['source_guides'][3];
-        c_axis_1 = parts[parts_count]['source_axes'][4];
-        c_axis_2 = parts[parts_count]['source_axes'][5];
-        c_guide_1 = parts[parts_count]['source_guides'][4];
-        c_guide_2 = parts[parts_count]['source_guides'][5];
+        // b_axis_1 = parts[parts_count]['source_axes'][2];
+        // b_axis_2 = parts[parts_count]['source_axes'][3];
+        // b_guide_1 = parts[parts_count]['source_guides'][2];
+        // b_guide_2 = parts[parts_count]['source_guides'][3];
+        c_axis_1 = parts[parts_count]['source_axes'][2];
+        c_axis_2 = parts[parts_count]['source_axes'][3];
+        c_guide_1 = parts[parts_count]['source_guides'][2];
+        c_guide_2 = parts[parts_count]['source_guides'][3];
         rot_crv = parts[parts_count]['rot_crv'][0];
 
         /* Define potential_target pairs (also taken from Rhino geometry, but typically different than the source placements)
@@ -2233,18 +2298,20 @@ function motor4(selection_index) {
         a_axis_2 = motor4_tube1a_axis_2.duplicate();
         a_guide_1 = motor4_tube1a_guide_1.duplicate();
         a_guide_2 = motor4_tube1a_guide_2.duplicate();
-        b_axis_1 = motor4_tube1b_axis_1.duplicate();
-        b_axis_2 = motor4_tube1b_axis_2.duplicate();
-        b_guide_1 = motor4_tube1b_guide_1.duplicate();
-        b_guide_2 = motor4_tube1b_guide_2.duplicate();
+        // b_axis_1 = motor4_tube1b_axis_1.duplicate();
+        // b_axis_2 = motor4_tube1b_axis_2.duplicate();
+        // b_guide_1 = motor4_tube1b_guide_1.duplicate();
+        // b_guide_2 = motor4_tube1b_guide_2.duplicate();
         c_axis_1 = motor4_tube2_axis_1.duplicate();
         c_axis_2 = motor4_tube2_axis_2.duplicate();
         c_guide_1 = motor4_tube2_guide_1.duplicate();
         c_guide_2 = motor4_tube2_guide_2.duplicate();
         rot_crv = motor4_rotationCurve.duplicate();
 
-        potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate(), c_axis_1.duplicate()];
-        potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate(), c_guide_1.duplicate()];
+        // potential_axes = [a_axis_1.duplicate(), b_axis_1.duplicate(), c_axis_1.duplicate()];
+        // potential_guides = [a_guide_1.duplicate(), b_guide_1.duplicate(), c_guide_1.duplicate()];
+        potential_axes = [a_axis_1.duplicate(), c_axis_1.duplicate()];
+        potential_guides = [a_guide_1.duplicate(), c_guide_1.duplicate()];
     }
 
 
@@ -2256,9 +2323,13 @@ function motor4(selection_index) {
     target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
     This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
     
-    let source_tags = ['motor4_tube1_a', 'motor4_tube1_a', 'motor4_tube1_b', 'motor4_tube1_b', 'motor4_tube1_b', 'motor4_tube1_b', 'motor4_tube2', 'motor4_tube2', 'motor4_tube2', 'motor4_tube2'];
-    let source_axes = [a_axis_2, a_axis_1, b_axis_1, b_axis_2, b_axis_1.duplicate(), b_axis_2.duplicate(), c_axis_1, c_axis_2, c_axis_1.duplicate(), c_axis_2.duplicate()];
-    let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2, b_guide_2.duplicate(), b_guide_1.duplicate(), c_guide_1, c_guide_2, c_guide_2.duplicate(), c_guide_1.duplicate()];
+    // let source_tags = ['motor4_tube1_a', 'motor4_tube1_a', 'motor4_tube1_b', 'motor4_tube1_b', 'motor4_tube1_b', 'motor4_tube1_b', 'motor4_tube2', 'motor4_tube2', 'motor4_tube2', 'motor4_tube2'];
+    // let source_axes = [a_axis_2, a_axis_1, b_axis_1, b_axis_2, b_axis_1.duplicate(), b_axis_2.duplicate(), c_axis_1, c_axis_2, c_axis_1.duplicate(), c_axis_2.duplicate()];
+    // let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2, b_guide_2.duplicate(), b_guide_1.duplicate(), c_guide_1, c_guide_2, c_guide_2.duplicate(), c_guide_1.duplicate()];
+
+    let source_tags = ['motor4_tube1_a', 'motor4_tube1_a', 'motor4_tube2', 'motor4_tube2'];
+    let source_axes = [a_axis_1, a_axis_2, c_axis_1, c_axis_2];
+    let source_guides = [a_guide_2, a_guide_1, c_guide_1, c_guide_2];
     
     let previous_count = (count - 1).toString()
     let target_tags = [...parts[previous_count]['target_tags']]; //shallow copy
@@ -2319,8 +2390,8 @@ function motor4(selection_index) {
     
     parts[parts_count]['selection_index'] = selection_index;
     parts[parts_count]['geo'] = [geo];
-    parts[parts_count]['source_axes'] = [source_axes[1], source_axes[0], source_axes[2], source_axes[3], source_axes[6], source_axes[7]];
-    parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3], source_guides[6], source_guides[7]];
+    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1], source_axes[2], source_axes[3]];
+    parts[parts_count]['source_guides'] = [source_guides[1], source_guides[0], source_guides[2], source_guides[3]];
     parts[parts_count]['potential_axes'] = potential_axes;
     parts[parts_count]['potential_guides'] = potential_guides;
     parts[parts_count]['rot_crv'] = [rot_crv];
@@ -2443,10 +2514,14 @@ function motor5(selection_index) {
     target_tags describe all the types of source geometry that can be accepted by the receiving part (a much longer string of concatenated source tags)
     This system allows for easy creation of source/target pairs for potential placement of new parts with the generate_selection_pairs() function*/
     
-    let source_tags = ['motor5_tube1_a', 'motor5_tube1_a', 'motor5_tube1_b', 'motor5_tube1_b', 'motor5_tube1_b', 'motor5_tube1_b', 'motor5_tube2', 'motor5_tube2', 'motor5_tube2', 'motor5_tube2'];
-    let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2, b_axis_1.duplicate(), b_axis_2.duplicate(), c_axis_1, c_axis_2, c_axis_1.duplicate(), c_axis_2.duplicate()];
-    let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2, b_guide_2.duplicate(), b_guide_1.duplicate(), c_guide_1, c_guide_2, c_guide_2.duplicate(), c_guide_1.duplicate()];
-    
+    // let source_tags = ['motor5_tube1_a', 'motor5_tube1_a', 'motor5_tube1_b', 'motor5_tube1_b', 'motor5_tube1_b', 'motor5_tube1_b', 'motor5_tube2', 'motor5_tube2', 'motor5_tube2', 'motor5_tube2'];
+    // let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2, b_axis_1.duplicate(), b_axis_2.duplicate(), c_axis_1, c_axis_2, c_axis_1.duplicate(), c_axis_2.duplicate()];
+    // let source_guides = [a_guide_1, a_guide_2, b_guide_1, b_guide_2, b_guide_2.duplicate(), b_guide_1.duplicate(), c_guide_1, c_guide_2, c_guide_2.duplicate(), c_guide_1.duplicate()];
+
+    let source_tags = ['motor5_tube1_a', 'motor5_tube1_a', 'motor5_tube1_b', 'motor5_tube1_b', 'motor5_tube2', 'motor5_tube2'];
+    let source_axes = [a_axis_1, a_axis_2, b_axis_1, b_axis_2, c_axis_1, c_axis_2];
+    let source_guides = [a_guide_2, a_guide_1, b_guide_1, b_guide_2, c_guide_1, c_guide_2];
+
     let previous_count = (count - 1).toString()
     let target_tags = [...parts[previous_count]['target_tags']]; //shallow copy
     let target_axes = [...parts[previous_count]['target_axes']];
@@ -2506,8 +2581,8 @@ function motor5(selection_index) {
     
     parts[parts_count]['selection_index'] = selection_index;
     parts[parts_count]['geo'] = [geo];
-    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1], source_axes[2], source_axes[3], source_axes[6], source_axes[7]];
-    parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3], source_guides[6], source_guides[7]];
+    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1], source_axes[2], source_axes[3], source_axes[4], source_axes[5]];
+    parts[parts_count]['source_guides'] = [source_guides[1], source_guides[0], source_guides[2], source_guides[3], source_guides[4], source_guides[5]];
     parts[parts_count]['potential_axes'] = potential_axes;
     parts[parts_count]['potential_guides'] = potential_guides;
     parts[parts_count]['rot_crv'] = [rot_crv];
