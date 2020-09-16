@@ -45,7 +45,7 @@ var rotation_curves = []; //for cute little curves that show which way the motor
 
 var rotation_angle = 0;
 var current_angle = 0; //This is to capture the angle from the manual slider, so that it can be returned to with reset_animation()
-var rotation_increment = 2;
+var rotation_increment = 3;
 
 var meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 500});
 var curve_material = new THREE.LineBasicMaterial({color: 0xffffff});
@@ -54,14 +54,15 @@ var curve_material = new THREE.LineBasicMaterial({color: 0xffffff});
 connections will rotate at roughly half the speed of smaller (i.e. Tubes 2 and 3) connections.*/
 var angle_factor_A = 1.0;
 var angle_factor_B = 2.0;
-var angle_A = 0;
-var angle_B = 0;
+var angle_A = 0.0174533;
+var angle_B = 0.0174533;
 
 var play_bool = false; 
 var play_count = 0;
 var line_weight = 3;
 var line_color = 0xffff00;
 var nib_UI_bool = false;
+var parts_limit = 12; //The max number of parts that can be added to the drawing machine (must match counter_icons in index.html)
 
 var window_width = window.screen.availWidth;
 var window_height = window.screen.availHeight;

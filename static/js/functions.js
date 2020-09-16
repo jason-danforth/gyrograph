@@ -495,6 +495,24 @@ function nib_creation() {
 }
 
 
+function parts_counter(parts_length) {
+    //Update counter showing how many more parts can be added
+    let last_counter = parts_limit - parts_length; //This is the last icon left "on", turn off all icons above this number
+
+    for (let i=1; i<parts_limit +1; i++) {
+        let counter_icon_name = i.toString();
+        let element = document.getElementById(counter_icon_name);
+        if (i <= last_counter) {
+            //parts_length can be reduced if undo() is called, so counter icons need to be turned on sometimes too
+            element.className = "counterAvailable";
+        }
+        else {
+            element.className = "counterUnavailable";
+        }
+    }
+}
+
+
 function undo() {    
     //Remove most recently added part
     let num_parts = Object.keys(parts).length;
@@ -703,179 +721,190 @@ function draw() {
 
 
 function update_src() {
-    let element_play = document.getElementById("play");
-    element_play.onclick = function() {
-        play();
-    };
+    let parts_length = Object.keys(parts).length - 1;
 
-    //Make pause and reset buttons Unavailable
-    let element_pause = document.getElementById("pause");
-    element_pause.className = "iconUnavailable";
-    element_pause.onclick = "";
+    //Update counter showing how many more parts can be added
+    parts_counter(parts_length);
 
-    let element_reset = document.getElementById("reset");
-    element_reset.className = "iconUnavailable";
-    element_reset.onclick = "";
-
-    //Make undo, previous, and next buttons available
-    if (Object.keys(parts).length > 1) {
-        let element_undo = document.getElementById("undo");
-        element_undo.className = "iconAvailable"; //Change to CSS class with hover 
-        element_undo.onclick = function() {
-            undo();
-            update_src();
-        }
-
-        let element_previous = document.getElementById("previous");
-        element_previous.className = "iconAvailable"; //Change to CSS class with hover 
-        element_previous.onclick = function() {
-            previous();
-            update_src();
-        }
-    
-        let element_next = document.getElementById("next");
-        element_next.className = "iconAvailable"; //Change to CSS class with hover 
-        element_next.onclick = function() {
-            next();
-            update_src();
-        }
+    if (parts_length >= parts_limit) {
+        no_more_parts();
     }
 
-    //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
-    let current_count = (count - 1).toString();
-    let target_tags = parts[current_count]['target_tags'];
-
-    let tag_set = new Set();
-    for (let i=0; i<target_tags.length; i++) {
-        let individual_tags = target_tags[i].split(", ");
-        for (let j=0; j<individual_tags.length; j++) {
-            tag_set.add(individual_tags[j].split("_")[0]);
-        }
-    }
-
-    if (tag_set.has("tube1")) {
-        let element = document.getElementById("tube1");
-        element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.onclick = function() {
-            add_part('Tube 1', 0);
-            update_src();
-        }
-    }
     else {
-        let element = document.getElementById("tube1");
-        element.className = "iconUnavailable";
-        element.onclick = "";
-    }
+        let element_play = document.getElementById("play");
+        element_play.onclick = function() {
+            play();
+        };
 
-    //The "tube2" tag is used for Tube 2 and Tube 3 since they share all the same placements
-    if (tag_set.has("tube2")) {
-        let element1 = document.getElementById("tube2");
-        element1.className = "iconAvailable"; //Change to CSS class with hover 
-        element1.onclick = function() {
-            add_part('Tube 2', 0);
-            update_src();
+        //Make pause and reset buttons Unavailable
+        let element_pause = document.getElementById("pause");
+        element_pause.className = "iconUnavailable";
+        element_pause.onclick = "";
+
+        let element_reset = document.getElementById("reset");
+        element_reset.className = "iconUnavailable";
+        element_reset.onclick = "";
+
+        //Make undo, previous, and next buttons available
+        if (Object.keys(parts).length > 1) {
+            let element_undo = document.getElementById("undo");
+            element_undo.className = "iconAvailable"; //Change to CSS class with hover 
+            element_undo.onclick = function() {
+                undo();
+                update_src();
+            }
+
+            let element_previous = document.getElementById("previous");
+            element_previous.className = "iconAvailable"; //Change to CSS class with hover 
+            element_previous.onclick = function() {
+                previous();
+                update_src();
+            }
+        
+            let element_next = document.getElementById("next");
+            element_next.className = "iconAvailable"; //Change to CSS class with hover 
+            element_next.onclick = function() {
+                next();
+                update_src();
+            }
         }
 
-        let element2 = document.getElementById("tube3");
-        element2.className = "iconAvailable"; //Change to CSS class with hover 
-        element2.onclick = function() {
-            add_part('Tube 3', 0);
-            update_src();
-        }
-    }
-    else {
-        let element1 = document.getElementById("tube2");
-        element1.className = "iconUnavailable"; 
-        element1.onclick = "";
+        //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
+        let current_count = (count - 1).toString();
+        let target_tags = parts[current_count]['target_tags'];
 
-        let element2 = document.getElementById("tube3");
-        element2.className = "iconUnavailable"; 
-        element2.onclick = "";
-    }
-
-    if (tag_set.has("motor1")) {
-        let element = document.getElementById("motor1");
-        element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.onclick = function() {
-            add_part('Motor 1', 0);
-            update_src();
+        let tag_set = new Set();
+        for (let i=0; i<target_tags.length; i++) {
+            let individual_tags = target_tags[i].split(", ");
+            for (let j=0; j<individual_tags.length; j++) {
+                tag_set.add(individual_tags[j].split("_")[0]);
+            }
         }
-    }
-    else {
-        let element = document.getElementById("motor1");
-        element.className = "iconUnavailable";
-        element.onclick = "";
-    }
 
-    if (tag_set.has("motor2")) {
-        let element = document.getElementById("motor2");
-        element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.onclick = function() {
-            add_part('Motor 2', 0);
-            update_src();
+        if (tag_set.has("tube1")) {
+            let element = document.getElementById("tube1");
+            element.className = "iconAvailable"; //Change to CSS class with hover 
+            element.onclick = function() {
+                add_part('Tube 1', 0);
+                update_src();
+            }
         }
-    }
-    else {
-        let element = document.getElementById("motor2");
-        element.className = "iconUnavailable"; 
-        element.onclick = "";
-    }
+        else {
+            let element = document.getElementById("tube1");
+            element.className = "iconUnavailable";
+            element.onclick = "";
+        }
 
-    if (tag_set.has("motor3")) {
-        let element = document.getElementById("motor3");
-        element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.onclick = function() {
-            add_part('Motor 3', 0);
-            update_src();
-        }
-    }
-    else {
-        let element = document.getElementById("motor3");
-        element.className = "iconUnavailable";
-        element.onclick = "";
-    }
+        //The "tube2" tag is used for Tube 2 and Tube 3 since they share all the same placements
+        if (tag_set.has("tube2")) {
+            let element1 = document.getElementById("tube2");
+            element1.className = "iconAvailable"; //Change to CSS class with hover 
+            element1.onclick = function() {
+                add_part('Tube 2', 0);
+                update_src();
+            }
 
-    if (tag_set.has("motor4")) {
-        let element = document.getElementById("motor4");
-        element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.onclick = function() {
-            add_part('Motor 4', 0);
-            update_src();
+            let element2 = document.getElementById("tube3");
+            element2.className = "iconAvailable"; //Change to CSS class with hover 
+            element2.onclick = function() {
+                add_part('Tube 3', 0);
+                update_src();
+            }
         }
-    }
-    else {
-        let element = document.getElementById("motor4");
-        element.className = "iconUnavailable";
-        element.onclick = "";
-    }
+        else {
+            let element1 = document.getElementById("tube2");
+            element1.className = "iconUnavailable"; 
+            element1.onclick = "";
 
-    if (tag_set.has("motor5")) {
-        let element = document.getElementById("motor5");
-        element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.onclick = function() {
-            add_part('Motor 5', 0);
-            update_src();
+            let element2 = document.getElementById("tube3");
+            element2.className = "iconUnavailable"; 
+            element2.onclick = "";
         }
-    }
-    else {
-        let element = document.getElementById("motor5");
-        element.className = "iconUnavailable"; 
-        element.onclick = "";
-    }
 
-    if (tag_set.has("nib") && Object.keys(parts).length > 1) {
-        let element = document.getElementById("nib");
-        element.className = "iconAvailable"; //Change to CSS class with hover 
-        element.onclick = function() {
-            nib_creation(); 
-            add_part('Nib', 0);
-            update_src();
+        if (tag_set.has("motor1")) {
+            let element = document.getElementById("motor1");
+            element.className = "iconAvailable"; //Change to CSS class with hover 
+            element.onclick = function() {
+                add_part('Motor 1', 0);
+                update_src();
+            }
         }
-    }
-    else {
-        let element = document.getElementById("nib");
-        element.className = "iconUnavailable"; 
-        element.onclick = "";
+        else {
+            let element = document.getElementById("motor1");
+            element.className = "iconUnavailable";
+            element.onclick = "";
+        }
+
+        if (tag_set.has("motor2")) {
+            let element = document.getElementById("motor2");
+            element.className = "iconAvailable"; //Change to CSS class with hover 
+            element.onclick = function() {
+                add_part('Motor 2', 0);
+                update_src();
+            }
+        }
+        else {
+            let element = document.getElementById("motor2");
+            element.className = "iconUnavailable"; 
+            element.onclick = "";
+        }
+
+        if (tag_set.has("motor3")) {
+            let element = document.getElementById("motor3");
+            element.className = "iconAvailable"; //Change to CSS class with hover 
+            element.onclick = function() {
+                add_part('Motor 3', 0);
+                update_src();
+            }
+        }
+        else {
+            let element = document.getElementById("motor3");
+            element.className = "iconUnavailable";
+            element.onclick = "";
+        }
+
+        if (tag_set.has("motor4")) {
+            let element = document.getElementById("motor4");
+            element.className = "iconAvailable"; //Change to CSS class with hover 
+            element.onclick = function() {
+                add_part('Motor 4', 0);
+                update_src();
+            }
+        }
+        else {
+            let element = document.getElementById("motor4");
+            element.className = "iconUnavailable";
+            element.onclick = "";
+        }
+
+        if (tag_set.has("motor5")) {
+            let element = document.getElementById("motor5");
+            element.className = "iconAvailable"; //Change to CSS class with hover 
+            element.onclick = function() {
+                add_part('Motor 5', 0);
+                update_src();
+            }
+        }
+        else {
+            let element = document.getElementById("motor5");
+            element.className = "iconUnavailable"; 
+            element.onclick = "";
+        }
+
+        if (tag_set.has("nib") && Object.keys(parts).length > 1) {
+            let element = document.getElementById("nib");
+            element.className = "iconAvailable"; //Change to CSS class with hover 
+            element.onclick = function() {
+                nib_creation(); 
+                add_part('Nib', 0);
+                update_src();
+            }
+        }
+        else {
+            let element = document.getElementById("nib");
+            element.className = "iconUnavailable"; 
+            element.onclick = "";
+        }
     }
 }
 
@@ -913,6 +942,70 @@ function freeze_src() {
     let element_next = document.getElementById("next");
     element_next.className = "iconUnavailable";
     element_next.onclick = "";
+
+    let element_tube1 = document.getElementById("tube1");
+    element_tube1.className = "iconUnavailable";
+    element_tube1.onclick = "";
+    
+    let element_tube2 = document.getElementById("tube2");
+    element_tube2.className = "iconUnavailable";
+    element_tube2.onclick = "";
+
+    let element_tube3 = document.getElementById("tube3");
+    element_tube3.className = "iconUnavailable";
+    element_tube3.onclick = "";
+    
+    let element_motor1 = document.getElementById("motor1");
+    element_motor1.className = "iconUnavailable";
+    element_motor1.onclick = "";
+
+    let element_motor2 = document.getElementById("motor2");
+    element_motor2.className = "iconUnavailable";
+    element_motor2.onclick = "";
+
+    let element_motor3 = document.getElementById("motor3");
+    element_motor3.className = "iconUnavailable";
+    element_motor3.onclick = "";
+
+    let element_motor4 = document.getElementById("motor4");
+    element_motor4.className = "iconUnavailable";
+    element_motor4.onclick = "";
+
+    let element_motor5 = document.getElementById("motor5");
+    element_motor5.className = "iconUnavailable";
+    element_motor5.onclick = "";
+
+    let element_nib = document.getElementById("nib");
+    element_nib.className = "iconUnavailable";
+    element_nib.onclick = "";
+}
+
+
+function no_more_parts() {
+    //Call this function when the parts.length limit is reached
+    //Very similar to freeze_src(), but undo/next/previous, rotation_slider, etc. are still available 
+
+    //Undo, Previous, Next need to be turned on so that when Play is Stopped and update_src() is called they become available
+    let element_undo = document.getElementById("undo");
+    element_undo.className = "iconAvailable"; //Change to CSS class with hover 
+    element_undo.onclick = function() {
+        undo();
+        update_src();
+    }
+
+    let element_previous = document.getElementById("previous");
+    element_previous.className = "iconAvailable"; //Change to CSS class with hover 
+    element_previous.onclick = function() {
+        previous();
+        update_src();
+    }
+
+    let element_next = document.getElementById("next");
+    element_next.className = "iconAvailable"; //Change to CSS class with hover 
+    element_next.onclick = function() {
+        next();
+        update_src();
+    }
 
     let element_tube1 = document.getElementById("tube1");
     element_tube1.className = "iconUnavailable";
