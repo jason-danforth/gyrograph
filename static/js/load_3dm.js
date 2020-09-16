@@ -45,7 +45,7 @@ var rotation_curves = []; //for cute little curves that show which way the motor
 
 var rotation_angle = 0;
 var current_angle = 0; //This is to capture the angle from the manual slider, so that it can be returned to with reset_animation()
-var rotation_increment = 3;
+var rotation_increment = 2;
 
 var meshMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, shininess: 500});
 var curve_material = new THREE.LineBasicMaterial({color: 0xffffff});
