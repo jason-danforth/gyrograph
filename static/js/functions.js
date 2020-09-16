@@ -243,6 +243,23 @@ function frontView() {
 }
 
 
+function rightView() {
+    let duration = 500;
+
+    new TWEEN.Tween( camera.position ).to( {
+        x: 4000,
+        y: 0,
+        z: 275}, duration )
+        .easing( TWEEN.Easing.Quadratic.InOut)
+        .start();
+    
+    new TWEEN.Tween( controls.target ).to( {
+        x: 0,
+        y: 0,
+        z: 275}, duration )
+        .easing( TWEEN.Easing.Quadratic.InOut)
+        .start();
+}
 
 
 
