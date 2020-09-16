@@ -62,7 +62,7 @@ var play_count = 0;
 var line_weight = 3;
 var line_color = 0xffff00;
 var nib_UI_bool = false;
-var parts_limit = 15; //The max number of parts that can be added to the drawing machine (must match the counter_icons in index.html)
+var parts_limit = 15; //Max number of parts that can be added to the drawing machine (must match the counter_icons in index.html)
 
 var window_width = window.screen.availWidth;
 var window_height = window.screen.availHeight;
