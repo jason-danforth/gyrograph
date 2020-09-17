@@ -516,7 +516,19 @@ function parts_counter(parts_length) {
     //Update counter showing how many more parts can be added
     let last_counter = parts_limit - parts_length; //This is the last icon left "on", turn off all icons above this number
 
-    for (let i=1; i<parts_limit +1; i++) {
+    if (last_counter == 1) {
+        // popovers Initialization
+        $(function () {
+            $('[data-toggle="popover"]').popover("show");
+        })
+    }
+    else {        
+        $(function () {
+            $('[data-toggle="popover"]').popover("hide");
+        })
+    }
+
+    for (let i=1; i<parts_limit + 1; i++) {
         let counter_icon_name = i.toString();
         let element = document.getElementById(counter_icon_name);
         if (i <= last_counter) {

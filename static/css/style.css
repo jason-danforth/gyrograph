@@ -9,7 +9,7 @@ canvas { width: 100%; height: 100%; }
 #overlay {
     position: fixed;
     display: block;
-    width: 180px;
+    width: 250px;
     height: 100%;
     top: 17;
     left: 0;
@@ -29,6 +29,23 @@ canvas { width: 100%; height: 100%; }
   z-index: 1;
 }
 
+
+
+.popover  {
+  background: #28253d!important;
+  }
+
+  .popover.right .arrow:after {
+  border-right-color:#28253d!important;
+}
+
+
+.popover-content {
+  /* background-color: #342f4f; */
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 20px;
+}
 
 
 /*---------------------------------- Icons -----------------------------*/
@@ -57,22 +74,16 @@ canvas { width: 100%; height: 100%; }
 
 .counterAvailable {
   opacity: 0.85;
-  transition: opacity 0.2s;
+  transition: opacity 0.1s;
   float: left;
 }
 
 .counterUnavailable {
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 0.1s;
   float: left;
 }
 
-.counterAvailableMargin {
-  opacity: 0.85;
-  transition: opacity 0.2s;
-  float: left;
-  margin-right: 3px;
-}
 
 
 /*---------------------------------- Nib Input -----------------------------*/
