@@ -32,11 +32,11 @@ canvas { width: 100%; height: 100%; }
 
 
 .popover  {
-  background: #28253d!important;
+  background: #312e4d!important;
   }
 
   .popover.right .arrow:after {
-  border-right-color:#28253d!important;
+  border-right-color:#312e4d!important;
 }
 
 
