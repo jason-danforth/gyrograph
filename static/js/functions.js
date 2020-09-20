@@ -10,7 +10,13 @@ var scene, camera, renderer, controls;
 var options = {
     'backdrop' : 'true'
 }
+
 $('#basicModal').modal(options);
+
+$('#basicModal').on('hidden.bs.modal', function () {
+    tutorials();
+  });
+
 
 rhino3dm().then(function(m) {
     rhino = m; // global
@@ -291,7 +297,9 @@ colorWheel.on('input:end', function(color){
     let num_nibs = Object.keys(nib_objects).length;
     let last_nib = num_nibs - 1;
     let last_index = last_nib.toString();
-    nib_objects[last_index]['color'] = line_color;
+    if (Object.keys(nib_objects).length > 0) {
+        nib_objects[last_index]['color'] = line_color;
+    }
     draw();
 })
 
@@ -369,7 +377,7 @@ $("#circularSlider").roundSlider({
     radius: 70,
     width: 2,
     handleSize: "+13",
-    readOnly: false,
+    readOnly: true,
     min: 100,
     max: 200,
     startValue: 0,
@@ -399,6 +407,154 @@ $("#circularSlider").roundSlider({
 
 function update_angle_factor_B(value) {
     angle_factor_B = value;
+}
+
+
+
+
+//------------------------------------------Tutorials-------------------------------------------------------------------------------------------------------------------------------------
+
+
+function tutorials() {
+    
+
+    $("#circularSlider").roundSlider("disable");
+
+    //Tubes
+    document.getElementById("tube1").className = "iconAvailable";  
+    document.getElementById("tube2").className = "iconAvailable";  
+    document.getElementById("tube3").className = "iconAvailable";  
+    $(function () {
+        $('[data-toggle="popover_tubes"]').popover("show");
+        
+        setTimeout(function() {
+            $('[data-toggle="popover_tubes"]').popover("destroy");
+
+            //Motors
+            document.getElementById("tube1").className = "iconUnavailable";  
+            document.getElementById("tube2").className = "iconUnavailable";  
+            document.getElementById("tube3").className = "iconUnavailable";  
+            document.getElementById("motor1").className = "iconAvailable";  
+            document.getElementById("motor2").className = "iconAvailable";  
+            document.getElementById("motor3").className = "iconAvailable";  
+            document.getElementById("motor4").className = "iconAvailable";  
+            document.getElementById("motor5").className = "iconAvailable";  
+            $(function () {
+                $('[data-toggle="popover_motors"]').popover("show");
+        
+                setTimeout(function() {
+                    $('[data-toggle="popover_motors"]').popover("destroy");
+
+                    //Nib
+                    document.getElementById("motor1").className = "iconUnavailable";  
+                    document.getElementById("motor2").className = "iconUnavailable";  
+                    document.getElementById("motor3").className = "iconUnavailable";  
+                    document.getElementById("motor4").className = "iconUnavailable";  
+                    document.getElementById("motor5").className = "iconUnavailable";  
+                    document.getElementById("nib").className = "iconAvailable";  
+                    $(function () {
+                        $('[data-toggle="popover_nib"]').popover("show");
+        
+                        setTimeout(function() {
+                            $('[data-toggle="popover_nib"]').popover("destroy");
+                            $("#circularSlider").roundSlider("enable");
+                            document.getElementById("circularSlider").classList.remove("circularUnavailable");
+                            document.getElementById("circularSlider").classList.add("circularAvailable");
+                            document.getElementById("reset").className = "iconAvailable";
+                            document.getElementById("reset").onclick = function() {
+                                reset();
+                            };
+                            update_src(); 
+                        }, popover_timer); 
+                    })
+
+                }, popover_timer); 
+            })
+
+        }, popover_timer); 
+    })
+}
+
+
+function trigger_popovers(parts_length) {
+    let last_counter = parts_limit - parts_length; //This is the last icon left "on", turn off all icons above this number
+
+    //Update counter showing how many more parts can be added
+    for (let i=1; i<parts_limit + 1; i++) {
+        let counter_icon_name = i.toString();
+        let element = document.getElementById(counter_icon_name);
+        if (i <= last_counter) {
+            //parts_length can be reduced if undo() is called, so counter icons need to be turned on sometimes too
+            element.className = "counterAvailable";
+        }
+        else {
+            element.className = "counterUnavailable";
+        }
+    }
+
+    //Trigger warning if on last counter
+    if (last_counter == 1 && counter_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_lastPart"]').popover("show");
+            setTimeout(function() {
+                $('[data-toggle="popover_lastPart"]').popover("destroy");
+            }, popover_timer); 
+
+            counter_popover += 1;
+        })
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Explain available icons (happens on load)
+    if (Object.keys(parts).length == 1 && icons_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_icons"]').popover("show");
+            icons_popover += 1; 
+
+            setTimeout(function() {
+                $('[data-toggle="popover_icons"]').popover("destroy");
+            }, popover_timer); 
+        })
+    }
+    else {
+        //Only popover without a timer
+        $(function () {
+            $('[data-toggle="popover_icons"]').popover("destroy");
+        })
+    }
+
+    if (Object.keys(parts).length == 2 && controls_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_controls"]').popover("show");
+            setTimeout(function() {
+                $('[data-toggle="popover_controls"]').popover("destroy");
+            }, popover_timer); 
+            
+            controls_popover += 1; 
+        })        
+    }
+
+    if (Object.keys(parts).length == 6 && speed_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_speed"]').popover("show");
+            setTimeout(function() {
+                $('[data-toggle="popover_speed"]').popover("destroy");
+            }, popover_timer); 
+
+            speed_popover += 1;
+        })
+    }
+
+    if (Object.keys(parts).length > 6 && play_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_play"]').popover("show");
+            setTimeout(function() {
+                $('[data-toggle="popover_play"]').popover("destroy");
+            }, popover_timer); 
+
+            play_popover += 1;
+        })
+    }
 }
 
 
@@ -458,7 +614,7 @@ function run() {
 
 
 function play() {
-    freeze_src(); //Disable all buttons other than play/pause/reset
+    freeze_src(); //Disable all buttons other than play/pause/stop
     play_bool = true;
 }
 
@@ -523,125 +679,14 @@ function nib_creation() {
 }
 
 
-function trigger_popovers(parts_length) {
-    let last_counter = parts_limit - parts_length; //This is the last icon left "on", turn off all icons above this number
-
-    //Update counter showing how many more parts can be added
-    for (let i=1; i<parts_limit + 1; i++) {
-        let counter_icon_name = i.toString();
-        let element = document.getElementById(counter_icon_name);
-        if (i <= last_counter) {
-            //parts_length can be reduced if undo() is called, so counter icons need to be turned on sometimes too
-            element.className = "counterAvailable";
-        }
-        else {
-            element.className = "counterUnavailable";
-        }
-    }
-
-    //Trigger warning if on last counter
-    if (last_counter == 1 && counter_popover == 0) {
-        $(function () {
-            $('[data-toggle="popover_lastPart"]').popover("show");
-            setTimeout(function() {
-                $('[data-toggle="popover_lastPart"]').popover("destroy");
-            }, popover_timer); 
-
-            counter_popover += 1;
-        })
-    }
-
-    //--------------------------------------------------------------------------------------
-    //Explain part icons (happens on load)
-    if (Object.keys(parts).length == 1 && icons_popover == 0) {
-        $(function () {
-            $('[data-toggle="popover_icons"]').popover("show");
-
-            icons_popover += 1; 
-        })
-    }
-    else {
-        //Only popover without a timer
-        $(function () {
-            $('[data-toggle="popover_icons"]').popover("destroy");
-        })
-    }
-
-    //After part icons, show nib popover if nib is available, otherwise show controls popover
-    if (Object.keys(parts).length == 2 && tag_set.has("nib") && nib_popover == 0) {
-        $(function () {
-            $('[data-toggle="popover_nib"]').popover("show");
-            setTimeout(function() {
-                $('[data-toggle="popover_nib"]').popover("destroy");
-            }, popover_timer); 
-            
-            nib_popover += 1; 
-        })
-
-    }
-    else if (Object.keys(parts).length == 2 && controls_popover == 0) {
-        $(function () {
-            $('[data-toggle="popover_controls"]').popover("show");
-            setTimeout(function() {
-                $('[data-toggle="popover_controls"]').popover("destroy");
-            }, popover_timer); 
-            
-            controls_popover += 1; 
-        })        
-    }
-
-    //If nib was created, then nibUI popover will be triggered
-    if (Object.keys(parts).length == 3 && Object.keys(nib_objects).length > 0) {}
-    //Else if nib is available show nib popover
-    else if (Object.keys(parts).length == 3 && tag_set.has("nib") && nib_popover == 0) {
-        $(function () {
-            $('[data-toggle="popover_controls"]').popover("show");
-            setTimeout(function() {
-                $('[data-toggle="popover_controls"]').popover("destroy");
-            }, popover_timer); 
-            
-            nib_popover += 1; 
-        })
-
-    }
-    //Else show controls
-    else if (Object.keys(parts).length == 3 && controls_popover == 0) {
-        $(function () {
-            $('[data-toggle="popover_controls"]').popover("show");
-            setTimeout(function() {
-                $('[data-toggle="popover_controls"]').popover("destroy");
-            }, popover_timer); 
-            
-            controls_popover += 1; 
-        })        
-    }
-
-
-
-
-
-
-    if (Object.keys(parts).length == 6 && speed_popover == 0) {
-        $(function () {
-            $('[data-toggle="popover_speed"]').popover("show");
-            setTimeout(function() {
-                $('[data-toggle="popover_speed"]').popover("destroy");
-            }, popover_timer); 
-
-            speed_popover += 1;
-        })
-    }
-
-    if (Object.keys(parts).length > 6 && play_popover == 0) {
-        $(function () {
-            $('[data-toggle="popover_play"]').popover("show");
-            setTimeout(function() {
-                $('[data-toggle="popover_play"]').popover("destroy");
-            }, popover_timer); 
-
-            play_popover += 1;
-        })
-    }
+function reset() {
+    nib_objects = {};
+    nib_item = 0;
+    parts = {};
+    count = 0;
+    base();
+    draw();
+    update_src();
 }
 
 
@@ -855,6 +900,18 @@ function draw() {
 function update_src() {
     let parts_length = Object.keys(parts).length - 1;
 
+    //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
+    let current_count = (count - 1).toString();
+    let target_tags = parts[current_count]['target_tags'];
+
+    tag_set = new Set();
+    for (let i=0; i<target_tags.length; i++) {
+        let individual_tags = target_tags[i].split(", ");
+        for (let j=0; j<individual_tags.length; j++) {
+            tag_set.add(individual_tags[j].split("_")[0]);
+        }
+    }
+        
     //Update counter showing how many more parts can be added
     trigger_popovers(parts_length);
 
@@ -863,12 +920,12 @@ function update_src() {
     }
 
     else {
-        //Make pause and reset buttons Unavailable
+        //Make pause and stop buttons Unavailable
         let element_pause = document.getElementById("pause");
         element_pause.className = "iconUnavailable";
         element_pause.onclick = "";
 
-        let element_reset = document.getElementById("reset");
+        let element_reset = document.getElementById("stop");
         element_reset.className = "iconUnavailable";
         element_reset.onclick = "";
 
@@ -917,18 +974,6 @@ function update_src() {
             let element_next = document.getElementById("next");
             element_next.className = "iconUnavailable"; //Change to CSS class with hover 
             element_next.onclick = function() {}
-        }
-
-        //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
-        let current_count = (count - 1).toString();
-        let target_tags = parts[current_count]['target_tags'];
-
-        tag_set = new Set();
-        for (let i=0; i<target_tags.length; i++) {
-            let individual_tags = target_tags[i].split(", ");
-            for (let j=0; j<individual_tags.length; j++) {
-                tag_set.add(individual_tags[j].split("_")[0]);
-            }
         }
 
         if (tag_set.has("tube1")) {
@@ -1061,21 +1106,21 @@ function update_src() {
 
 
 function freeze_src() {
-    //Turn off all controls during play / pause / reset
+    //Turn off all controls during play / pause / stop
 
     //Disable circular slider
     $("#circularSlider").roundSlider("disable");
     document.getElementById("circularSlider").classList.remove("circularAvailable");
     document.getElementById("circularSlider").classList.add("circularUnavailable");
 
-    //Make pause and reset buttons available
+    //Make pause and stop buttons available
     let element_pause = document.getElementById("pause");
     element_pause.className = "iconAvailable";
     element_pause.onclick = function() {
         pause();
     }
 
-    let element_reset = document.getElementById("reset");
+    let element_reset = document.getElementById("stop");
     element_reset.className = "iconAvailable";
     element_reset.onclick = function() {
         stop();
@@ -1415,7 +1460,7 @@ function base(selection_index) {
 
     parts['0']['target_axes'] = [axis, axis.duplicate()];
     parts['0']['target_guides'] = [guide, guide.duplicate()];
-    parts['0']['target_tags'] = [tag_tube1_mid_outer, tag_tube1_a_inner];
+    parts['0']['target_tags'] = [tag_base_outer, tag_base_inner];
 
     count += 1;
 }
@@ -1662,7 +1707,7 @@ function tube2(selection_index) {
     let potential_axes = [];
     let potential_guides = [];
     
-    if (target_tag == tag_tube1_a_inner) {
+    if (target_tag == tag_tube1_a_inner || target_tag == tag_base_inner) {
         potential_source_tags = ['tube2_a_outer', 'tube2_a_inner', 'tube2_mid_outer'];
         potential_target_tags = [tag_tube2_a_outer, tag_tube2_a_inner, tag_tube2_mid_outer];
         potential_axes = [a_axis_1.duplicate(), a_axis_1.duplicate(), mid_axis_1.duplicate()];
@@ -1830,7 +1875,7 @@ function tube3(selection_index) {
     let potential_axes = [];
     let potential_guides = [];
 
-    if (target_tag == tag_tube1_a_inner) {
+    if (target_tag == tag_tube1_a_inner || target_tag == tag_base_inner) {
         potential_source_tags = ['tube3_a_outer', 'tube3_a_inner'];
         potential_target_tags = [tag_tube3_a_outer, tag_tube3_a_inner];
         potential_axes = [a_axis_1.duplicate(), a_axis_1.duplicate()];

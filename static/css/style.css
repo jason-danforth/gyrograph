@@ -43,12 +43,16 @@ canvas { width: 100%; height: 100%; }
   border-bottom-color:#312e4d!important;
 }
 
+.popover.top .arrow:after {
+  border-top-color:#312e4d!important;
+}
+
 
 .popover-content {
   /* background-color: #342f4f; */
   color: #ffffff;
   font-size: 12px;
-  max-width: 100px;
+  max-width: 101px;
   /* max-height: 20px; */
 }
 
@@ -89,7 +93,11 @@ canvas { width: 100%; height: 100%; }
   float: left;
 }
 
-
+.counterOnLoad {
+  opacity: 0.3;
+  transition: opacity 0.1s;
+  float: left;
+}
 
 /*---------------------------------- Nib Input -----------------------------*/
 
@@ -230,8 +238,6 @@ canvas { width: 100%; height: 100%; }
   margin-bottom: 20px;
   margin-left: 22px;
 }
-
-
 
 
 #circularSlider .rs-number {
