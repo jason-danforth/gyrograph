@@ -3,6 +3,9 @@
     <meta charset="utf-8">
     <title>Gyrograph</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/static/images/favicon.png"/>
+
     <!-- CSS -->
     <link rel="stylesheet" href="../static/css/style.css">
 
@@ -46,7 +49,8 @@
                 <div class="col-md-12">
                     <div class="row">
                         <img class="iconUnavailable" src="/static/images/margin.png"> <!-- overlay can't have margin b/c of scroll bar, so creating margin with a 15px wide png -->
-                        <img class="iconAvailable" id="play" src="/static/images/icons_play.png" onclick="play()">
+                        <img class="iconUnavailable" id="play" data-toggle="popover_play" data-placement="bottom" title=""
+                        data-content="Run the machine!" src="/static/images/icons_play.png" onclick=" ">
                         <img class="iconUnavailable" id="pause" src="/static/images/icons_pause.png" onclick=" ">
                         <img class="iconUnavailable" id="reset" src="/static/images/icons_reset.png" onclick=" ">
                     </div>
@@ -55,19 +59,22 @@
                         <img class="iconUnavailable" src="/static/images/margin.png">
                         <img class="iconUnavailable" id="tube1" src="/static/images/icons_tube1.png" onclick=" ">
                         <img class="iconUnavailable" id="tube2" src="/static/images/icons_tube2.png" onclick=" ">
-                        <img class="iconUnavailable" id="tube3" src="/static/images/icons_tube3.png" onclick=" ">
+                        <img class="iconUnavailable" data-toggle="popover_icons" data-placement="right" title=""
+                        data-content="Tubes build the machine" id="tube3" src="/static/images/icons_tube3.png" onclick=" ">
                     </div>
                     <div class="row">
                         <img class="iconUnavailable" src="/static/images/margin.png">
                         <img class="iconUnavailable" id="motor1" src="/static/images/icons_motor1.png" onclick=" ">
                         <img class="iconUnavailable" id="motor2" src="/static/images/icons_motor2.png" onclick=" ">
-                        <img class="iconUnavailable" id="motor3" src="/static/images/icons_motor3.png" onclick=" ">
+                        <img class="iconUnavailable" data-toggle="popover_icons" data-placement="right" title=""
+                        data-content="Motors rotate the Tubes" id="motor3" src="/static/images/icons_motor3.png" onclick=" ">
                     </div>
                     <div class="row">
                         <img class="iconUnavailable" src="/static/images/margin.png">
                         <img class="iconUnavailable" id="motor4" src="/static/images/icons_motor4.png" onclick=" ">
                         <img class="iconUnavailable" id="motor5" src="/static/images/icons_motor5.png" onclick=" ">
-                        <img class="iconUnavailable" id="nib" src="/static/images/icons_nib.png" onclick=" ">
+                        <img class="iconUnavailable" data-toggle="popover_nib" data-placement="right" title=""
+                        data-content="Nibs draw lines" id="nib" src="/static/images/icons_nib.png" onclick=" ">
                     </div>
                     <div class="row">
                         <img class="iconUnavailable" src="/static/images/icons_counter_margin.png">
@@ -85,23 +92,26 @@
                         <img class="counterAvailable" id="4" src="/static/images/icons_counter.png">
                         <img class="counterAvailable" id="3" src="/static/images/icons_counter.png">
                         <img class="counterAvailable" id="2" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" data-toggle="popover" data-placement="right" title=""
-                        data-content="!!!"id="1" src="/static/images/icons_counter.png">
+                        <img class="counterAvailable" data-toggle="popover_lastPart" data-placement="right" title=""
+                        data-content="One part left!" id="1" src="/static/images/icons_counter.png">
                     </div>
                     <div class="row">
                         <img class="iconUnavailable" src="/static/images/margin.png">
                         <img class="iconUnavailable" id="previous" src="/static/images/icons_previous.png" onclick=" ">
-                        <img class="iconUnavailable" id="next" src="/static/images/icons_next.png" onclick=" ">
-                        <img class="iconUnavailable" id="undo" src="/static/images/icons_undo.png" onclick=" ">            
+                        <img class="iconUnavailable" data-toggle="popover_controls" data-placement="bottom" title=""
+                        data-content="Change placement" id="next" src="/static/images/icons_next.png" onclick=" ">
+                        <img class="iconUnavailable" data-toggle="popover_controls" data-placement="right" title=""
+                        data-content="Undo" id="undo" src="/static/images/icons_undo.png" onclick=" ">            
                     </div>
                     <br>
                     <div class="row">
                         <!-- Line-weight slider -->
                         <div class="slidecontainer">
-                            <input type="range" min="1" max="10" value="3" class="sliderLinesUnavailable" id="lineWeightSlider">
+                            <input type="range" min="1" max="10" value="3" class="sliderLinesUnavailable" data-toggle="popover_nibUI" data-placement="right" title=""
+                            data-content="Change Nib size" id="lineWeightSlider">
                         </div>                              
                     </div>
-                    <div class="row">
+                    <div class="row" >
                         <!-- Color Wheel from: https://www.cssscript.com/sleek-html5-javascript-color-picker-iro-js/ -->
                         <svg style="display:none;">
                             <defs>
@@ -111,11 +121,15 @@
                             </defs>
                         </svg>
                         <div class="wheelUnavailable" id="colorWheel"></div>
+                        <img class="iconUnavailable" data-toggle="popover_nibUI" data-placement="bottom" title=""
+                        data-content="Change Nib color" src="/static/images/icons_popover_margin.png">
                     </div>
                     <div class="row">
                         <!-- Circular slider -->
                         <div class="slider-margin">
                             <div id="circularSlider" class="circularAvailable"></div>
+                            <img class="iconUnavailable" data-toggle="popover_speed" data-placement="bottom" title=""
+                            data-content="Change speed of small Motors" src="/static/images/icons_popover_margin_2.png">
                         </div>                
                     </div>
                 </div>

@@ -38,6 +38,15 @@ var count = 0;
 var nib_objects = {}; //JSON to track each nib (color, line weight, and points)
 var nib_item = 0; //int to track each nib sequentially
 var nib_key; //str used as key in nib_objects
+var nib_popover = 0; //Used to show popover first time Nib is created, and then never again
+var nibUI_popover = 0; //Used to show popover first time Nib UI is made available, and then never again
+var play_popover = 0; //Used to show popover, and then never again after Play is pressed
+var speed_popover = 0; //Used to speed popover, and then never again
+var controls_popover = 0; //Used to controls popover, and then never again
+var icons_popover = 0; //Used to icons popover, and then never again
+var counter_popover = 0; //Used to counter popover, and then never again
+var popover_timer = 2000; //miliseconds popovers will show for
+var tag_set; //Set of all target tags available
 // var target_axes = [];
 // var target_guides = [];
 // var target_tags = [];
@@ -393,7 +402,9 @@ The alternative, current implementation, is to use the Tube 1 tags for the Base,
 drawback being that a Nib can be placed in the Base, which can't draw a line b/c it just rotates 
 around a single point.*/
 
- 
+var tag_base_inner = "tube2_b_outer, tube3_b_outer";
+var tag_base_outer = "motor3_tube1, motor4_tube1_a, motor4_tube1_b, motor5_tube1_a, motor5_tube1_b";
+
 var tag_tube1_a_inner = "tube2_b_outer, tube3_b_outer, nib_tube1_a";
 var tag_tube1_b_inner = "tube2_a_outer, tube3_a_outer, nib_tube1_b";
 var tag_tube1_mid_outer = "motor3_tube1, motor4_tube1_a, motor4_tube1_b, motor5_tube1_a, motor5_tube1_b";

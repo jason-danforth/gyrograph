@@ -492,6 +492,17 @@ function nib_UI() {
     if (nib_UI_bool) {
         document.getElementById("colorWheel").className = "wheelAvailable"; //enable color wheel
         document.getElementById("lineWeightSlider").className = "sliderLines"; //enable line weight slider
+
+        if (nibUI_popover == 0) {
+            $(function () {
+                $('[data-toggle="popover_nibUI"]').popover("show");
+                setTimeout(function() {
+                    $('[data-toggle="popover_nibUI"]').popover("destroy");
+                }, popover_timer); 
+            })
+
+            nibUI_popover += 1;
+        }
     }
 
     else {
@@ -512,22 +523,10 @@ function nib_creation() {
 }
 
 
-function parts_counter(parts_length) {
-    //Update counter showing how many more parts can be added
+function trigger_popovers(parts_length) {
     let last_counter = parts_limit - parts_length; //This is the last icon left "on", turn off all icons above this number
 
-    if (last_counter == 1) {
-        // popovers Initialization
-        $(function () {
-            $('[data-toggle="popover"]').popover("show");
-        })
-    }
-    else {        
-        $(function () {
-            $('[data-toggle="popover"]').popover("hide");
-        })
-    }
-
+    //Update counter showing how many more parts can be added
     for (let i=1; i<parts_limit + 1; i++) {
         let counter_icon_name = i.toString();
         let element = document.getElementById(counter_icon_name);
@@ -538,6 +537,110 @@ function parts_counter(parts_length) {
         else {
             element.className = "counterUnavailable";
         }
+    }
+
+    //Trigger warning if on last counter
+    if (last_counter == 1 && counter_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_lastPart"]').popover("show");
+            setTimeout(function() {
+                $('[data-toggle="popover_lastPart"]').popover("destroy");
+            }, popover_timer); 
+
+            counter_popover += 1;
+        })
+    }
+
+    //--------------------------------------------------------------------------------------
+    //Explain part icons (happens on load)
+    if (Object.keys(parts).length == 1 && icons_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_icons"]').popover("show");
+
+            icons_popover += 1; 
+        })
+    }
+    else {
+        //Only popover without a timer
+        $(function () {
+            $('[data-toggle="popover_icons"]').popover("destroy");
+        })
+    }
+
+    //After part icons, show nib popover if nib is available, otherwise show controls popover
+    if (Object.keys(parts).length == 2 && tag_set.has("nib") && nib_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_nib"]').popover("show");
+            setTimeout(function() {
+                $('[data-toggle="popover_nib"]').popover("destroy");
+            }, popover_timer); 
+            
+            nib_popover += 1; 
+        })
+
+    }
+    else if (Object.keys(parts).length == 2 && controls_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_controls"]').popover("show");
+            setTimeout(function() {
+                $('[data-toggle="popover_controls"]').popover("destroy");
+            }, popover_timer); 
+            
+            controls_popover += 1; 
+        })        
+    }
+
+    //If nib was created, then nibUI popover will be triggered
+    if (Object.keys(parts).length == 3 && Object.keys(nib_objects).length > 0) {}
+    //Else if nib is available show nib popover
+    else if (Object.keys(parts).length == 3 && tag_set.has("nib") && nib_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_controls"]').popover("show");
+            setTimeout(function() {
+                $('[data-toggle="popover_controls"]').popover("destroy");
+            }, popover_timer); 
+            
+            nib_popover += 1; 
+        })
+
+    }
+    //Else show controls
+    else if (Object.keys(parts).length == 3 && controls_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_controls"]').popover("show");
+            setTimeout(function() {
+                $('[data-toggle="popover_controls"]').popover("destroy");
+            }, popover_timer); 
+            
+            controls_popover += 1; 
+        })        
+    }
+
+
+
+
+
+
+    if (Object.keys(parts).length == 6 && speed_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_speed"]').popover("show");
+            setTimeout(function() {
+                $('[data-toggle="popover_speed"]').popover("destroy");
+            }, popover_timer); 
+
+            speed_popover += 1;
+        })
+    }
+
+    if (Object.keys(parts).length > 6 && play_popover == 0) {
+        $(function () {
+            $('[data-toggle="popover_play"]').popover("show");
+            setTimeout(function() {
+                $('[data-toggle="popover_play"]').popover("destroy");
+            }, popover_timer); 
+
+            play_popover += 1;
+        })
     }
 }
 
@@ -753,18 +856,13 @@ function update_src() {
     let parts_length = Object.keys(parts).length - 1;
 
     //Update counter showing how many more parts can be added
-    parts_counter(parts_length);
+    trigger_popovers(parts_length);
 
     if (parts_length >= parts_limit) {
         no_more_parts();
     }
 
     else {
-        let element_play = document.getElementById("play");
-        element_play.onclick = function() {
-            play();
-        };
-
         //Make pause and reset buttons Unavailable
         let element_pause = document.getElementById("pause");
         element_pause.className = "iconUnavailable";
@@ -776,6 +874,12 @@ function update_src() {
 
         //Make undo, previous, and next buttons available
         if (Object.keys(parts).length > 1) {
+            let element_play = document.getElementById("play");
+            element_play.className = "iconAvailable"; //Change to CSS class with hover
+            element_play.onclick = function() {
+                play();
+            };
+
             let element_undo = document.getElementById("undo");
             element_undo.className = "iconAvailable"; //Change to CSS class with hover 
             element_undo.onclick = function() {
@@ -797,12 +901,29 @@ function update_src() {
                 update_src();
             }
         }
+        else {
+            let element_play = document.getElementById("play");
+            element_play.className = "iconUnavailable"; //Change to CSS class with hover
+            element_play.onclick = function() {};
+
+            let element_undo = document.getElementById("undo");
+            element_undo.className = "iconUnavailable"; //Change to CSS class with hover 
+            element_undo.onclick = function() {}
+
+            let element_previous = document.getElementById("previous");
+            element_previous.className = "iconUnavailable"; //Change to CSS class with hover 
+            element_previous.onclick = function() {}
+        
+            let element_next = document.getElementById("next");
+            element_next.className = "iconUnavailable"; //Change to CSS class with hover 
+            element_next.onclick = function() {}
+        }
 
         //Iterate over target_tags and update icons base on whether or not they are available (i.e. in target_tags)
         let current_count = (count - 1).toString();
         let target_tags = parts[current_count]['target_tags'];
 
-        let tag_set = new Set();
+        tag_set = new Set();
         for (let i=0; i<target_tags.length; i++) {
             let individual_tags = target_tags[i].split(", ");
             for (let j=0; j<individual_tags.length; j++) {
@@ -929,6 +1050,7 @@ function update_src() {
                 update_src();
             }
         }
+
         else {
             let element = document.getElementById("nib");
             element.className = "iconUnavailable"; 
@@ -1539,7 +1661,7 @@ function tube2(selection_index) {
     let potential_target_tags = [];
     let potential_axes = [];
     let potential_guides = [];
-
+    
     if (target_tag == tag_tube1_a_inner) {
         potential_source_tags = ['tube2_a_outer', 'tube2_a_inner', 'tube2_mid_outer'];
         potential_target_tags = [tag_tube2_a_outer, tag_tube2_a_inner, tag_tube2_mid_outer];
@@ -1859,7 +1981,7 @@ function motor1(selection_index) {
     // let source_guides = [a_guide_1, b_guide_1];
 
     let source_tags = ['motor1_tube2_a', 'motor1_tube2_a'];
-    let source_axes = [a_axis_1, a_axis_2];
+    let source_axes = [a_axis_2, a_axis_1];
     let source_guides = [a_guide_1, a_guide_1.duplicate()];
 
     let previous_count = (count - 1).toString()
@@ -1925,7 +2047,7 @@ function motor1(selection_index) {
     parts[parts_count]['geo'] = [geo];
     // parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1], source_axes[2], source_axes[3]];
     // parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1], source_guides[2], source_guides[3]];
-    parts[parts_count]['source_axes'] = [source_axes[0], source_axes[1]];
+    parts[parts_count]['source_axes'] = [source_axes[1], source_axes[0]];
     parts[parts_count]['source_guides'] = [source_guides[0], source_guides[1]];
     parts[parts_count]['potential_axes'] = potential_axes;
     parts[parts_count]['potential_guides'] = potential_guides;
