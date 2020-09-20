@@ -45,7 +45,7 @@ var speed_popover = 0; //Used to speed popover, and then never again
 var controls_popover = 0; //Used to controls popover, and then never again
 var icons_popover = 0; //Used to icons popover, and then never again
 var counter_popover = 0; //Used to counter popover, and then never again
-var popover_timer = 2000; //miliseconds popovers will show for
+var popover_timer = 3000; //miliseconds popovers will show for
 var tag_set; //Set of all target tags available
 // var target_axes = [];
 // var target_guides = [];
@@ -460,10 +460,10 @@ var tag_nib_tube2_b = "tube2_b_inner, tube3_b_inner";
 //------------------------------------------Load Rhino-------------------------------------------------------------------------------------------------------------------------------------
 
 //Heroku app runs from app.py backend (in main project directory)
-// let fetchPromise = fetch('static/models/Drawing_Machine.3dm');
+let fetchPromise = fetch('static/models/Drawing_Machine.3dm');
 
 //Locally hosted app runs directly from index.html (in "templates" directory)
-let fetchPromise = fetch('../static/models/Drawing_Machine.3dm');
+// let fetchPromise = fetch('../static/models/Drawing_Machine.3dm');
 
 let rhino;
 
@@ -612,7 +612,7 @@ rhino3dm().then(async m => {
     //------------------------------------------Build Machine-------------------------------------------------------------------------------------------------------------------------------------
 
     add_part('Base', 0);
-    update_src();
+    // update_src();
     activateScroll(); //Needs to be called last in order to load properly 
     run();
 });

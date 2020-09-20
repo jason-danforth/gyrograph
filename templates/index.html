@@ -52,47 +52,49 @@
                         <img class="iconUnavailable" id="play" data-toggle="popover_play" data-placement="bottom" title=""
                         data-content="Run the machine!" src="/static/images/icons_play.png" onclick=" ">
                         <img class="iconUnavailable" id="pause" src="/static/images/icons_pause.png" onclick=" ">
-                        <img class="iconUnavailable" id="reset" src="/static/images/icons_reset.png" onclick=" ">
+                        <img class="iconUnavailable" id="stop" src="/static/images/icons_stop.png" onclick=" ">
                     </div>
                     <br>
                     <div class="row">
                         <img class="iconUnavailable" src="/static/images/margin.png">
-                        <img class="iconUnavailable" id="tube1" src="/static/images/icons_tube1.png" onclick=" ">
+                        <img class="iconUnavailable" data-toggle="popover_icons" data-placement="top" title=""
+                        data-content="Hidden parts don't fit" id="tube1" src="/static/images/icons_tube1.png" onclick=" ">
                         <img class="iconUnavailable" id="tube2" src="/static/images/icons_tube2.png" onclick=" ">
-                        <img class="iconUnavailable" data-toggle="popover_icons" data-placement="right" title=""
+                        <img class="iconUnavailable" data-toggle="popover_tubes" data-placement="right" title=""
                         data-content="Tubes build the machine" id="tube3" src="/static/images/icons_tube3.png" onclick=" ">
                     </div>
                     <div class="row">
                         <img class="iconUnavailable" src="/static/images/margin.png">
                         <img class="iconUnavailable" id="motor1" src="/static/images/icons_motor1.png" onclick=" ">
                         <img class="iconUnavailable" id="motor2" src="/static/images/icons_motor2.png" onclick=" ">
-                        <img class="iconUnavailable" data-toggle="popover_icons" data-placement="right" title=""
+                        <img class="iconUnavailable" data-toggle="popover_motors" data-placement="right" title=""
                         data-content="Motors rotate the Tubes" id="motor3" src="/static/images/icons_motor3.png" onclick=" ">
                     </div>
                     <div class="row">
                         <img class="iconUnavailable" src="/static/images/margin.png">
-                        <img class="iconUnavailable" id="motor4" src="/static/images/icons_motor4.png" onclick=" ">
+                        <img class="iconUnavailable" data-toggle="popover_icons" data-placement="bottom" title=""
+                        data-content="Visible parts can be added" id="motor4" src="/static/images/icons_motor4.png" onclick=" ">
                         <img class="iconUnavailable" id="motor5" src="/static/images/icons_motor5.png" onclick=" ">
                         <img class="iconUnavailable" data-toggle="popover_nib" data-placement="right" title=""
-                        data-content="Nibs draw lines" id="nib" src="/static/images/icons_nib.png" onclick=" ">
+                        data-content="Nibs draw the lines" id="nib" src="/static/images/icons_nib.png" onclick=" ">
                     </div>
                     <div class="row">
                         <img class="iconUnavailable" src="/static/images/icons_counter_margin.png">
-                        <img class="counterAvailable" id="15" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="14" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="13" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="12" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="11" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="10" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="9" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="8" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="7" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="6" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="5" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="4" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="3" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" id="2" src="/static/images/icons_counter.png">
-                        <img class="counterAvailable" data-toggle="popover_lastPart" data-placement="right" title=""
+                        <img class="counterOnLoad" id="15" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="14" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="13" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="12" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="11" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="10" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="9" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="8" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="7" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="6" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="5" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="4" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="3" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" id="2" src="/static/images/icons_counter.png">
+                        <img class="counterOnLoad" data-toggle="popover_lastPart" data-placement="right" title=""
                         data-content="One part left!" id="1" src="/static/images/icons_counter.png">
                     </div>
                     <div class="row">
@@ -127,10 +129,16 @@
                     <div class="row">
                         <!-- Circular slider -->
                         <div class="slider-margin">
-                            <div id="circularSlider" class="circularAvailable"></div>
+                            <div id="circularSlider" class="circularUnavailable"></div>
                             <img class="iconUnavailable" data-toggle="popover_speed" data-placement="bottom" title=""
                             data-content="Change speed of small Motors" src="/static/images/icons_popover_margin_2.png">
                         </div>                
+                    </div>
+                    <div class="row">
+                        <img class="iconUnavailable" src="/static/images/margin.png">
+                        <img class="iconUnavailable" src="/static/images/icons_blank.png" onclick=" ">
+                        <img class="iconUnavailable" data-toggle="popover_controls" data-placement="right" title=""
+                        data-content="Reset machine" id="reset" src="/static/images/icons_reset.png" onclick=" ">
                     </div>
                 </div>
             </div>
