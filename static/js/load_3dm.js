@@ -63,8 +63,8 @@ var curve_material = new THREE.LineBasicMaterial({color: 0xffffff});
 connections will rotate at roughly half the speed of smaller (i.e. Tubes 2 and 3) connections.*/
 var angle_factor_A = 1.0;
 var angle_factor_B = 2.0;
-var angle_A = 0.0174533;
-var angle_B = 0.0174533;
+var angle_A = 0.03;
+var angle_B = 0.06;
 
 var play_bool = false; 
 var play_count = 0;
@@ -460,10 +460,10 @@ var tag_nib_tube2_b = "tube2_b_inner, tube3_b_inner";
 //------------------------------------------Load Rhino-------------------------------------------------------------------------------------------------------------------------------------
 
 //Heroku app runs from app.py backend (in main project directory)
-let fetchPromise = fetch('static/models/Drawing_Machine.3dm');
+// let fetchPromise = fetch('static/models/Drawing_Machine.3dm');
 
 //Locally hosted app runs directly from index.html (in "templates" directory)
-// let fetchPromise = fetch('../static/models/Drawing_Machine.3dm');
+let fetchPromise = fetch('../static/models/Drawing_Machine.3dm');
 
 let rhino;
 
